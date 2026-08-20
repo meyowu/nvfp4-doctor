@@ -2,10 +2,12 @@
 
 ## Current slice
 
-Four E004 slices now pin public checkpoint metadata, validate the two remote
+Five E004 slices now pin public checkpoint metadata, validate the two remote
 safetensors headers, produce a representative-layer acquisition plan, and
-acquire only those planned tensor payloads into ignored local storage. They do
-not load the model, capture activations, or execute a backend.
+acquire only those planned tensor payloads into ignored local storage. The fifth
+slice strictly loads one unfused `o_proj`, validates its checkpoint-to-runtime
+transform, and executes it with a deterministic synthetic activation. It does
+not load the model or capture a real Qwen activation.
 
 ## Hypothesis
 
@@ -26,6 +28,11 @@ ranges for every required projection tensor before authorizing payload access.
 The fourth-slice hypothesis is that all 60 authorized ranges can be acquired
 independently with exact partial-content boundaries and retained as
 content-addressed local artifacts without downloading either complete shard.
+
+The fifth-slice hypothesis is that the acquired layer-0 `o_proj` tensors can be
+loaded without an implicit cast or layout inference, transformed exactly into
+the selected CUTLASS representation, and replayed deterministically through the
+vLLM-selected FlashInfer kernel with profiler-backed dispatch evidence.
 
 ## Completion criterion
 
@@ -72,6 +79,16 @@ The payload-acquisition slice passes only if:
 - the combined acquired size is exactly 311,427,192 bytes; and
 - neither complete safetensors shard is downloaded.
 
+The single-projection replay slice passes only if:
+
+- all four layer-0 `o_proj` artifacts match their recorded lengths and hashes;
+- packed weight bytes remain unchanged and no weight padding is required;
+- the independent 128x4 scale transform matches vLLM byte-for-byte;
+- three synchronized replays produce the same finite BF16 `(16, 4096)` output;
+- vLLM selects its FlashInfer CUTLASS NVFP4 kernel; and
+- Nsight attributes an SM120 block-scaled E2M1 CUTLASS kernel, with no known
+  fallback signature, to the exact E004 NVTX range.
+
 ## Controlled variables
 
 - repository: `nvidia/Qwen3-8B-NVFP4`;
@@ -96,6 +113,11 @@ Authorized payloads are stored under the ignored project-local
 `artifacts/E004-qwen3-layer-capture/tensor-payloads/` directory. The downloader
 uses atomic per-tensor writes and an ignored progress index so interrupted runs
 can resume only from artifacts whose length, metadata, and SHA-256 still match.
+
+The first replay uses a deterministic BF16 `(16, 4096)` activation whose values
+are defined by a recorded integer sequence. It stays below the checkpoint's
+declared input calibration bound. Activation quantization happens before the
+target NVTX range; the range contains the selected projection GEMM only.
 
 ## Actual observations
 
@@ -149,6 +171,23 @@ wrote 311,427,192 bytes to ignored local files. Every response boundary and
 length matched the plan, and an independent local pass recomputed all 60
 SHA-256 values without a mismatch. No complete weight shard was downloaded.
 
+Layer-0 `o_proj` loaded as U8 `(4096, 2048)`, representing a logical
+`(4096, 4096)` weight, plus F8_E4M3 scales at `(4096, 256)` and two scalar F32
+values. Packed weight SHA-256 remained
+`1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a`.
+The independently swizzled scale SHA-256 was
+`4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2`,
+matching vLLM byte-for-byte; weight padding was zero.
+
+vLLM selected `FlashInferCutlassNvFp4LinearKernel`. One warm-up and three
+synchronized measured replays produced finite BF16 `(16, 4096)` outputs with
+the same SHA-256,
+`ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf`.
+Nsight Systems attributed the expected SM120 block-scaled CUTLASS E2M1 kernel
+to `e004:layer_00:o_proj:nvfp4_gemm`; no known fallback signature occurred in
+that range. The retained ignored profiler report has SHA-256
+`faadecc958a5a0b2730a90e6325f650bf4e761b79ea377079699e9f2edf3702d`.
+
 Run the slice with network access using:
 
 ```bash
@@ -157,6 +196,7 @@ PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
 PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
 PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
 PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
+bash scripts/run_e004_projection_profile.sh
 ```
 
 The normalized evidence is retained in [metadata.json](metadata.json) and
@@ -169,6 +209,10 @@ The exact representative-layer plan is retained in
 The tracked hash and range inventory is retained in [payloads.json](payloads.json)
 and [manifest-payloads.json](manifest-payloads.json); the payload bytes remain
 ignored and local.
+The normalized first replay and its provenance are retained in
+[replay-single-projection.json](replay-single-projection.json) and
+[manifest-replay.json](manifest-replay.json); the raw run and Nsight report
+remain ignored and local.
 
 ## Interpretation
 
@@ -195,6 +239,12 @@ are now reproducible by immutable source revision, exact range, length, and
 local SHA-256. This establishes acquisition integrity only; decoding, scale
 mapping, runtime views, and backend execution remain separate questions.
 
+The single-projection hypothesis is supported for the bounded layer-0 `o_proj`
+case. Stored and runtime metadata, the exact scale permutation, deterministic
+output, vLLM kernel selection, and range-scoped profiler identity are now
+recorded separately. Output finiteness and repeatability are execution evidence,
+not a numerical-correctness comparison.
+
 ## Threats to validity
 
 - Safetensors headers establish stored shapes, dtypes, and byte offsets but not
@@ -205,17 +255,23 @@ mapping, runtime views, and backend execution remain separate questions.
   establish vLLM/FlashInfer execution or RTX 5080 compatibility.
 - An immutable repository revision prevents upstream drift but does not
   independently validate the producer's quantization claims.
-- No safetensors payload, tokenizer, prompt, activation, GPU execution, or
-  observed kernel is part of this slice.
+- No tokenizer, prompt, real model activation, or full-model execution is part
+  of the replay slice.
 - Individual tensor ranges do not have upstream per-tensor hashes. A future
   clean-room reproduction must compare newly computed local hashes while still
   pinning each source shard by its immutable LFS SHA-256.
 - Exact transport and local hashes do not prove that the producer's logical
   NVFP4 layout matches the Gate 1 oracle.
+- The replay activation is synthetic and is not evidence about the activation
+  distribution of Qwen3.
+- `o_proj` is unfused in the inspected vLLM path. Individual `q_proj`,
+  `gate_proj`, and `up_proj` replays would not reproduce their fused model-layer
+  loading behavior without the companion tensors.
+- One profiled projection establishes the selected kernel only for this pinned
+  environment and case; it does not establish numerical correctness.
 
 ## Decision
 
-Continue. The next bounded step is to load the acquired tensors without silent
-reshape or cast, establish the exact checkpoint-to-runtime layout transform,
-and test a single representative projection replay before expanding to the full
-early/middle/late matrix.
+Continue. Expand the same strict loader and deterministic replay to the frozen
+early/middle/late matrix, while preserving the distinction between unfused
+production-aligned cases and individual fused-family kernel preflights.
