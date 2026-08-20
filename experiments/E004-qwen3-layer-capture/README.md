@@ -2,10 +2,10 @@
 
 ## Current slice
 
-Three E004 slices now pin public checkpoint metadata, validate the two remote
-safetensors headers, and produce a metadata-only acquisition plan for
-representative layers. They do not download tensor payloads, load the model,
-capture activations, or execute a backend.
+Four E004 slices now pin public checkpoint metadata, validate the two remote
+safetensors headers, produce a representative-layer acquisition plan, and
+acquire only those planned tensor payloads into ignored local storage. They do
+not load the model, capture activations, or execute a backend.
 
 ## Hypothesis
 
@@ -22,6 +22,10 @@ without retrieving weight payloads.
 The third-slice hypothesis is that validated headers alone are sufficient to
 select early, middle, and late layers and construct exact shard-local byte
 ranges for every required projection tensor before authorizing payload access.
+
+The fourth-slice hypothesis is that all 60 authorized ranges can be acquired
+independently with exact partial-content boundaries and retained as
+content-addressed local artifacts without downloading either complete shard.
 
 ## Completion criterion
 
@@ -59,6 +63,15 @@ The acquisition-plan slice passes only if:
 - the exact planned transfer size is recorded; and
 - no payload request is executed while constructing the plan.
 
+The payload-acquisition slice passes only if:
+
+- all 60 planned requests return HTTP 206 with exact `Content-Range` and
+  `Content-Length` values before their bodies are accepted;
+- every local file length matches its planned tensor interval;
+- a SHA-256 is recorded and reverified for every local tensor artifact;
+- the combined acquired size is exactly 311,427,192 bytes; and
+- neither complete safetensors shard is downloaded.
+
 ## Controlled variables
 
 - repository: `nvidia/Qwen3-8B-NVFP4`;
@@ -78,6 +91,11 @@ partial content. Raw headers are parsed in memory and are not committed.
 The representative selection is fixed at layer 0, layer 18 (the first layer of
 the model's second half), and layer 35. The plan covers `weight`,
 `input_scale`, `weight_scale`, and `weight_scale_2` for each target projection.
+
+Authorized payloads are stored under the ignored project-local
+`artifacts/E004-qwen3-layer-capture/tensor-payloads/` directory. The downloader
+uses atomic per-tensor writes and an ignored progress index so interrupted runs
+can resume only from artifacts whose length, metadata, and SHA-256 still match.
 
 ## Actual observations
 
@@ -126,6 +144,11 @@ their payload-relative offsets to absolute HTTP ranges. Each layer accounts for
 in the first shard and twenty in the second. Construction executed four header
 requests totaling 134,032 bytes and zero payload requests.
 
+The authorized acquisition then completed all 60 exact range requests and
+wrote 311,427,192 bytes to ignored local files. Every response boundary and
+length matched the plan, and an independent local pass recomputed all 60
+SHA-256 values without a mismatch. No complete weight shard was downloaded.
+
 Run the slice with network access using:
 
 ```bash
@@ -133,6 +156,7 @@ source ./activate-nvfp4-lab.sh
 PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
 PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
 PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
+PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
 ```
 
 The normalized evidence is retained in [metadata.json](metadata.json) and
@@ -142,6 +166,9 @@ Header evidence is retained in [headers.json](headers.json) and
 The exact representative-layer plan is retained in
 [acquisition-plan.json](acquisition-plan.json) and
 [manifest-acquisition-plan.json](manifest-acquisition-plan.json).
+The tracked hash and range inventory is retained in [payloads.json](payloads.json)
+and [manifest-payloads.json](manifest-payloads.json); the payload bytes remain
+ignored and local.
 
 ## Interpretation
 
@@ -163,6 +190,11 @@ to 311,427,192 bytes rather than either complete shard, and every intended range
 can be audited before transfer. This result plans a transfer; it does not
 authorize or validate one.
 
+The payload-acquisition hypothesis is also supported. The selected stored bytes
+are now reproducible by immutable source revision, exact range, length, and
+local SHA-256. This establishes acquisition integrity only; decoding, scale
+mapping, runtime views, and backend execution remain separate questions.
+
 ## Threats to validity
 
 - Safetensors headers establish stored shapes, dtypes, and byte offsets but not
@@ -176,13 +208,14 @@ authorize or validate one.
 - No safetensors payload, tokenizer, prompt, activation, GPU execution, or
   observed kernel is part of this slice.
 - Individual tensor ranges do not have upstream per-tensor hashes. A future
-  authorized acquisition must record locally computed range hashes while still
+  clean-room reproduction must compare newly computed local hashes while still
   pinning each source shard by its immutable LFS SHA-256.
+- Exact transport and local hashes do not prove that the producer's logical
+  NVFP4 layout matches the Gate 1 oracle.
 
 ## Decision
 
-Continue. With separate explicit authorization for payload access, the next
-bounded step is to retrieve the 60 planned ranges into ignored local artifact
-storage, verify every length and range boundary, and record a SHA-256 for each
-acquired tensor. Without that authorization, stop at this metadata-only
-boundary.
+Continue. The next bounded step is to load the acquired tensors without silent
+reshape or cast, establish the exact checkpoint-to-runtime layout transform,
+and test a single representative projection replay before expanding to the full
+early/middle/late matrix.

@@ -164,7 +164,13 @@ accounts for 103,809,064 bytes and the full plan accounts for 311,427,192 bytes.
 Construction repeated only the four header requests and downloaded zero payload
 bytes.
 
-The next bounded step requires separate authorization to acquire those planned
-payload ranges into ignored local storage and hash each result. No current
-observation is a claim about payload validity, real dispatch, GEMM accumulation,
-or model outputs.
+The fourth E004 slice acquired those 60 ranges into ignored local storage. Every
+response returned the exact planned HTTP 206 boundaries and lengths; all
+311,427,192 bytes were independently rehashed without a mismatch. The tracked
+inventory records a SHA-256 for every tensor while retaining the full shard LFS
+hash as source identity. Neither complete shard was downloaded.
+
+The next bounded step is to establish the checkpoint-to-runtime layout
+transform and replay one representative projection without a silent reshape or
+cast. No current observation is a claim about logical payload semantics, real
+dispatch, GEMM accumulation, or model outputs.
