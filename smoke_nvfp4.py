@@ -12,25 +12,30 @@ def main() -> None:
     a_global = (448 * 6) / a.float().abs().max()
     b_global = (448 * 6) / b.float().abs().max()
 
-    a_fp4, a_scale = nvfp4_quantize(
-        a, a_global, sfLayout=SfLayout.layout_128x4, do_shuffle=False
-    )
-    b_fp4, b_scale = nvfp4_quantize(
-        b, b_global, sfLayout=SfLayout.layout_128x4, do_shuffle=False
-    )
-    output = mm_fp4(
-        a_fp4,
-        b_fp4.T,
-        a_scale,
-        b_scale.T,
-        alpha=1.0 / (a_global * b_global),
-        out_dtype=torch.bfloat16,
-        use_nvfp4=True,
-        backend="cutlass",
-    )
-    torch.cuda.synchronize()
+    with torch.cuda.nvtx.range("e001:nvfp4_quantize_a"):
+        a_fp4, a_scale = nvfp4_quantize(
+            a, a_global, sfLayout=SfLayout.layout_128x4, do_shuffle=False
+        )
+    with torch.cuda.nvtx.range("e001:nvfp4_quantize_b"):
+        b_fp4, b_scale = nvfp4_quantize(
+            b, b_global, sfLayout=SfLayout.layout_128x4, do_shuffle=False
+        )
+    with torch.cuda.nvtx.range("e001:nvfp4_gemm"):
+        output = mm_fp4(
+            a_fp4,
+            b_fp4.T,
+            a_scale,
+            b_scale.T,
+            alpha=1.0 / (a_global * b_global),
+            out_dtype=torch.bfloat16,
+            use_nvfp4=True,
+            backend="cutlass",
+        )
+        torch.cuda.synchronize()
 
-    error = (output.float() - a.float() @ b.float().T).abs()
+    with torch.cuda.nvtx.range("e001:unquantized_reference"):
+        error = (output.float() - a.float() @ b.float().T).abs()
+        torch.cuda.synchronize()
     result = {
         "gpu": torch.cuda.get_device_name(0),
         "capability": torch.cuda.get_device_capability(0),
