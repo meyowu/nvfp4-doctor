@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nvfp4-doctor"
+version = "0.1.0.dev0"
+description = "Contract-driven diagnostics for NVFP4 inference kernels"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+authors = [{ name = "nvfp4-doctor contributors" }]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/meyowu/nvfp4-doctor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
