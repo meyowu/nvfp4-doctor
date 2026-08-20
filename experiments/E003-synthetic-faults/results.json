@@ -1,0 +1,430 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E003-synthetic-faults",
+  "slice": "format_faults_v1",
+  "execution_device": "cpu",
+  "seed": 0,
+  "clean_artifacts_checked": 3,
+  "clean_contract_evaluations": 18,
+  "clean_false_rejects": 0,
+  "fault_cases": [
+    {
+      "fault_kind": "nibble_swap",
+      "label": "synthetic",
+      "parameters": {},
+      "clean_shape": [
+        2,
+        32
+      ],
+      "clean_layout": "linear",
+      "faulted_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 32,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 64,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "scale_index_shift",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 1
+      },
+      "clean_shape": [
+        2,
+        32
+      ],
+      "clean_layout": "linear",
+      "faulted_layout": "linear",
+      "expected_failed_contracts": [
+        "logical_scales",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "logical_scales",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": false,
+          "mismatch_count": 4,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 56,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "block_scale_reversal",
+      "label": "synthetic",
+      "parameters": {},
+      "clean_shape": [
+        2,
+        32
+      ],
+      "clean_layout": "linear",
+      "faulted_layout": "linear",
+      "expected_failed_contracts": [
+        "logical_scales",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "logical_scales",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": false,
+          "mismatch_count": 4,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 56,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "global_scale_multiplier",
+      "label": "synthetic",
+      "parameters": {
+        "factor": 2.0
+      },
+      "clean_shape": [
+        2,
+        32
+      ],
+      "clean_layout": "linear",
+      "faulted_layout": "linear",
+      "expected_failed_contracts": [
+        "global_scale",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "global_scale",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 56,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "scale_layout_mislabel",
+      "label": "synthetic",
+      "parameters": {
+        "target": "linear"
+      },
+      "clean_shape": [
+        128,
+        64
+      ],
+      "clean_layout": "cutlass_128x4",
+      "faulted_layout": "linear",
+      "expected_failed_contracts": [
+        "logical_scales",
+        "metadata",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "logical_scales",
+        "metadata",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "mismatched fields: scale_layout"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": false,
+          "mismatch_count": 384,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 5376,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "padding_corruption",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 513
+      },
+      "clean_shape": [
+        129,
+        80
+      ],
+      "clean_layout": "cutlass_128x4",
+      "faulted_layout": "cutlass_128x4",
+      "expected_failed_contracts": [
+        "scale_padding"
+      ],
+      "observed_failed_contracts": [
+        "scale_padding"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "checked 1403 physical padding bytes"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    }
+  ],
+  "faults_injected": 6,
+  "faults_detected": 6,
+  "false_accepts": 0,
+  "localization_failures": 0,
+  "reversibility_failures": 0,
+  "slice_status": "pass",
+  "decision": "continue",
+  "claim_boundary": "Detection and exact localization apply only to the six deterministic CPU format controls in this matrix. Stride, non-contiguous storage, backend identity, dispatch, GEMM, and model propagation are not tested."
+}

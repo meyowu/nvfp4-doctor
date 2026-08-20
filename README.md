@@ -11,17 +11,24 @@ correctness claims.
 
 ## Current status
 
-Week 2 / Gate 1 is complete with a `go` decision. The repository now contains a
-CPU-only oracle for E2M1, UE4M3 scales, packed values, CUTLASS 128x4 scale
-layout, padding, scalar global scales, and exact hierarchical reconstruction.
-Its semantics are pinned to versioned public NVIDIA sources and hand-authored
-fixtures rather than the candidate FlashInfer implementation.
+Week 2 / Gate 1 is complete with a `go` decision, and E003 synthetic fault
+injection is in progress. The repository contains a CPU-only oracle for E2M1,
+UE4M3 scales, packed values, CUTLASS 128x4 scale layout, padding, scalar global
+scales, and exact hierarchical reconstruction. Its semantics are pinned to
+versioned public NVIDIA sources and hand-authored fixtures rather than the
+candidate FlashInfer implementation.
 
 Three constructed RTX 5080 differential cases matched FlashInfer's packed and
 scale bytes exactly, including boundary padding and multi-atom layouts. This
 supports the declared dense row-wise block-16 format contract only. It does not
 establish arbitrary quantization rounding, GEMM correctness, model quality, or
 performance.
+
+Two E003 slices add exact structural/evidence contracts, six deterministic
+format faults, and five stride/backend-identity faults. All eleven were detected
+and localized in their declared CPU matrices with zero clean false rejects or
+fault false accepts. Value permutations, real dispatch replay, GEMM, and
+model-level fault propagation remain pending.
 
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
@@ -52,6 +59,8 @@ source ./activate-nvfp4-lab.sh
 python smoke_nvfp4.py
 ./scripts/run_e001_week1.sh 3
 PYTHONPATH=src python scripts/run_e002_gate1.py
+PYTHONPATH=src python scripts/run_e003_format_faults.py
+PYTHONPATH=src python scripts/run_e003_execution_faults.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup

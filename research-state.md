@@ -5,13 +5,13 @@ only from observed repository, environment, test, and experiment evidence.
 
 ## Current handoff
 
-- Current experiment: `E002-format-oracle`
-- Current gate: `Gate 1 — Format Oracle`
-- Status: `complete`
-- Decision: `go`
-- Verified baseline commit: `fdc0beab037c1f35115de10a0b1539deeeadf38e`
+- Current experiment: `E003-synthetic-faults`
+- Current gate: `Gate 2 preparation — Synthetic Fault Injection`
+- Status: `in_progress`
+- Decision: `continue`
+- Verified baseline commit: `18d9e14cad813abccce09821099517f6ff769be5`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
-- Active local branch: `exp/e002-format-oracle`
+- Active local branch: `exp/e003-synthetic-faults` (uncommitted)
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -93,11 +93,37 @@ only from observed repository, environment, test, and experiment evidence.
   `f0be51513892d8b10968090fb081a8dafbee0b89`; it records `dirty=false` and the
   unchanged semantic source-bundle SHA-256
   `88f5b9afaa4f2d83b25b298d0d981026740b810a928b3f1f037e312e00c12154`.
+- E003's first CPU-only slice defines six exact format contracts with explicit
+  domains, preconditions, invariants, mismatch metrics, zero-mismatch
+  thresholds, and limitations.
+- Six deterministic, reversible faults cover nibble swapping, scale-index
+  shifting, block-scale reversal, global-scale multiplication, layout
+  mislabeling, and physical padding corruption. Every artifact is labeled
+  `synthetic`, and the immutable clean tensor is retained separately.
+- Three clean artifacts produced 18 passing contract evaluations. All six
+  faults were detected, every failed-contract set matched its declared expected
+  set, and clean false rejects, fault false accepts, localization failures, and
+  reversibility failures were zero.
+- The padding control changed one of 1,403 physical padding bytes while logical
+  reconstruction remained exact, demonstrating a bounded structurally invalid
+  but numerically silent positive control.
+- E003's second CPU-only slice defines separate exact contracts for recorded
+  stride, row-major contiguity, requested backend, reported backend, observed
+  kernel tuple, and bounded fallback status.
+- One clean execution-evidence snapshot passed all six contracts. Two stride
+  faults and three backend-identity faults were detected with exact localization
+  and zero clean false rejects, fault false accepts, localization failures, or
+  reversibility failures.
+- A reported-backend-only fault left requested-backend and observed-kernel
+  contracts passing. This directly checks that the three identity fields remain
+  separate rather than being inferred from one another.
+- The fallback-kernel string in this slice is labeled synthetic and is not
+  represented as a profiler observation from the run.
 
-These observations complete Gate 1 for the specified public semantics and
-constructed differential cases. They do not establish arbitrary-input rounding,
-NVFP4 GEMM correctness or performance, production model quality, or untested
-layout and scaling recipes.
+These observations complete Gate 1 and support two E003 CPU synthetic-fault
+slices. E003 remains in progress. They do not establish real runtime stride or
+dispatch detection, arbitrary-input rounding, NVFP4 GEMM correctness or
+performance, production model quality, or model-level fault propagation.
 
 ## Last verification
 
@@ -112,21 +138,23 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python -m pytest -q
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/python -m compileall -q src tests scripts
 uv pip check --python /home/meyowu/projects/nvfp4-doctor/.venv/bin/python
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e002_gate1.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_format_faults.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_execution_faults.py
 ```
 
-Observed result: 58 tests plus 210 subtests passed and Python compilation
+Observed result: 77 tests plus 248 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-23 source files, and `uv pip check` found all 207 installed packages compatible.
-The E002 runner completed three synchronized CUDA differential cases with exact
-packed-value and scale-byte matches, maximum reconstruction error 0.0, and a
-`go` decision.
+27 source files, and `uv pip check` found all 207 installed packages compatible.
+The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
+faults detected, exact localization, zero false accepts or rejects, zero
+reversibility failures, slice status `pass`, and decision `continue`.
 
 ## Next action
 
-Create E003 and define deterministic, reversible positive-control faults for
-scale shifts or permutations, nibble-order corruption, and scale-layout or
-padding corruption. Measure their detection against the clean Gate 1 oracle
-before expanding to model workloads.
+Add deterministic packed-value block, row, and column permutation controls,
+then evaluate all E003 detectors on a held-out clean/fault matrix that is not
+used to tune later thresholds. Measure clean false rejects, fault false accepts,
+localization, and reversibility before deciding whether E003 is complete.
 
 ## Blockers and limitations
 
@@ -140,6 +168,14 @@ before expanding to model workloads.
   of scope.
 - NVFP4 GEMM correctness, throughput, accuracy on real model weights and
   activations, and end-to-end model quality remain future-gate questions.
+- The first E003 slice covers six deterministic CPU format controls only. It
+  does not yet cover stride, non-contiguous storage, backend mismatch, fallback,
+  arbitrary corruptions, or held-out fault distributions.
+- The second E003 slice covers metadata and backend-identity fields using
+  synthetic evidence. It does not establish actual runtime storage or dispatch;
+  profiler-backed replay remains a later experiment boundary.
+- Packed-value block, row, and column permutations plus a held-out evaluation
+  matrix remain required before E003 can be considered complete.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -147,6 +183,7 @@ before expanding to model workloads.
 
 ## Working-tree expectation
 
-Gate 1 changes are committed on `exp/e002-format-oracle`. Begin E003 from the
-updated `main` after this branch is merged. Do not infer permission to download
-model weights or publish external results from this state file.
+Preserve the uncommitted E003 format-fault slice on
+`exp/e003-synthetic-faults`. Review and commit it only after explicit user
+authorization. Do not infer permission to push, open a PR, merge, download
+model weights, or publish external results from this state file.
