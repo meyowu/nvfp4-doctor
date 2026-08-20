@@ -13,6 +13,13 @@ from .modelopt import (
     ProjectionInventory,
     inspect_modelopt_checkpoint,
 )
+from .payload import (
+    CutlassProjectionPayload,
+    ModelOptProjectionPayload,
+    ProjectionPayloadError,
+    StoredTensorPayload,
+    load_modelopt_projection,
+)
 from .safetensors import (
     SafetensorsHeader,
     SafetensorsHeaderError,
@@ -25,13 +32,18 @@ __all__ = [
     "TARGET_PROJECTIONS",
     "AcquisitionPlanError",
     "CheckpointMetadataError",
+    "CutlassProjectionPayload",
     "ModelOptCheckpointInspection",
+    "ModelOptProjectionPayload",
     "ProjectionInventory",
+    "ProjectionPayloadError",
     "SafetensorsHeader",
     "SafetensorsHeaderError",
     "SafetensorsTensor",
+    "StoredTensorPayload",
     "TensorByteRange",
     "inspect_modelopt_checkpoint",
+    "load_modelopt_projection",
     "parse_safetensors_header",
     "plan_tensor_byte_ranges",
 ]
