@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from .collectors import (
     CollectionError,
@@ -42,7 +42,7 @@ def collect_git(runner: CommandRunner = run_command) -> GitFingerprint:
 
 
 def utc_now() -> datetime:
-    return datetime.now(UTC)
+    return datetime.now(timezone.utc)
 
 
 def assemble_e001_manifest(
@@ -59,8 +59,9 @@ def assemble_e001_manifest(
 ) -> EnvironmentManifest:
     """Collect known evidence without inferring profiler-derived fields."""
     captured_at = clock()
-    if captured_at.utcoffset() is None or captured_at.utcoffset() != UTC.utcoffset(
-        None
+    if (
+        captured_at.utcoffset() is None
+        or captured_at.utcoffset() != timezone.utc.utcoffset(None)
     ):
         raise ValueError("clock must return a UTC-aware datetime")
     return EnvironmentManifest(

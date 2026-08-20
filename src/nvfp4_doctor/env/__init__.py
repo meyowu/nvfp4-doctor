@@ -1,13 +1,12 @@
 """Immutable environment fingerprinting boundaries."""
 
-from .assembly import assemble_e001_manifest, collect_git
 from .collectors import (
     CollectionError,
     CommandResult,
     collect_gpu,
     collect_software,
 )
-from .e001 import e001_smoke_tensors
+from .assembly import assemble_e001_manifest, collect_git
 from .manifest import (
     SCHEMA_VERSION,
     ArtifactEvidence,
@@ -27,8 +26,8 @@ __all__ = [
     "ArtifactEvidence",
     "BackendEvidence",
     "CollectionError",
-    "CommandEvidence",
     "CommandResult",
+    "CommandEvidence",
     "EnvironmentManifest",
     "FallbackStatus",
     "GPUFingerprint",
@@ -36,9 +35,8 @@ __all__ = [
     "ManifestValidationError",
     "SoftwareFingerprint",
     "TensorMetadata",
-    "assemble_e001_manifest",
-    "collect_git",
     "collect_gpu",
+    "collect_git",
     "collect_software",
-    "e001_smoke_tensors",
+    "assemble_e001_manifest",
 ]

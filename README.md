@@ -11,21 +11,16 @@ correctness claims.
 
 ## Current status
 
-Week 1 / Gate 0 is complete with a `go` decision. On the pinned RTX 5080 / WSL2
-environment, three FlashInfer CUTLASS NVFP4 quantize-and-GEMM smoke runs
-completed on `sm_120`. Nsight Systems attributed the same target kernel set to
-the `e001:nvfp4_gemm` range in all three runs, and the bounded classifier did
-not detect a known fallback signature in that range.
-
-This establishes repeatable environment and dispatch evidence for the tested
-matrix only. It is not a format-correctness proof or benchmark result.
+The first RTX 5080 / WSL2 environment is operational. A FlashInfer CUTLASS
+NVFP4 quantize-and-GEMM smoke test completed on `sm_120`, and Nsight Systems
+captured the run. This establishes environment viability only; it is not a
+correctness proof or benchmark result.
 
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
-[docs/research-plan.md](docs/research-plan.md), and the research boundary is
-frozen in [docs/scope.md](docs/scope.md). Research and engineering rules are
-defined in [AGENTS.md](AGENTS.md).
+[docs/research-plan.md](docs/research-plan.md). Research and engineering rules
+are defined in [AGENTS.md](AGENTS.md).
 
 To resume a research session, read [research-state.md](research-state.md) and run:
 
@@ -44,10 +39,8 @@ uv venv --python 3.12
 source .venv/bin/activate
 uv pip install vllm==0.27.1 --torch-backend=auto
 uv pip install -r requirements-research.txt
-uv pip install -r requirements-dev.txt
 source ./activate-nvfp4-lab.sh
 python smoke_nvfp4.py
-./scripts/run_e001_week1.sh 3
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup

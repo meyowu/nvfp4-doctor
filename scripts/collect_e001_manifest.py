@@ -9,14 +9,20 @@ from pathlib import Path
 
 from nvfp4_doctor.env import (
     CommandEvidence,
+    TensorMetadata,
     assemble_e001_manifest,
-    e001_smoke_tensors,
 )
 
+
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = (
-    ROOT / ".local" / "artifacts" / "E001-kernel-identity" / "manifest.json"
-)
+DEFAULT_OUTPUT = ROOT / ".local" / "artifacts" / "E001-kernel-identity" / "manifest.json"
+
+
+def smoke_tensors() -> tuple[TensorMetadata, ...]:
+    return (
+        TensorMetadata("a", (16, 256), (16, 256), "bfloat16", (256, 1), "cuda:0"),
+        TensorMetadata("b", (128, 256), (128, 256), "bfloat16", (256, 1), "cuda:0"),
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -30,7 +36,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     manifest = assemble_e001_manifest(
-        tensors=e001_smoke_tensors(),
+        tensors=smoke_tensors(),
         command=CommandEvidence(
             argv=("python", "smoke_nvfp4.py"),
             cwd=str(ROOT),
