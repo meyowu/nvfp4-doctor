@@ -8,7 +8,9 @@ from nvfp4_doctor.backends import (
     NsightEvidenceError,
     NsightKernelEvidence,
     assess_e001_fallback,
+    assess_range_fallback,
     attach_kernel_evidence,
+    expected_sm120_cutlass_present,
     extract_kernel_evidence,
     parse_cuda_gpu_kernel_summary,
 )
@@ -89,6 +91,17 @@ class NsightEvidenceTests(unittest.TestCase):
     def test_unrecognized_target_kernel_remains_unknown(self) -> None:
         observed = (f"{E001_GEMM_RANGE}/void future_nvfp4_kernel()",)
         self.assertEqual(assess_e001_fallback(observed), FallbackStatus.UNKNOWN)
+
+    def test_generic_assessment_uses_only_the_requested_range(self) -> None:
+        range_name = "e004:layer_00:o_proj:nvfp4_gemm"
+        expected = EXPECTED_CUTLASS.replace(E001_GEMM_RANGE, range_name)
+        observed = (expected, f"{E001_GEMM_RANGE}/void cublasGemmEx()")
+        self.assertEqual(
+            assess_range_fallback(observed, range_name),
+            FallbackStatus.NOT_DETECTED,
+        )
+        self.assertTrue(expected_sm120_cutlass_present(observed, range_name))
+        self.assertFalse(expected_sm120_cutlass_present(observed, E001_GEMM_RANGE))
 
     def test_attach_records_range_scoped_assessment_without_reported_backend(
         self,

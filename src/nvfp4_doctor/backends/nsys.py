@@ -102,7 +102,14 @@ def assess_e001_fallback(observed_kernels: tuple[str, ...]) -> FallbackStatus:
     observed and no known fallback signature was observed in that same range.
     Missing or unfamiliar evidence remains ``UNKNOWN``.
     """
-    target_kernels = kernels_in_nvtx_range(observed_kernels, E001_GEMM_RANGE)
+    return assess_range_fallback(observed_kernels, E001_GEMM_RANGE)
+
+
+def assess_range_fallback(
+    observed_kernels: tuple[str, ...], range_name: str
+) -> FallbackStatus:
+    """Classify a named NVTX range without inferring from outside kernels."""
+    target_kernels = kernels_in_nvtx_range(observed_kernels, range_name)
     if not target_kernels:
         return FallbackStatus.UNKNOWN
     if any(
@@ -117,6 +124,16 @@ def assess_e001_fallback(observed_kernels: tuple[str, ...]) -> FallbackStatus:
     ):
         return FallbackStatus.NOT_DETECTED
     return FallbackStatus.UNKNOWN
+
+
+def expected_sm120_cutlass_present(
+    observed_kernels: tuple[str, ...], range_name: str
+) -> bool:
+    """Return whether a range contains the bounded E2M1 CUTLASS signature."""
+    return any(
+        all(fragment in kernel for fragment in _E001_CUTLASS_SIGNATURE)
+        for kernel in kernels_in_nvtx_range(observed_kernels, range_name)
+    )
 
 
 def attach_kernel_evidence(
