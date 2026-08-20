@@ -12,6 +12,7 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified baseline commit: `e9cbd9055be5e74a9f32569e1cadedf546dce84e`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
+- Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
 - Active local branch: `exp/e003-heldout-permutations`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
@@ -139,6 +140,11 @@ only from observed repository, environment, test, and experiment evidence.
 - All nine held-out permutation faults were detected and localized exactly to
   packed values plus reconstruction. Clean false rejects, fault false accepts,
   localization failures, and reversibility failures were zero.
+- The held-out manifest was regenerated from clean completion commit
+  `326522ce74b70ee5934373a2a5fa72d512cd8390`; it records `dirty=false`, result
+  SHA-256 `a228b0a75b50c99ffa661d37640c5d8bbdf211f7aae6c79942fd9f698dbf5e74`,
+  and source-bundle SHA-256
+  `fe3a273cbd28ae1b3354ff8ea7b02402d0df891b9640dffe185cd76b4cc88d94`.
 
 These observations complete Gate 1 and the declared three-slice E003 CPU
 synthetic-fault matrix. They do not establish real runtime stride or dispatch

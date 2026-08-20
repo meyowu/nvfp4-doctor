@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E003-synthetic-faults",
   "slice": "packed_permutation_heldout_v1",
-  "captured_at_utc": "2026-08-20T17:27:27.043667Z",
+  "captured_at_utc": "2026-08-20T17:30:33.551456Z",
   "command": {
     "argv": [
       "python",
@@ -13,8 +13,8 @@
   },
   "git": {
     "branch": "exp/e003-heldout-permutations",
-    "commit": "e9cbd9055be5e74a9f32569e1cadedf546dce84e",
-    "dirty": true
+    "commit": "326522ce74b70ee5934373a2a5fa72d512cd8390",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",
