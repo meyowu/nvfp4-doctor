@@ -1,0 +1,826 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "representative_projection_replay_matrix_v1",
+  "captured_at_utc": "2026-08-20T20:40:41.076152Z",
+  "status": "pass",
+  "decision": "continue",
+  "matrix": {
+    "layers": [
+      0,
+      18,
+      35
+    ],
+    "projections": [
+      "q_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "case_count": 15,
+    "repetitions_per_case": 3,
+    "all_cases_finite": true,
+    "all_case_hashes_stable": true,
+    "all_weights_byte_preserved": true,
+    "all_weight_padding_zero": true,
+    "all_scale_swizzles_candidate_exact": true,
+    "distinct_output_sha256_count": 15
+  },
+  "cases": [
+    {
+      "layer": 0,
+      "role": "early",
+      "projection": "q_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "77c42441f4aa37bd28ffe9080e0e604e7a6ba3f7dff672736c7c333040a2d4c1",
+        "weight": "0fae32050c693343a90768b5570c29e6322152cd8bb5a3d4cf73bd3d7d3cf0e4",
+        "weight_scale": "153c69b3985ef81cb0269e7459f4abd016a27b55d8dd165eebb12ce8fe428938",
+        "weight_scale_2": "a920443bfab1bd19ef0ced27bb5fda2ae5f9d48bbf8ef1b76ecabcee7aea3238"
+      },
+      "weight_shape": [
+        4096,
+        4096
+      ],
+      "packed_weight_shape": [
+        4096,
+        2048
+      ],
+      "weight_scale_shape": [
+        4096,
+        256
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "6ee4fa4d14149b143111198612df85c19e5c8ef8caf4cc17477e7ccd1323150a",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "946b0ab680a7a754e9d23d3999a098d3c6f0ccf125f5e8700d8c4b886ad1d826",
+      "input_scale": 0.0002092633949359879,
+      "weight_scale_2": 0.0002325148816453293,
+      "alpha_runtime_f32": 4.8656854545470196e-08,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 0.5625000055879354,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-q_proj.json",
+      "raw_evidence_sha256": "e4376590c390a49a0b828ad411206e6c8b78161a15135c0efccfcd3d63490fb4"
+    },
+    {
+      "layer": 0,
+      "role": "early",
+      "projection": "o_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "83eae1783b2c6d492881eb861a2adab9fd5b0437bf96a2aa65e7d6e8b9e6c89a",
+        "weight": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a",
+        "weight_scale": "9e255b8003f0d80086b762b8a4bb9cd1f8e5be482bdc3590dc65662289f77d19",
+        "weight_scale_2": "08337a1b36f654e8f433655f5262db64d0f83f50da0d48d2eda403e3260de0ce"
+      },
+      "weight_shape": [
+        4096,
+        4096
+      ],
+      "packed_weight_shape": [
+        4096,
+        2048
+      ],
+      "weight_scale_shape": [
+        4096,
+        256
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2",
+      "input_scale": 0.00012715657067019492,
+      "weight_scale_2": 0.0002702985657379031,
+      "alpha_runtime_f32": 3.437023821106777e-08,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 0.34179686196148396,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-o_proj.json",
+      "raw_evidence_sha256": "3ae310749ec7bbaf6fe18759ab02b1234925e498f6649de2d9bf70fa5852c8ef"
+    },
+    {
+      "layer": 0,
+      "role": "early",
+      "projection": "gate_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        12288,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "9702f83cafce9439742f8de661a56b3b4445d6315f76209e2e11602a60c0fddc",
+        "weight": "aff199166d0bd99966c2d89811736da829fca680ae3ec89df4f575992d2a6d05",
+        "weight_scale": "e97fc0a1c076a1edfa409026b08ab731c69f811e68f1a2dfaa325fdd344d8353",
+        "weight_scale_2": "747dd02d217db1cb705236847e1592fd76c9b7a918b90bce196f0432c86bc736"
+      },
+      "weight_shape": [
+        12288,
+        4096
+      ],
+      "packed_weight_shape": [
+        12288,
+        2048
+      ],
+      "weight_scale_shape": [
+        12288,
+        256
+      ],
+      "output_shape": [
+        16,
+        12288
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "4545efa12051a7bed9103319166d72be8cf808541f2bb254892ccd66b1cfb350",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "d9f19e39074c3e68f72ce947164e25502efedab06860310b5da91746445acdae",
+      "input_scale": 0.0007004510844126344,
+      "weight_scale_2": 0.00021943592582829297,
+      "alpha_runtime_f32": 1.5370413564141927e-07,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 1.8828125149011612,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-gate_proj.json",
+      "raw_evidence_sha256": "59072c090ec0d754527b9350562165ed2c58e28eccf270f438d0aaa5f453178f"
+    },
+    {
+      "layer": 0,
+      "role": "early",
+      "projection": "up_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        12288,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "9702f83cafce9439742f8de661a56b3b4445d6315f76209e2e11602a60c0fddc",
+        "weight": "a0fca785098afc1eb226da153c9064ec99a31ab0621de503410185a409819e2d",
+        "weight_scale": "e6a1a5eb6c7dd13ad0a59250777ff052e15fb6c184deafd123eb0e174b296d61",
+        "weight_scale_2": "747dd02d217db1cb705236847e1592fd76c9b7a918b90bce196f0432c86bc736"
+      },
+      "weight_shape": [
+        12288,
+        4096
+      ],
+      "packed_weight_shape": [
+        12288,
+        2048
+      ],
+      "weight_scale_shape": [
+        12288,
+        256
+      ],
+      "output_shape": [
+        16,
+        12288
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "549ef89c4ff7c6fafa4c37945ace4896234fa24e96ae39d7374bd7ed39adf20a",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "18b95c3b2d049ae62d28c8a91912e5af80abd01ba10561d48dbbc2bbb5372a84",
+      "input_scale": 0.0007004510844126344,
+      "weight_scale_2": 0.00021943592582829297,
+      "alpha_runtime_f32": 1.5370413564141927e-07,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 1.8828125149011612,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-up_proj.json",
+      "raw_evidence_sha256": "2c82e74f84eba42c3d03883d6896c82ba5ece46fef015e8ba5043b4832ae6cc1"
+    },
+    {
+      "layer": 0,
+      "role": "early",
+      "projection": "down_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        12288
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "ac7bab9067dd0183074ede2fee59c95f55889e8beab00be5c8ff2c6688a11f62",
+        "weight": "873812a4e2ab9dcd12b5ec2ffcbcc7528afa21d8aeeff1fb1345215dceb3b9fc",
+        "weight_scale": "905b6971a5d3c2dd1b79f8212dfad357a924a46515ecdaeb999e9a029829d98b",
+        "weight_scale_2": "23bd3da24e9b5bf1e248445591ed3ed0f549498b779e0243598ef94ac68ed202"
+      },
+      "weight_shape": [
+        4096,
+        12288
+      ],
+      "packed_weight_shape": [
+        4096,
+        6144
+      ],
+      "weight_scale_shape": [
+        4096,
+        768
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "f0ec3433db4744c699e645c18588e1356024a875f72f5f86c5fbe6d68d680e55",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "91f409bb8a3764c3352a978a32ef0ab78e2cc8e56d4182627b1127006adc12a9",
+      "input_scale": 0.0047898064367473125,
+      "weight_scale_2": 0.0003197079640813172,
+      "alpha_runtime_f32": 1.5313393078031368e-06,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 12.874999701976776,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-down_proj.json",
+      "raw_evidence_sha256": "09f996c9ff6469c39925bc6e87b735506e6f15415450282d5c6e3c64d497bfc6"
+    },
+    {
+      "layer": 18,
+      "role": "middle",
+      "projection": "q_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "9a113e5949953e17627bb8617952712844ad6751405e25c913a0211725c53ac0",
+        "weight": "e1351b5dfbab28f1737a6bde77a2c2ab9a3035025b8919b2371c764c64295320",
+        "weight_scale": "5455a6b00b25d283844957a6eb7c0a8f42b90b821dc1e3bcc8d7fd638d3f712c",
+        "weight_scale_2": "f90e54661f2b7e2b771cb636f9cd5f54bfda1d355b7955e54eb87d2f60a206ff"
+      },
+      "weight_shape": [
+        4096,
+        4096
+      ],
+      "packed_weight_shape": [
+        4096,
+        2048
+      ],
+      "weight_scale_shape": [
+        4096,
+        256
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "e52fc660d1a1d8c07dcbdad05df9627c2b2ee2a43319af05e76bc63c81283dd3",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "b8b7a8f4089c6e07a1f527d54a7a075b1e9282ac82c8e5c76494f6d5b6616e70",
+      "input_scale": 0.006882440764456987,
+      "weight_scale_2": 0.00015549433010164648,
+      "alpha_runtime_f32": 1.0701804740165244e-06,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 18.500000774860382,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-q_proj.json",
+      "raw_evidence_sha256": "ad2e553e80284da05e372c9e286be1be7be714be31997650ea261806abf8e3ec"
+    },
+    {
+      "layer": 18,
+      "role": "middle",
+      "projection": "o_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "0600b2c66d5ae81c3909c5320f6cecc928e9913d184c2b1df86c59fe73c92bee",
+        "weight": "0bc9adc4e11fc0245ec163c363dde7e253ce0e14af40a8f7aac19ebaf23480e0",
+        "weight_scale": "368ed3b0ac7eb37d7196816cb7d8ea17999e512ba96b2fa24371397be7b8479b",
+        "weight_scale_2": "e7f142d94d4ca7d43ae019ddc81aa4475b759a5cdab7c5e99064df91bbab28bf"
+      },
+      "weight_shape": [
+        4096,
+        4096
+      ],
+      "packed_weight_shape": [
+        4096,
+        2048
+      ],
+      "weight_scale_shape": [
+        4096,
+        256
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "f22c4cb6ef468f66ece86778e6f4c154bda5d34423af3582f0d9c9933e83b83a",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "d1ea9df26a41d37570cae30eb3a435a3595f59c7c5b1e172e2a59cfd046fe69e",
+      "input_scale": 0.0023018973879516125,
+      "weight_scale_2": 0.00025721959536895156,
+      "alpha_runtime_f32": 5.920931016589748e-07,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 6.187500178813934,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-o_proj.json",
+      "raw_evidence_sha256": "dcb2bc2f5d1a9b28b5c144cc8331dd8d4f935e8769a3facc33dac8830404f94b"
+    },
+    {
+      "layer": 18,
+      "role": "middle",
+      "projection": "gate_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        12288,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "dd072b987c76d4ebc81f0e6bd7a6785104625590e3b952d778c2a64165c2c8a2",
+        "weight": "dff33bf54fd616943a2eaed5d0bcdb8c5a5b6a1b439ad5ff20b2a562d83e2aa7",
+        "weight_scale": "35d52853412a687c7df655e1d8ce7f43d47ca1010cb14429611c3941ae5c843a",
+        "weight_scale_2": "27e57f29789643dd5ebb7bb87401967702250b8468d3bd61fbeab9f5d0c0b509"
+      },
+      "weight_shape": [
+        12288,
+        4096
+      ],
+      "packed_weight_shape": [
+        12288,
+        2048
+      ],
+      "weight_scale_shape": [
+        12288,
+        256
+      ],
+      "output_shape": [
+        16,
+        12288
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "dd16bf1473aae317583c902a879ae8cb0bafe37c2c47c99d47006ceb716fe781",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "a8ad01fa5ea873acfc5256ec0b1451713836770877caa99f350ffed8044f18d6",
+      "input_scale": 0.0040690102614462376,
+      "weight_scale_2": 0.0002775646571535617,
+      "alpha_runtime_f32": 1.129413476519403e-06,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 10.937499582767487,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-gate_proj.json",
+      "raw_evidence_sha256": "684cb6bf3c254ed26bc480acf254e9ecf12fb2738da39589c95e36a601ee7062"
+    },
+    {
+      "layer": 18,
+      "role": "middle",
+      "projection": "up_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        12288,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "dd072b987c76d4ebc81f0e6bd7a6785104625590e3b952d778c2a64165c2c8a2",
+        "weight": "19582acc1b7e2f05a5016dcae14f8dd484b789e94c1efb5f12deb1addcd02ccc",
+        "weight_scale": "233189188918c372ffe565648ec7a09a10d3ed155ebd765bc8ea3cd6ea250d5e",
+        "weight_scale_2": "27e57f29789643dd5ebb7bb87401967702250b8468d3bd61fbeab9f5d0c0b509"
+      },
+      "weight_shape": [
+        12288,
+        4096
+      ],
+      "packed_weight_shape": [
+        12288,
+        2048
+      ],
+      "weight_scale_shape": [
+        12288,
+        256
+      ],
+      "output_shape": [
+        16,
+        12288
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "669c1fa1a3b7059ecf4c8623ca4413e60349ad06521837d705f4a352d7cdfad7",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "f11c76a35db75ab4be7bba0bd3789b7d3e0e14afd60a0b85992b10e3c215029b",
+      "input_scale": 0.0040690102614462376,
+      "weight_scale_2": 0.0002775646571535617,
+      "alpha_runtime_f32": 1.129413476519403e-06,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 10.937499582767487,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-up_proj.json",
+      "raw_evidence_sha256": "a5be9327a6284d1632dce7127da57a945682163ebfdfcb0a1f4453b107a42cd7"
+    },
+    {
+      "layer": 18,
+      "role": "middle",
+      "projection": "down_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        12288
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "ebb2b2c78facb01467eddef24ed860f4e9628e438bc3724889ae8864d67d09ea",
+        "weight": "c2a521ed2554282ad6e4499690c645497bfbae4086eb2f830ccc82aa0d9e0454",
+        "weight_scale": "7197ebedae740507d043a3378fc4720317d5a8a11c7e6a03bf5587352186a6d3",
+        "weight_scale_2": "a09e46be3fbfebe623a8728c2cf403e4ade5abdf4fd2d84532a720ea34ebf514"
+      },
+      "weight_shape": [
+        4096,
+        12288
+      ],
+      "packed_weight_shape": [
+        4096,
+        6144
+      ],
+      "weight_scale_shape": [
+        4096,
+        768
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "52d563a8b1b99c5de64a9b15a8d053c4ef9e42d115ba55cb795e9c2637d3fb36",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "c4dafb5f3a2afd685062caf64596f448172aeab4e23ecf3e147ce19cb8f82509",
+      "input_scale": 0.0262276791036129,
+      "weight_scale_2": 0.0004504975804593414,
+      "alpha_runtime_f32": 1.1815505786216818e-05,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 70.50000143051147,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-down_proj.json",
+      "raw_evidence_sha256": "96b40a99c0cf715c76663b1c97cb4655dab9f89e08c49b20660804929a897ac7"
+    },
+    {
+      "layer": 35,
+      "role": "late",
+      "projection": "q_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "2e6accc1e799c12d2c25450eebc950c8feacd3e9364dafa3d209b2cc803f1591",
+        "weight": "73392c9d567e2e9dbdbdf3b2dc02b714dbfc50778ea261478e4f0888d207c054",
+        "weight_scale": "a7a2333cd901d11f7aa36f5486670c1508c6a5824cfce9249e355545cb131c28",
+        "weight_scale_2": "dede9dd994cc88b8fafb02b40d4f3b817138f7bf6460c81933d6e662c1b62351"
+      },
+      "weight_shape": [
+        4096,
+        4096
+      ],
+      "packed_weight_shape": [
+        4096,
+        2048
+      ],
+      "weight_scale_shape": [
+        4096,
+        256
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "edc43473babd39d1063297f8c8780f92fa8a43797ab566566ec494381cae695d",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "e501184ac11f0afc27750a1618fca5145ec276bfdc39286680471d268d141ab6",
+      "input_scale": 0.0554315485060215,
+      "weight_scale_2": 0.00027175177820026875,
+      "alpha_runtime_f32": 1.5063621503941249e-05,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 149.0000023841858,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-q_proj.json",
+      "raw_evidence_sha256": "3efeeb7cfbd529bff440e918dba811289a16995ccf1c35e76053ab04062ae598"
+    },
+    {
+      "layer": 35,
+      "role": "late",
+      "projection": "o_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "ed0ecc590b97a6196aca775e14dae50b47a6396bc108250ebf89a890da013811",
+        "weight": "aed64b412b68a7e5242868a1d99a8be2b8d96fc6b6b250b619cdd3cba8c62a41",
+        "weight_scale": "2d5683f2a042a0ca7c80c84446c0fc6101de4f7e2e39204c78902ede9f8efc9c",
+        "weight_scale_2": "23bd3da24e9b5bf1e248445591ed3ed0f549498b779e0243598ef94ac68ed202"
+      },
+      "weight_shape": [
+        4096,
+        4096
+      ],
+      "packed_weight_shape": [
+        4096,
+        2048
+      ],
+      "weight_scale_shape": [
+        4096,
+        256
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "2a46bf79d01380a983016aa8fd321587d726cd1ead79886424fa9a66474a8c24",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "e090c97c547b193de8cbf41d4098eccfb2ef7a3f75f6e8ab2c2323d51bdf7d6c",
+      "input_scale": 0.0260416679084301,
+      "weight_scale_2": 0.0003197079640813172,
+      "alpha_runtime_f32": 8.325728231284302e-06,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 70.00000333786011,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-o_proj.json",
+      "raw_evidence_sha256": "46624713b5237c8e9a81a5a6458514e3e712d5cd968766b0d5e37eea6135df55"
+    },
+    {
+      "layer": 35,
+      "role": "late",
+      "projection": "gate_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        12288,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "3292fab82adaa5221ef4133eb48f105095ac1136cd7285629b17a753d61a0767",
+        "weight": "d6da1c93d02bdb5317375ecfaaeb575ba7a9687da6692f8385013e33a4f3766f",
+        "weight_scale": "f6274ef762d7c3c21ab42d823a47ec4e990b41f9dbbe249c0d0cabb0458bcc4e",
+        "weight_scale_2": "832d138d62424897651672f94f4c966bf73369a0442a681db3f1c91539b178af"
+      },
+      "weight_shape": [
+        12288,
+        4096
+      ],
+      "packed_weight_shape": [
+        12288,
+        2048
+      ],
+      "weight_scale_shape": [
+        12288,
+        256
+      ],
+      "output_shape": [
+        16,
+        12288
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "c8b92d9b751099d53bd4479c071209a8682669acf4b887541c07547b6368fcc4",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "6fd75a9ee70100d7e707a5013fc7a1efe09a331fa9428eef9b6481fe91891e57",
+      "input_scale": 0.1049107164144516,
+      "weight_scale_2": 0.000526064948644489,
+      "alpha_runtime_f32": 5.5189851991599426e-05,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 282.0000057220459,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-gate_proj.json",
+      "raw_evidence_sha256": "e5ce0e793aafc3743e131064345605678431c0cb9b90c7b05db2aa0592eda74f"
+    },
+    {
+      "layer": 35,
+      "role": "late",
+      "projection": "up_proj",
+      "adapter_scope": "individual_fused_family_preflight",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        12288,
+        4096
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "3292fab82adaa5221ef4133eb48f105095ac1136cd7285629b17a753d61a0767",
+        "weight": "14e2268b89f354bc8ed2a833698f0b5a72dde019994145817c12d849e604d805",
+        "weight_scale": "ad7da75f0f7363568355d364d3f2dfd1733cc0b3b0c79fb04e88b11a091334df",
+        "weight_scale_2": "832d138d62424897651672f94f4c966bf73369a0442a681db3f1c91539b178af"
+      },
+      "weight_shape": [
+        12288,
+        4096
+      ],
+      "packed_weight_shape": [
+        12288,
+        2048
+      ],
+      "weight_scale_shape": [
+        12288,
+        256
+      ],
+      "output_shape": [
+        16,
+        12288
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "ed1d1ee8aecf661033dde886691918d9222bf979b4c3a6c439917d961c941248",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "b636f85ef9de516ec88a444cd6b1801dd79f23ce25d07010f08729dee78530a7",
+      "input_scale": 0.1049107164144516,
+      "weight_scale_2": 0.000526064948644489,
+      "alpha_runtime_f32": 5.5189851991599426e-05,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 282.0000057220459,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-up_proj.json",
+      "raw_evidence_sha256": "a65e24113eb2bb102dbf60f4607e9ad5675fad4eebae8822d3d9ba046a4d17e1"
+    },
+    {
+      "layer": 35,
+      "role": "late",
+      "projection": "down_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "activation_provenance": "synthetic_deterministic",
+      "logical_mnk": [
+        16,
+        4096,
+        12288
+      ],
+      "source_tensor_sha256": {
+        "input_scale": "7c7acd75f092fcceedd4474ec98216fba8b6b5520d07f432e1659198e0256d04",
+        "weight": "f85d171fa3cdea06da0dca6eb3aeb93264585de74c1385b1ae5ebd3b6880f036",
+        "weight_scale": "0e7452d4cb550aaa43e9a2ac4f9f2750aead9fcabe0a1596d037f9a3ccf7ffa5",
+        "weight_scale_2": "dbef90a193a1849c67922c08a330ee969895c95356b9a030180a65d49883d841"
+      },
+      "weight_shape": [
+        4096,
+        12288
+      ],
+      "packed_weight_shape": [
+        4096,
+        6144
+      ],
+      "weight_scale_shape": [
+        4096,
+        768
+      ],
+      "output_shape": [
+        16,
+        4096
+      ],
+      "output_dtype": "bfloat16",
+      "output_sha256": "169f2d94b3a9f865a4c557232ea5e1bc9c76d53be1e89db1b83f0db65bc06cec",
+      "output_hash_stable": true,
+      "all_finite": true,
+      "weight_bytes_preserved": true,
+      "weight_padding_bytes": 0,
+      "scale_swizzle_candidate_byte_exact": true,
+      "runtime_weight_scale_sha256": "bc8e1ac903a1c0a53f74594a390229b73f2ae5e72b304946e50a7efbea3747a7",
+      "input_scale": 0.8333333730697632,
+      "weight_scale_2": 0.0010811942629516125,
+      "alpha_runtime_f32": 0.0009009952773340046,
+      "activation_max_abs": 0.25,
+      "checkpoint_calibrated_max_abs": 2240.0001068115234,
+      "requested_backend": "cutlass",
+      "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+      "reported_backend": null,
+      "raw_evidence_path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-down_proj.json",
+      "raw_evidence_sha256": "892142c398977e019c8be07111bbb1c354862621d3cc665b1330107b3316a1f1"
+    }
+  ],
+  "backend_identity_anchor": {
+    "case": {
+      "layer": 0,
+      "projection": "o_proj"
+    },
+    "requested_backend": "cutlass",
+    "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+    "reported_backend": null,
+    "target_nvtx_range": "e004:layer_00:o_proj:nvfp4_gemm",
+    "expected_sm120_cutlass_signature_present": true,
+    "fallback_status": "not_detected",
+    "profiler_sha256": "faadecc958a5a0b2730a90e6325f650bf4e761b79ea377079699e9f2edf3702d"
+  },
+  "claim_boundary": "The matrix replays real acquired weights with deterministic synthetic activations. o_proj and down_proj are production-aligned unfused cases; q_proj, gate_proj, and up_proj are individual fused-family kernel preflights. The matrix does not establish real Qwen activation capture, numerical correctness, or model-level accuracy."
+}

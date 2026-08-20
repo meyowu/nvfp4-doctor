@@ -2,12 +2,13 @@
 
 ## Current slice
 
-Five E004 slices now pin public checkpoint metadata, validate the two remote
+Six E004 slices now pin public checkpoint metadata, validate the two remote
 safetensors headers, produce a representative-layer acquisition plan, and
 acquire only those planned tensor payloads into ignored local storage. The fifth
 slice strictly loads one unfused `o_proj`, validates its checkpoint-to-runtime
 transform, and executes it with a deterministic synthetic activation. It does
-not load the model or capture a real Qwen activation.
+not load the model or capture a real Qwen activation. The sixth slice extends
+the same bounded replay to all 15 acquired early/middle/late projection cases.
 
 ## Hypothesis
 
@@ -33,6 +34,10 @@ The fifth-slice hypothesis is that the acquired layer-0 `o_proj` tensors can be
 loaded without an implicit cast or layout inference, transformed exactly into
 the selected CUTLASS representation, and replayed deterministically through the
 vLLM-selected FlashInfer kernel with profiler-backed dispatch evidence.
+
+The sixth-slice hypothesis is that the same explicit loading and transformation
+contract holds over the frozen 3-layer by 5-projection matrix, with stable finite
+outputs and no case-specific weight mutation or padding.
 
 ## Completion criterion
 
@@ -89,6 +94,16 @@ The single-projection replay slice passes only if:
 - Nsight attributes an SM120 block-scaled E2M1 CUTLASS kernel, with no known
   fallback signature, to the exact E004 NVTX range.
 
+The representative replay matrix passes only if:
+
+- all 15 layer/projection cases are present exactly once;
+- every case revalidates its four acquired source tensors;
+- every packed weight remains byte-identical and requires zero padding;
+- every independent scale swizzle matches vLLM byte-for-byte;
+- three synchronized repeats per case are finite and hash-stable; and
+- fused-family cases remain labeled as individual kernel preflights rather than
+  production model-layer replays.
+
 ## Controlled variables
 
 - repository: `nvidia/Qwen3-8B-NVFP4`;
@@ -118,6 +133,10 @@ The first replay uses a deterministic BF16 `(16, 4096)` activation whose values
 are defined by a recorded integer sequence. It stays below the checkpoint's
 declared input calibration bound. Activation quantization happens before the
 target NVTX range; the range contains the selected projection GEMM only.
+
+The matrix uses the same 16-row recipe and seed independently for every case.
+Each case runs in a separate process so no preceding projection weight remains
+resident on the 16 GB GPU.
 
 ## Actual observations
 
@@ -188,6 +207,13 @@ to `e004:layer_00:o_proj:nvfp4_gemm`; no known fallback signature occurred in
 that range. The retained ignored profiler report has SHA-256
 `faadecc958a5a0b2730a90e6325f650bf4e761b79ea377079699e9f2edf3702d`.
 
+All 15 early/middle/late matrix cases passed. Every case preserved its packed
+weight bytes, required zero padding, matched the independent scale transform,
+and produced three identical finite output hashes. The 15 case outputs had 15
+distinct hashes. Six `o_proj`/`down_proj` cases are labeled
+`production_aligned_unfused`; nine `q_proj`/`gate_proj`/`up_proj` cases are
+labeled `individual_fused_family_preflight`.
+
 Run the slice with network access using:
 
 ```bash
@@ -197,6 +223,7 @@ PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
 PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
 PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
 bash scripts/run_e004_projection_profile.sh
+PYTHONPATH=src python scripts/run_e004_replay_matrix.py
 ```
 
 The normalized evidence is retained in [metadata.json](metadata.json) and
@@ -212,6 +239,10 @@ ignored and local.
 The normalized first replay and its provenance are retained in
 [replay-single-projection.json](replay-single-projection.json) and
 [manifest-replay.json](manifest-replay.json); the raw run and Nsight report
+remain ignored and local.
+The complete bounded matrix and its clean provenance are retained in
+[replay-matrix.json](replay-matrix.json) and
+[manifest-replay-matrix.json](manifest-replay-matrix.json); per-case raw runs
 remain ignored and local.
 
 ## Interpretation
@@ -245,6 +276,11 @@ output, vLLM kernel selection, and range-scoped profiler identity are now
 recorded separately. Output finiteness and repeatability are execution evidence,
 not a numerical-correctness comparison.
 
+The representative-matrix hypothesis is also supported. The checkpoint-to-
+runtime transform and deterministic execution preflight held for all acquired
+cases. This expands structural and execution coverage but still supplies no real
+Qwen activations or numerical reference outputs.
+
 ## Threats to validity
 
 - Safetensors headers establish stored shapes, dtypes, and byte offsets but not
@@ -269,9 +305,12 @@ not a numerical-correctness comparison.
   loading behavior without the companion tensors.
 - One profiled projection establishes the selected kernel only for this pinned
   environment and case; it does not establish numerical correctness.
+- The matrix reuses the single profiled `o_proj` as its backend-identity anchor;
+  it does not contain a separate profiler report for every case.
 
 ## Decision
 
-Continue. Expand the same strict loader and deterministic replay to the frozen
-early/middle/late matrix, while preserving the distinction between unfused
-production-aligned cases and individual fused-family kernel preflights.
+Continue to the real-activation boundary. The selected 60 tensor artifacts are
+sufficient for strict projection replay but not for running Qwen3 or producing
+its layer inputs. Full pinned checkpoint and tokenizer acquisition requires a
+separate explicit authorization before real activation capture can begin.
