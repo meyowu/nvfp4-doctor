@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E004-qwen3-layer-capture",
   "slice": "representative_tensor_acquisition_v1",
-  "captured_at_utc": "2026-08-20T20:13:53.765321Z",
+  "captured_at_utc": "2026-08-20T20:16:13.064376Z",
   "command": {
     "argv": [
       "python",
@@ -12,8 +12,8 @@
   },
   "git": {
     "branch": "exp/e004-tensor-acquisition",
-    "commit": "62db873d3951bbcdcabe638983165a941f62eea2",
-    "dirty": true
+    "commit": "60c05df86936ca958088d4685b25001f77ad0da0",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",

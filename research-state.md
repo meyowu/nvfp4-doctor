@@ -18,6 +18,7 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 acquisition-plan implementation commit: `2f4f6301447dd6f6dc73164d4f30536679bcbb8b`
 - Verified E004 acquisition-plan evidence commit: `76ef175ad885b741068dd21db08149b0902840bd`
 - Verified E004 tensor-acquisition implementation commit: `62db873d3951bbcdcabe638983165a941f62eea2`
+- Verified E004 tensor-acquisition evidence commit: `60c05df86936ca958088d4685b25001f77ad0da0`
 - Active local branch: `exp/e004-tensor-acquisition`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
@@ -207,6 +208,11 @@ only from observed repository, environment, test, and experiment evidence.
 - Every local tensor length matched its planned interval, and an independent
   verification pass recomputed all 60 recorded SHA-256 values without a
   mismatch.
+- The payload manifest was regenerated from clean evidence commit
+  `60c05df86936ca958088d4685b25001f77ad0da0`; it records `dirty=false`, result
+  SHA-256 `6ae6088720f14d8a681896a524a638e94b9732c3b1d4d751769548a4d5feb062`,
+  and source-bundle SHA-256
+  `8093fc825d4d2eb9e98c8bc891234738481fa50db36cf0eda0c141a8fcece4dd`.
 
 These observations complete Gate 1 and E003, and support the metadata,
 safetensors-header, representative acquisition-plan, and transport-integrity
