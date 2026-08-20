@@ -167,6 +167,9 @@ class FormatFaultTests(unittest.TestCase):
                 "global_scale_multiplier",
                 "scale_layout_mislabel",
                 "padding_corruption",
+                "packed_block_permutation",
+                "packed_row_permutation",
+                "packed_column_permutation",
             },
         )
 
