@@ -1,0 +1,79 @@
+{
+  "artifacts": [],
+  "backend": {
+    "fallback_status": "unknown",
+    "observed_kernels": [],
+    "profiler_artifact_sha256": null,
+    "reported_backend": null,
+    "requested_backend": "cutlass",
+    "requested_format": "nvfp4"
+  },
+  "captured_at_utc": "2026-08-20T04:00:00Z",
+  "command": {
+    "argv": [
+      "python",
+      "smoke_nvfp4.py"
+    ],
+    "cwd": "/home/meyowu/projects/nvfp4-doctor",
+    "seed": 0
+  },
+  "experiment_id": "E001-kernel-identity",
+  "git": {
+    "commit": "19a43b5efda91de93bdfe0df806380ee17108874",
+    "dirty": false
+  },
+  "gpu": {
+    "compute_capability": "12.0",
+    "driver_version": "595.95",
+    "memory_mib": 16303,
+    "name": "NVIDIA GeForce RTX 5080"
+  },
+  "schema_version": 1,
+  "software": {
+    "cuda_runtime": "13.2.75",
+    "cuda_toolkit": "13.2.86",
+    "flashinfer": "0.6.16.post3",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "os": "Ubuntu 24.04.4 LTS",
+    "python": "3.12.3",
+    "torch": "2.13.0+cu132",
+    "vllm": "0.27.1",
+    "wsl_version": "2.7.12.0"
+  },
+  "tensors": [
+    {
+      "device": "cuda:0",
+      "dtype": "bfloat16",
+      "logical_shape": [
+        16,
+        256
+      ],
+      "name": "a",
+      "physical_shape": [
+        16,
+        256
+      ],
+      "stride": [
+        256,
+        1
+      ]
+    },
+    {
+      "device": "cuda:0",
+      "dtype": "bfloat16",
+      "logical_shape": [
+        128,
+        256
+      ],
+      "name": "b",
+      "physical_shape": [
+        128,
+        256
+      ],
+      "stride": [
+        256,
+        1
+      ]
+    }
+  ]
+}

@@ -35,7 +35,11 @@ backend string alone.
 
 ## Actual observations
 
-Not yet collected under the E001 manifest schema.
+A local pre-profiler schema-v1 manifest was generated from the checked-in smoke
+test definition and the current WSL environment. It recorded the requested
+backend as CUTLASS, `git.dirty=true`, no observed kernels, and fallback status
+`unknown`. This is an assembly/collection observation, not kernel-identity
+evidence and not a completed E001 result.
 
 ## Threats to validity
 
