@@ -1,0 +1,48 @@
+{
+  "claim_boundary": "No known fallback signature was detected inside the target NVTX range; this does not prove that all silent fallback modes are impossible.",
+  "decision": "go",
+  "environment_stable": true,
+  "experiment_id": "E001-kernel-identity",
+  "gate0_repeatability": "pass",
+  "no_known_fallback_detected": true,
+  "profiler_evidence_complete": true,
+  "repetitions": 3,
+  "reported_backend": null,
+  "requested_backend": "cutlass",
+  "requested_format": "nvfp4",
+  "runs": [
+    {
+      "captured_at_utc": "2026-08-20T07:26:32.296939Z",
+      "fallback_status": "not_detected",
+      "manifest_sha256": "1b4ce752d28f27c098773e6b4836133bdac9d52b4eb230c98548d50b84d065c6",
+      "observed_kernel_count": 23,
+      "profiler_sha256": "62fecf2f03911cd092c32c539c80145bc74a97711fbbe4d7f64d0b9e7507df86",
+      "run_id": "run-01",
+      "target_kernel_count": 4,
+      "target_kernel_set_sha256": "98aa16a78e2cdb3d74f27a0568bc2ed9f35de0e8584936717180c5e9c76ef10a"
+    },
+    {
+      "captured_at_utc": "2026-08-20T07:26:40.618961Z",
+      "fallback_status": "not_detected",
+      "manifest_sha256": "6b098b78db2c0738e38ae5f706dc9af702cc1a80ea7f84ce5c1192dd609a1308",
+      "observed_kernel_count": 23,
+      "profiler_sha256": "b74beec7a9a7ac6f46ee7b70a291eb03c8440f7cc3042207fefb0e2ccbef7387",
+      "run_id": "run-02",
+      "target_kernel_count": 4,
+      "target_kernel_set_sha256": "98aa16a78e2cdb3d74f27a0568bc2ed9f35de0e8584936717180c5e9c76ef10a"
+    },
+    {
+      "captured_at_utc": "2026-08-20T07:26:48.737523Z",
+      "fallback_status": "not_detected",
+      "manifest_sha256": "135b1b5582abd5f7330ee875f0eb8667750bc594151325ad9887a7f1cec1f493",
+      "observed_kernel_count": 23,
+      "profiler_sha256": "439335fe9282d833189b846606ca7429312182e3814c7524f746c0601eea2d6b",
+      "run_id": "run-03",
+      "target_kernel_count": 4,
+      "target_kernel_set_sha256": "98aa16a78e2cdb3d74f27a0568bc2ed9f35de0e8584936717180c5e9c76ef10a"
+    }
+  ],
+  "schema_version": 1,
+  "target_kernel_set_stable": true,
+  "target_nvtx_range": "e001:nvfp4_gemm"
+}
