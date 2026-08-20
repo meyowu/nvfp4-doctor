@@ -9,12 +9,13 @@ only from observed repository, environment, test, and experiment evidence.
 - Current gate: `Gate 2 — Qwen3 checkpoint metadata and capture planning`
 - Status: `in_progress`
 - Decision: `continue`
-- Verified baseline commit: `e9cbd9055be5e74a9f32569e1cadedf546dce84e`
+- Verified baseline commit: `229e4190e7604ae623f449bcefca2f8f4ad4cbbf`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
 - Verified E004 metadata commit: `68cb4e0328598dd33d3626b0046e704c97ac39b5`
-- Active local branch: `exp/e004-checkpoint-metadata`
+- Verified E004 header commit: `ee716253c14f0f6b1a8364d2f92253ec01cbe571`
+- Active local branch: `exp/e004-safetensors-headers`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -165,11 +166,29 @@ only from observed repository, environment, test, and experiment evidence.
   SHA-256 `3d87bff0ff6147dd022398e465968ebc1ae06a8fb868efcd2059e8dc4f547e81`,
   and source-bundle SHA-256
   `a8dd847464f82efcb1f6213b09816f084573aaedb7b3f0032dfff574bdc5f0b6`.
+- Four bounded HTTP range requests retrieved only the 8-byte prefix and declared
+  JSON header for each pinned weight shard. Both URLs returned exact HTTP 206
+  ranges and lengths; 134,032 bytes were downloaded and payload bytes remained
+  zero.
+- The headers describe 1,181 and 46 tensors respectively. Their combined 1,227
+  names match the pinned index exactly, and all dtype/shape-sized intervals are
+  contiguous and cover each declared payload boundary.
+- The five capture-target families account for 720 tensors over 36 layers.
+  Packed weights are stored as U8, block scales as F8_E4M3, and input/global
+  scales as scalar F32. Stored weight shapes are `(4096, 2048)` for `q_proj`
+  and `o_proj`, `(12288, 2048)` for `gate_proj` and `up_proj`, and
+  `(4096, 6144)` for `down_proj`.
+- The E004 header manifest was regenerated from clean commit
+  `ee716253c14f0f6b1a8364d2f92253ec01cbe571`; it records `dirty=false`, result
+  SHA-256 `8d6b32d2bc36b8f3477b88e11b5bc8542fcabc70778a12bdbe3f1b8fd5fd64d9`,
+  and source-bundle SHA-256
+  `c5789594fe59ae05bb22efdd10836cb37143fdde6a64d9ea875bbe82b11c8049`.
 
 These observations complete Gate 1 and E003, and support the metadata-planning
-slice of E004. They do not establish safetensors shapes or dtypes, real runtime
-stride or dispatch, arbitrary-input rounding, NVFP4 GEMM correctness or
-performance, production model quality, or model-level fault propagation.
+and safetensors-header slices of E004. They do not establish logical checkpoint
+layout semantics, real runtime stride or dispatch, arbitrary-input rounding,
+NVFP4 GEMM correctness or performance, production model quality, or model-level
+fault propagation.
 
 ## Last verification
 
@@ -188,11 +207,12 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_execution_faults.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_heldout_permutations.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_checkpoint_metadata.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_safetensors_headers.py
 ```
 
-Observed result: 91 tests plus 272 subtests passed and Python compilation
+Observed result: 99 tests plus 280 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-28 source files, and `uv pip check` found all 207 installed packages compatible.
+29 source files, and `uv pip check` found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
 reversibility failures, slice status `pass`, and decision `continue`.
@@ -202,13 +222,16 @@ permutation faults with the same zero-failure metrics; it reported E003 status
 The E004 metadata runner resolved the immutable revision, downloaded 112,965
 metadata bytes, validated all five target projection inventories, downloaded no
 weight files, and reported status `pass` and decision `continue`.
+The header runner validated four exact partial-content responses, full index
+alignment, exact payload boundaries, and uniform stored shapes/dtypes for 720
+capture-target tensors while downloading zero payload bytes. It reported status
+`pass` and decision `continue`.
 
 ## Next action
 
-Retrieve only the two pinned remote safetensors headers with HTTP range
-requests, validate header length and file boundaries, and record the exact
-dtypes and shapes of the five capture-target projection families before
-choosing representative layers or downloading weight payloads.
+Select representative early, middle, and late layers and produce an exact
+shard-local byte-range acquisition plan for the five projection families from
+metadata alone. Do not request tensor payloads without separate authorization.
 
 ## Blockers and limitations
 
@@ -230,9 +253,9 @@ choosing representative layers or downloading weight payloads.
   profiler-backed replay remains a later experiment boundary.
 - The held-out E003 permutations are cyclic and axis-aligned; arbitrary partial
   permutations and compound faults remain outside the completion boundary.
-- E004 currently validates config and index metadata only. The index does not
-  expose stored tensor shapes, dtypes, offsets, strides, or layout semantics;
-  those require bounded safetensors-header inspection.
+- E004 now validates config, index, and stored header shapes/dtypes/offsets.
+  Stored U8 shapes describe packed bytes; they do not establish logical NVFP4
+  shapes, runtime strides, framework views, or scale-layout semantics.
 - The model card documents TensorRT-LLM on B200, not vLLM/FlashInfer on RTX
   5080. Runtime support and actual kernel identity therefore remain unknown.
 - The E002 manifest pins the clean implementation commit rather than the later
@@ -242,8 +265,8 @@ choosing representative layers or downloading weight payloads.
 
 ## Working-tree expectation
 
-Keep verified E004 metadata work committed and pushed on the stacked focused
-`exp/e004-checkpoint-metadata` branch. The configured research closeout workflow
+Keep verified E004 header work committed and pushed on the focused
+`exp/e004-safetensors-headers` branch. The configured research closeout workflow
 authorizes commit and push for verified in-scope changes only; opening a PR,
 merging, downloading model weights, or publishing external results still
 requires separate explicit authorization.

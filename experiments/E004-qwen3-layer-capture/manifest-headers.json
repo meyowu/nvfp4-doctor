@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "safetensors_headers_v1",
+  "captured_at_utc": "2026-08-20T19:36:41.662232Z",
+  "command": {
+    "argv": [
+      "python",
+      "scripts/run_e004_safetensors_headers.py"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor"
+  },
+  "git": {
+    "branch": "exp/e004-safetensors-headers",
+    "commit": "ee716253c14f0f6b1a8364d2f92253ec01cbe571",
+    "dirty": false
+  },
+  "platform": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "software": {
+    "httpx": "0.28.1",
+    "torch": "2.13.0+cu132",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3"
+  },
+  "model": {
+    "repository": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "weight_files_downloaded": false,
+    "payload_bytes_downloaded": 0
+  },
+  "backend": {
+    "requested": "http_range_header_only",
+    "reported": "http_206_partial_content",
+    "observed_kernel": null
+  },
+  "source_bundle_sha256": "c5789594fe59ae05bb22efdd10836cb37143fdde6a64d9ea875bbe82b11c8049",
+  "artifacts": [
+    {
+      "kind": "safetensors-header-inspection",
+      "path": "experiments/E004-qwen3-layer-capture/headers.json",
+      "sha256": "8d6b32d2bc36b8f3477b88e11b5bc8542fcabc70778a12bdbe3f1b8fd5fd64d9"
+    }
+  ]
+}

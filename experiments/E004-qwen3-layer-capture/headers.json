@@ -1,0 +1,352 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "safetensors_headers_v1",
+  "status": "pass",
+  "decision": "continue",
+  "repository": {
+    "id": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e"
+  },
+  "request_policy": {
+    "http_range_only": true,
+    "maximum_header_bytes_per_shard": 16777216,
+    "reject_non_partial_response_before_body_read": true,
+    "accept_encoding": "identity"
+  },
+  "shards": [
+    {
+      "path": "model-00001-of-00002.safetensors",
+      "source_url": "https://huggingface.co/nvidia/Qwen3-8B-NVFP4/resolve/ccd10a893cbca613259517c3efe08e151ddf2b8e/model-00001-of-00002.safetensors",
+      "file_size": 4987209424,
+      "lfs_sha256": "6c13ef7322f4e5460858782e32da7e34b6c6fa8148cbeb70abcd2b44455d43f0",
+      "prefix_range": {
+        "status_code": 206,
+        "requested_range": "bytes=0-7",
+        "content_range": "bytes 0-7/4987209424",
+        "content_length": 8
+      },
+      "header_range": {
+        "status_code": 206,
+        "requested_range": "bytes=8-129055",
+        "content_range": "bytes 8-129055/4987209424",
+        "content_length": 129048
+      },
+      "header_length": 129048,
+      "header_region_bytes": 129056,
+      "header_region_sha256": "46e8ddddc1f268115daa4b02c31c322783c84266b2e80e5698547ee119a1c0a8",
+      "payload_start": 129056,
+      "payload_bytes": 4987080368,
+      "tensor_count": 1181,
+      "index_names_match": true,
+      "payload_boundaries_exact": true
+    },
+    {
+      "path": "model-00002-of-00002.safetensors",
+      "source_url": "https://huggingface.co/nvidia/Qwen3-8B-NVFP4/resolve/ccd10a893cbca613259517c3efe08e151ddf2b8e/model-00002-of-00002.safetensors",
+      "file_size": 1409856960,
+      "lfs_sha256": "cf084e6b0e9f4bed9d15b6a454c34c0a1e8c4b74668db62b4063defc5a601c96",
+      "prefix_range": {
+        "status_code": 206,
+        "requested_range": "bytes=0-7",
+        "content_range": "bytes 0-7/1409856960",
+        "content_length": 8
+      },
+      "header_range": {
+        "status_code": 206,
+        "requested_range": "bytes=8-4975",
+        "content_range": "bytes 8-4975/1409856960",
+        "content_length": 4968
+      },
+      "header_length": 4968,
+      "header_region_bytes": 4976,
+      "header_region_sha256": "e086007484df6287d13666fc8fc3d1158670673dad3c1cbba89a526b090533d0",
+      "payload_start": 4976,
+      "payload_bytes": 1409851984,
+      "tensor_count": 46,
+      "index_names_match": true,
+      "payload_boundaries_exact": true
+    }
+  ],
+  "range_request_count": 4,
+  "range_bytes_downloaded": 134032,
+  "payload_bytes_downloaded": 0,
+  "weight_files_downloaded": false,
+  "combined_tensor_count": 1227,
+  "combined_index_names_match": true,
+  "capture_target_tensor_count": 720,
+  "capture_target_projections": [
+    {
+      "projection": "q_proj",
+      "layer_count": 36,
+      "tensor_count": 144,
+      "tensors": [
+        {
+          "suffix": "input_scale",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight",
+          "dtype": "U8",
+          "shape": [
+            4096,
+            2048
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale",
+          "dtype": "F8_E4M3",
+          "shape": [
+            4096,
+            256
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale_2",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        }
+      ]
+    },
+    {
+      "projection": "o_proj",
+      "layer_count": 36,
+      "tensor_count": 144,
+      "tensors": [
+        {
+          "suffix": "input_scale",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight",
+          "dtype": "U8",
+          "shape": [
+            4096,
+            2048
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale",
+          "dtype": "F8_E4M3",
+          "shape": [
+            4096,
+            256
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale_2",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        }
+      ]
+    },
+    {
+      "projection": "gate_proj",
+      "layer_count": 36,
+      "tensor_count": 144,
+      "tensors": [
+        {
+          "suffix": "input_scale",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight",
+          "dtype": "U8",
+          "shape": [
+            12288,
+            2048
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale",
+          "dtype": "F8_E4M3",
+          "shape": [
+            12288,
+            256
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale_2",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        }
+      ]
+    },
+    {
+      "projection": "up_proj",
+      "layer_count": 36,
+      "tensor_count": 144,
+      "tensors": [
+        {
+          "suffix": "input_scale",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight",
+          "dtype": "U8",
+          "shape": [
+            12288,
+            2048
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale",
+          "dtype": "F8_E4M3",
+          "shape": [
+            12288,
+            256
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale_2",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        }
+      ]
+    },
+    {
+      "projection": "down_proj",
+      "layer_count": 36,
+      "tensor_count": 144,
+      "tensors": [
+        {
+          "suffix": "input_scale",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight",
+          "dtype": "U8",
+          "shape": [
+            4096,
+            6144
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale",
+          "dtype": "F8_E4M3",
+          "shape": [
+            4096,
+            768
+          ],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        },
+        {
+          "suffix": "weight_scale_2",
+          "dtype": "F32",
+          "shape": [],
+          "tensor_count": 36,
+          "shards": [
+            "model-00001-of-00002.safetensors",
+            "model-00002-of-00002.safetensors"
+          ]
+        }
+      ]
+    }
+  ],
+  "observations": [
+    "both shard URLs honored exact prefix and JSON-header byte ranges",
+    "header tensor names exactly match the pinned safetensors index",
+    "all tensor intervals are contiguous and exactly cover each shard payload",
+    "the five capture targets have uniform stored dtypes and shapes across 36 layers"
+  ],
+  "claim_boundary": "Stored U8 weight shapes describe packed checkpoint bytes, not logical matrix shapes or runtime strides. Header inspection does not read payloads, load tensors, establish scale layout semantics, execute a backend, or demonstrate numerical correctness."
+}

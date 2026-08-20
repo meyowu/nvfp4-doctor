@@ -145,7 +145,18 @@ first E004 slice pinned revision
 downloading weights. The declarations agree on NVFP4 group size 16, and each
 planned projection family has four quantization tensor names in all 36 layers.
 
-The next bounded step is remote safetensors-header inspection to establish exact
-stored shapes and dtypes before selecting representative capture layers. No
-current observation is a claim about real dispatch, GEMM accumulation, or model
-outputs.
+The second E004 slice issued four exact HTTP range requests totaling
+134,032 bytes. Both shard URLs returned HTTP 206 with matching range and length
+boundaries. The parsed headers described 1,227 tensors whose names exactly
+matched the pinned index; all tensor intervals were contiguous and covered the
+declared payloads. No tensor payload byte was downloaded.
+
+The five capture targets account for 720 indexed tensors. Their packed weights
+are stored as U8, block scales as F8_E4M3, and the two scalar scales as F32,
+uniformly across 36 layers. These stored shapes and dtypes support acquisition
+planning only; they do not establish logical layouts, runtime strides, backend
+support, or numerical behavior.
+
+The next bounded step is a metadata-only representative-layer and shard-local
+byte-range acquisition plan. No current observation is a claim about real
+dispatch, GEMM accumulation, or model outputs.

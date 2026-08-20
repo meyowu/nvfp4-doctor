@@ -38,6 +38,11 @@ declarations agree on NVFP4 group size 16, and all five planned projection
 families expose the expected quantization tensor names across 36 layers. Only
 112,965 bytes of small metadata were downloaded; no model weight was fetched.
 
+Bounded range requests subsequently read 134,032 bytes covering only the two
+safetensors prefixes and JSON headers. All 1,227 tensor names aligned with the
+pinned index, and the five capture-target families had uniform stored dtypes and
+shapes across 36 layers. Payload bytes downloaded remained zero.
+
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
@@ -71,6 +76,7 @@ PYTHONPATH=src python scripts/run_e003_format_faults.py
 PYTHONPATH=src python scripts/run_e003_execution_faults.py
 PYTHONPATH=src python scripts/run_e003_heldout_permutations.py
 PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
+PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup
