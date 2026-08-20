@@ -15,7 +15,9 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
 - Verified E004 metadata commit: `68cb4e0328598dd33d3626b0046e704c97ac39b5`
 - Verified E004 header commit: `ee716253c14f0f6b1a8364d2f92253ec01cbe571`
-- Active local branch: `exp/e004-safetensors-headers`
+- Verified E004 acquisition-plan implementation commit: `2f4f6301447dd6f6dc73164d4f30536679bcbb8b`
+- Verified E004 acquisition-plan evidence commit: `76ef175ad885b741068dd21db08149b0902840bd`
+- Active local branch: `exp/e004-acquisition-plan`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -183,12 +185,26 @@ only from observed repository, environment, test, and experiment evidence.
   SHA-256 `8d6b32d2bc36b8f3477b88e11b5bc8542fcabc70778a12bdbe3f1b8fd5fd64d9`,
   and source-bundle SHA-256
   `c5789594fe59ae05bb22efdd10836cb37143fdde6a64d9ea875bbe82b11c8049`.
+- E004 fixes layers 0, 18, and 35 as early, middle, and late representatives
+  and covers `q_proj`, `o_proj`, `gate_proj`, `up_proj`, and `down_proj`.
+- The metadata-only planner resolved all four quantization tensors for each
+  selected projection to 60 unique, non-overlapping, shard-local HTTP ranges.
+- Each selected layer accounts for 103,809,064 planned bytes. The complete
+  plan accounts for 311,427,192 bytes across 40 first-shard and 20 second-shard
+  ranges.
+- Plan construction executed four header range requests totaling 134,032 bytes
+  and no payload requests; payload bytes downloaded remained zero.
+- The acquisition-plan manifest was regenerated from clean evidence commit
+  `76ef175ad885b741068dd21db08149b0902840bd`; it records `dirty=false`, result
+  SHA-256 `c69847d3a8ef8b886bd4904b49e34bcc97cc8e80b6657a8d6d37859068d902c2`,
+  and source-bundle SHA-256
+  `edc9a1efce1c5fa8cec2cdf82b1aecd08272be98f9310485eb85b0abe7ce78d8`.
 
-These observations complete Gate 1 and E003, and support the metadata-planning
-and safetensors-header slices of E004. They do not establish logical checkpoint
-layout semantics, real runtime stride or dispatch, arbitrary-input rounding,
-NVFP4 GEMM correctness or performance, production model quality, or model-level
-fault propagation.
+These observations complete Gate 1 and E003, and support the metadata,
+safetensors-header, and representative acquisition-plan slices of E004. They do
+not establish payload validity, logical checkpoint layout semantics, real
+runtime stride or dispatch, arbitrary-input rounding, NVFP4 GEMM correctness or
+performance, production model quality, or model-level fault propagation.
 
 ## Last verification
 
@@ -208,11 +224,12 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_heldout_permutations.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_checkpoint_metadata.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_safetensors_headers.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_acquisition_plan.py
 ```
 
-Observed result: 99 tests plus 280 subtests passed and Python compilation
+Observed result: 106 tests plus 341 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-29 source files, and `uv pip check` found all 207 installed packages compatible.
+30 source files, and `uv pip check` found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
 reversibility failures, slice status `pass`, and decision `continue`.
@@ -226,12 +243,16 @@ The header runner validated four exact partial-content responses, full index
 alignment, exact payload boundaries, and uniform stored shapes/dtypes for 720
 capture-target tensors while downloading zero payload bytes. It reported status
 `pass` and decision `continue`.
+The acquisition-plan runner selected layers 0, 18, and 35, produced 60 exact
+in-bounds ranges totaling 311,427,192 planned bytes, and downloaded zero payload
+bytes. It reported status `pass` and decision `continue`.
 
 ## Next action
 
-Select representative early, middle, and late layers and produce an exact
-shard-local byte-range acquisition plan for the five projection families from
-metadata alone. Do not request tensor payloads without separate authorization.
+With separate explicit authorization for payload access, retrieve the 60
+planned ranges into ignored local artifact storage, verify every response
+boundary and length, and record a SHA-256 for each tensor. Without that
+authorization, stop at the metadata-only boundary.
 
 ## Blockers and limitations
 
@@ -256,6 +277,9 @@ metadata alone. Do not request tensor payloads without separate authorization.
 - E004 now validates config, index, and stored header shapes/dtypes/offsets.
   Stored U8 shapes describe packed bytes; they do not establish logical NVFP4
   shapes, runtime strides, framework views, or scale-layout semantics.
+- The acquisition plan bounds the next transfer at 311,427,192 bytes but does
+  not authorize it. Upstream provides whole-shard LFS hashes, not per-tensor
+  hashes; an authorized acquisition must record local hashes for every range.
 - The model card documents TensorRT-LLM on B200, not vLLM/FlashInfer on RTX
   5080. Runtime support and actual kernel identity therefore remain unknown.
 - The E002 manifest pins the clean implementation commit rather than the later
@@ -265,8 +289,8 @@ metadata alone. Do not request tensor payloads without separate authorization.
 
 ## Working-tree expectation
 
-Keep verified E004 header work committed and pushed on the focused
-`exp/e004-safetensors-headers` branch. The configured research closeout workflow
-authorizes commit and push for verified in-scope changes only; opening a PR,
-merging, downloading model weights, or publishing external results still
-requires separate explicit authorization.
+Keep verified E004 acquisition-plan work on the focused
+`exp/e004-acquisition-plan` branch. Use the configured research closeout
+workflow for commit, push, PR creation, and merge. Downloading tensor payloads,
+deleting branches, or publishing external results still requires separate
+explicit authorization.
