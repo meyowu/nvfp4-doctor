@@ -11,16 +11,22 @@ Primary question: given a real NVFP4 checkpoint, real layer activations, and a p
 In scope:
 
 - One GPU: RTX 5080 (`sm_120`), WSL2/Ubuntu as the initial environment.
-- Dense NVFP4 linear/GEMM only.
-- Synthetic fixtures, then one captured real layer, then a small set of real shapes.
+- Dense NVFP4 linear/GEMM, followed by bounded model-level validation on Qwen3-8B.
+- Synthetic fixtures, representative Qwen3-8B layers, then an end-to-end checkpoint study.
 - Format decoding, capture/replay, backend identity, a high-precision reference, contracts, fault injection, minimization, and JSON/Markdown reports.
 - vLLM and FlashInfer adapters only after framework-independent core logic is tested.
+- `nvidia/Qwen3-8B-NVFP4` as the primary model checkpoint, its upstream
+  high-precision Qwen3-8B checkpoint as the clean reference, and one independently
+  produced Qwen3-8B NVFP4 checkpoint as an optional cross-toolchain comparison.
 
 Out of scope unless a gate explicitly changes it:
 
-- MoE, attention, KV cache, multi-GPU, training, CPU offload, a web dashboard, a new optimized CUDA kernel, or production-safe dispatch.
+- MoE, attention-kernel correctness, KV-cache quantization, multi-GPU, training,
+  CPU offload, a web dashboard, a new optimized CUDA kernel, or production-safe dispatch.
 - Benchmark leaderboard work without a falsifiable research question.
 - Uploading model weights, private data, full activations, or large traces to Git.
+- Generalizing model-level findings beyond the tested Qwen3 checkpoints, layers,
+  prompts, datasets, revisions, and execution backends.
 
 ## Expected repository shape
 
@@ -88,6 +94,13 @@ Distinguish observation, inference, and claim. Preserve failed experiments and n
 
 Release evidence must rebuild from an empty pinned environment. Keep a stable environment and exploratory environments separate. Lock dependencies and record wheel sources; never replace a stable result with an unpinned nightly result.
 
+For model-level experiments, pin both model and dataset revisions. Never load the
+high-precision and NVFP4 Qwen3-8B checkpoints on the 16 GB test GPU at the same
+time. Run them separately, retain only the minimal selected outputs needed for
+comparison, move those outputs off the GPU promptly, and reference large local
+artifacts by content hash. Treat prompts and datasets as experimental inputs,
+not as evidence by themselves.
+
 ## Testing requirements
 
 Before changing code:
@@ -116,17 +129,37 @@ Allowed language is proportional to evidence: “observed,” “consistent with
 
 Always disclose hardware, software versions, shapes, model/revision, backend evidence, repetitions, uncertainty, and limitations. A clean run means only that no tested contract failed. FP64/reference output is not automatically the specification. A backend difference becomes an upstream bug candidate only after independent oracle validation, repeatability, backend identity evidence, and minimization.
 
+At model level, report layer-output error separately from final-logit and task
+metrics. Do not infer user-visible quality from one prompt, equate token
+disagreement with semantic failure, or attribute a perplexity change to a kernel
+bug until quantization error and contract/kernel error have been separated.
+
 Do not open an upstream issue merely to meet a milestone. An issue/PR needs a minimal public reproducer, pinned environment, expected-versus-actual behavior, artifact hashes, impact, bisect evidence when feasible, and neutral wording. Otherwise publish a negative result or limitation.
 
 ## Eight-week roadmap and gates
 
 - **Week 1 — Foundation / Gate 0:** public skeleton, frozen scope, environment manifest, synthetic CUDA sanity check. Go only if `sm_120` is visible and a pinned Linux environment can run repeatably.
 - **Week 2 — Format oracle / Gate 1:** exhaustive E2M1, E4M3 scale handling, packing/layout fixtures, exact scale reconstruction. Pivot if public format semantics cannot be independently established.
-- **Week 3 — Capture and replay / Gate 2:** capture one real dense layer without losing metadata; replay it deterministically; identify actual backend/kernel. Pivot to synthetic plus checkpoint-only analysis if capture is not reliable.
+- **Week 3 — Qwen3 layer capture and replay / Gate 2:** pin and inspect
+  `nvidia/Qwen3-8B-NVFP4`; capture representative `q_proj`, `o_proj`, `gate_proj`,
+  `up_proj`, and `down_proj` cases without losing metadata; replay them
+  deterministically; identify the actual backend/kernel. Pivot to synthetic plus
+  checkpoint-only analysis if capture is not reliable or the checkpoint cannot
+  execute within the 16 GB GPU boundary.
 - **Week 4 — Numerical reference / Gate 3:** tiled high-precision reference, metrics, clean-run envelope across boundary shapes. Stop correctness claims if the oracle cannot pass independent golden tests.
-- **Week 5 — Contracts and positive controls / Gate 4:** structural and metamorphic suite plus injected-fault corpus. Go only if relevant faults are detected with acceptable false alarms.
+- **Week 5 — Contracts and model-level positive controls / Gate 4:** structural
+  and metamorphic suite plus deterministic scale, packing, layout, and dispatch
+  faults applied to representative Qwen3 layers. Measure layer outputs, final
+  logits, top-k agreement, KL divergence, and perplexity on a fixed evaluation
+  slice. Go only if relevant faults are detected with acceptable false alarms and
+  at least one silent fault has a reproducible downstream signature.
 - **Week 6 — Backend matrix and minimization / Gate 5:** compare at least two genuinely distinct implementations if available, prove no silent fallback, shrink failures. If only one real NVFP4 backend exists on `sm_120`, pivot the comparative study to FP8 or retain NVFP4 as a single-backend diagnostic tool.
-- **Week 7 — Real checkpoint study / Gate 6:** multiple layer/shape families, repeatability, threats-to-validity analysis, upstream-quality reproducer or documented negative result.
+- **Week 7 — End-to-end checkpoint study / Gate 6:** compare the clean NVIDIA
+  Qwen3-8B NVFP4 checkpoint with its high-precision reference across fixed inputs;
+  optionally compare one independently produced Qwen3-8B NVFP4 checkpoint.
+  Measure diagnostic accuracy, layer localization, false-positive rate, runtime
+  overhead, memory, and latency. Produce an upstream-quality reproducer or a
+  documented negative result.
 - **Week 8 — Release / Gate 7:** clean-room reproduction, tagged release, technical report, limitations, demo, and explicit Go/Pivot/Stop decision for phase two.
 
 Global stop/pivot triggers: unverifiable backend identity; an oracle that depends on the candidate implementation; no detection advantage over simple baselines after positive controls; results that cannot be reproduced after three disciplined attempts; or a scope that requires unavailable hardware. Stopping or narrowing is a valid research result.
