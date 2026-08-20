@@ -1,0 +1,67 @@
+{
+  "cutlass_revision": {
+    "commit": "e6233cbac5d7c7a865c19c91cd684ceece19513c",
+    "tag": "v4.6.0"
+  },
+  "retrieved_at_utc": "2026-08-20T08:20:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "claims_used": [
+        "E2M1 has one sign, two exponent, and one mantissa bit",
+        "hierarchical reconstruction is E2M1 times block scale times global scale",
+        "one local E4M3 scale covers 16 consecutive elements",
+        "the global scale is FP32 and the local scale is E4M3"
+      ],
+      "id": "transformer-engine-nvfp4-2.16",
+      "publisher": "NVIDIA",
+      "url": "https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.16/user-guide/features/low_precision_training/nvfp4/nvfp4.html"
+    },
+    {
+      "claims_used": [
+        "E2M1 is a packed four-bit format without infinity or NaN",
+        "UE4M3 is a seven-bit unsigned format in a byte with a zero-padded MSB",
+        "UE4M3 code 0x7f is NaN",
+        "NVFP4 block-scaled MMA uses E2M1, UE4M3, and block16"
+      ],
+      "id": "ptx-isa-9.2",
+      "publisher": "NVIDIA",
+      "url": "https://docs.nvidia.com/cuda/archive/13.2.0/parallel-thread-execution/index.html"
+    },
+    {
+      "claims_used": [
+        "E2M1 exponent bias is one and its finite magnitudes are 0, 0.5, 1, 1.5, 2, 3, 4, and 6",
+        "NVFP4 pairs E2M1 values with UE4M3 scale factors"
+      ],
+      "id": "cutlass-float-subbyte-v4.6.0",
+      "publisher": "NVIDIA",
+      "url": "https://github.com/NVIDIA/cutlass/blob/e6233cbac5d7c7a865c19c91cd684ceece19513c/include/cutlass/float_subbyte.h"
+    },
+    {
+      "claims_used": [
+        "UE4M3 has exponent bias seven, finite range 0 through 448, and NaN at 0x7f"
+      ],
+      "id": "cutlass-float8-v4.6.0",
+      "publisher": "NVIDIA",
+      "url": "https://github.com/NVIDIA/cutlass/blob/e6233cbac5d7c7a865c19c91cd684ceece19513c/include/cutlass/float8.h"
+    },
+    {
+      "claims_used": [
+        "CUTLASS logical sub-byte element zero occupies the least-significant bits of its storage unit"
+      ],
+      "id": "cutlass-subbyte-reference-v4.6.0",
+      "publisher": "NVIDIA",
+      "url": "https://github.com/NVIDIA/cutlass/blob/e6233cbac5d7c7a865c19c91cd684ceece19513c/include/cutlass/subbyte_reference.h"
+    },
+    {
+      "claims_used": [
+        "the scale-factor layout uses 512-byte atoms containing 128 rows by four scale columns",
+        "the atom order begins M0, M32, M64, M96 for each group of four scales",
+        "larger tensors arrange basic blocks in K-major order"
+      ],
+      "id": "cutlass-blackwell-layout-v4.6.0",
+      "publisher": "NVIDIA",
+      "url": "https://github.com/NVIDIA/cutlass/blob/e6233cbac5d7c7a865c19c91cd684ceece19513c/media/docs/cpp/blackwell_functionality.md"
+    }
+  ]
+}

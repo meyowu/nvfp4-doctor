@@ -1,0 +1,79 @@
+{
+  "artifacts": [
+    {
+      "kind": "gate1-results",
+      "path": "experiments/E002-format-oracle/results.json",
+      "sha256": "d8681af9b7d75e283f3255ea38fc40f3abb27d4f049added3578dea2fd7fec6c"
+    },
+    {
+      "kind": "golden-fixture",
+      "path": "tests/fixtures/e002_format_oracle_v1.json",
+      "sha256": "06bce06630a946aedda9b672b6ee7a355cc96eade7fbd33bd9652c7419946c3f"
+    },
+    {
+      "kind": "public-source-record",
+      "path": "experiments/E002-format-oracle/sources.json",
+      "sha256": "07bb8a7f7f1c1e53ef53408ad04d9ff3f96c7985c99966c3f0d117c95b89d0be"
+    }
+  ],
+  "candidate_adapter": {
+    "flashinfer": "0.6.16.post3",
+    "observed_kernel": null,
+    "reported_backend": null,
+    "requested_backend": "cuda",
+    "requested_layouts": [
+      "linear",
+      "cutlass_128x4"
+    ],
+    "torch": "2.13.0+cu132"
+  },
+  "captured_at_utc": "2026-08-20T15:33:49.421476Z",
+  "command": {
+    "argv": [
+      "python",
+      "scripts/run_e002_gate1.py"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor",
+    "seed": 0
+  },
+  "experiment_id": "E002-format-oracle",
+  "git": {
+    "branch": "exp/e002-format-oracle",
+    "commit": "f0be51513892d8b10968090fb081a8dafbee0b89",
+    "dirty": false
+  },
+  "gpu": {
+    "compute_capability": "12.0",
+    "name": "NVIDIA GeForce RTX 5080",
+    "nvidia_smi": "NVIDIA GeForce RTX 5080, 595.95, 16303 MiB, 12.0"
+  },
+  "model": {
+    "revision": null,
+    "status": "not_applicable_synthetic_format_fixture"
+  },
+  "oracle": {
+    "public_sources": [
+      "transformer-engine-nvfp4-2.16",
+      "ptx-isa-9.2",
+      "cutlass-float-subbyte-v4.6.0",
+      "cutlass-float8-v4.6.0",
+      "cutlass-subbyte-reference-v4.6.0",
+      "cutlass-blackwell-layout-v4.6.0"
+    ],
+    "source_bundle_sha256": "88f5b9afaa4f2d83b25b298d0d981026740b810a928b3f1f037e312e00c12154"
+  },
+  "platform": {
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "os": "Linux",
+    "python": "3.12.3",
+    "wsl_distro": "Ubuntu-24.04",
+    "wsl_version": "WSL version: 2.7.12.0"
+  },
+  "schema_version": 1,
+  "software": {
+    "cuda_runtime": "13.2.75",
+    "cuda_toolkit": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:53:34_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+    "uv": "uv 0.12.5 (x86_64-unknown-linux-gnu)",
+    "vllm": "0.27.1"
+  }
+}
