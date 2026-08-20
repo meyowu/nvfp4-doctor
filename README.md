@@ -11,14 +11,17 @@ correctness claims.
 
 ## Current status
 
-Week 1 / Gate 0 is complete with a `go` decision. On the pinned RTX 5080 / WSL2
-environment, three FlashInfer CUTLASS NVFP4 quantize-and-GEMM smoke runs
-completed on `sm_120`. Nsight Systems attributed the same target kernel set to
-the `e001:nvfp4_gemm` range in all three runs, and the bounded classifier did
-not detect a known fallback signature in that range.
+Week 2 / Gate 1 is complete with a `go` decision. The repository now contains a
+CPU-only oracle for E2M1, UE4M3 scales, packed values, CUTLASS 128x4 scale
+layout, padding, scalar global scales, and exact hierarchical reconstruction.
+Its semantics are pinned to versioned public NVIDIA sources and hand-authored
+fixtures rather than the candidate FlashInfer implementation.
 
-This establishes repeatable environment and dispatch evidence for the tested
-matrix only. It is not a format-correctness proof or benchmark result.
+Three constructed RTX 5080 differential cases matched FlashInfer's packed and
+scale bytes exactly, including boundary padding and multi-atom layouts. This
+supports the declared dense row-wise block-16 format contract only. It does not
+establish arbitrary quantization rounding, GEMM correctness, model quality, or
+performance.
 
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
@@ -48,6 +51,7 @@ uv pip install -r requirements-dev.txt
 source ./activate-nvfp4-lab.sh
 python smoke_nvfp4.py
 ./scripts/run_e001_week1.sh 3
+PYTHONPATH=src python scripts/run_e002_gate1.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup

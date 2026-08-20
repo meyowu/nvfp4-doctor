@@ -58,9 +58,33 @@ The first JIT build exceeded available memory under parallel compilation. The
 verified workaround limits build parallelism with `MAX_JOBS=1` and
 `FLASHINFER_NVCC_THREADS=1`; `activate-nvfp4-lab.sh` exports both variables.
 
+## Gate 1 observation
+
+The independent Gate 1 oracle is CPU-only and does not import PyTorch,
+FlashInfer, vLLM, or CUDA. It exhaustively checks all 16 E2M1 payloads and all
+127 finite UE4M3 scale codes. Hand-authored fixtures cover packing, signed zero,
+subnormal and maximum scales, CUTLASS 128x4 offsets, physical padding, and a
+hierarchical reconstruction with an explicit scalar FP32 global scale.
+
+Hypothesis properties generated reversible packed values and scale layouts over
+boundary shapes. A pinned FlashInfer differential then exercised `(128, 64)`,
+`(17, 80)`, and `(129, 80)` BF16 matrices at three global scales. Packed bytes,
+linear scale bytes, and CUTLASS 128x4 scale bytes matched the independent oracle
+exactly in all cases; reconstructed inputs had maximum absolute error `0.0`.
+The largest and multi-atom cases each covered all 127 finite UE4M3 codes.
+
+The final verification reported 58 CPU tests plus 210 subtests passing, 23
+Mypy source files clean, 47 Python files formatted, and all 207 installed
+packages compatible.
+
+These observations support only the declared dense row-wise block-16 format
+contract. They do not establish arbitrary quantizer rounding, GEMM numerical
+correctness, model-level quality, or support for adapter-specific layouts not
+listed in the contract.
+
 ## Next gate
 
-Gate 0 passed with a `go` decision. Gate 1 is the independent format oracle:
-exhaustive E2M1 decoding, E4M3 scale handling, packing and layout golden
-fixtures, and exact scale-index reconstruction. No Week 1 observation is a
-claim that those format semantics are correct.
+Gate 1 passed with a `go` decision. The next bounded experiment is deterministic
+synthetic fault injection against the independent oracle, followed by
+metadata-preserving Qwen3 layer capture for Gate 2. No Gate 1 observation is a
+claim about GEMM accumulation or model outputs.

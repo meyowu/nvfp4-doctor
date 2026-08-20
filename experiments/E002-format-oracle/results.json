@@ -1,0 +1,246 @@
+{
+  "adapter_differential": "pass",
+  "claim_boundary": "Exact agreement applies only to the constructed, exactly representable row-wise block-16 cases and the pinned FlashInfer layouts; it does not establish GEMM correctness or a numerical-error envelope.",
+  "decision": "go",
+  "experiment_id": "E002-format-oracle",
+  "fixture_checks": {
+    "e2m1_payloads_checked": 16,
+    "finite_ue4m3_codes_checked": 127,
+    "golden_layout_offsets_checked": 11,
+    "golden_packed_bytes_checked": 8,
+    "hierarchical_reconstruction": "exact",
+    "status": "pass"
+  },
+  "gpu_cases": [
+    {
+      "checks": {
+        "cutlass_128x4_scales_exact": true,
+        "hierarchical_reconstruction_exact": true,
+        "linear_packed_values_exact": true,
+        "linear_scales_exact": true,
+        "swizzled_packed_values_exact": true
+      },
+      "columns": 64,
+      "global_scale": 1.0,
+      "global_scale_metadata": {
+        "dtype": "float32",
+        "logical_shape": [],
+        "value": 1.0
+      },
+      "inverse_global_scale_passed_to_flashinfer": 1.0,
+      "logical_scale_shape": [
+        128,
+        4
+      ],
+      "max_abs_reconstruction_error": 0.0,
+      "packed_sha256": "989f20ab107d56204836e5cf674557ec849788479bcfb0125eaeea050f62724e",
+      "physical_scale_shape": [
+        128,
+        4
+      ],
+      "rows": 128,
+      "scale_codes_covered": 127,
+      "swizzled_scale_sha256": "d4fd03615d0c95db3e19c04f719cf6970b0228b04e05079b25fdf50845d5d53f",
+      "tensors": {
+        "input": {
+          "dtype": "torch.bfloat16",
+          "shape": [
+            128,
+            64
+          ],
+          "stride": [
+            64,
+            1
+          ]
+        },
+        "packed": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            128,
+            32
+          ],
+          "stride": [
+            32,
+            1
+          ]
+        },
+        "scale_linear": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            128,
+            4
+          ],
+          "stride": [
+            4,
+            1
+          ]
+        },
+        "scale_swizzled": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            128,
+            4
+          ],
+          "stride": [
+            4,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "checks": {
+        "cutlass_128x4_scales_exact": true,
+        "hierarchical_reconstruction_exact": true,
+        "linear_packed_values_exact": true,
+        "linear_scales_exact": true,
+        "swizzled_packed_values_exact": true
+      },
+      "columns": 80,
+      "global_scale": 0.5,
+      "global_scale_metadata": {
+        "dtype": "float32",
+        "logical_shape": [],
+        "value": 0.5
+      },
+      "inverse_global_scale_passed_to_flashinfer": 2.0,
+      "logical_scale_shape": [
+        17,
+        5
+      ],
+      "max_abs_reconstruction_error": 0.0,
+      "packed_sha256": "fd103b5eb0f1e53ef119926e59fbc47dcbceb2001b573ac2138ee922f8d943ce",
+      "physical_scale_shape": [
+        128,
+        8
+      ],
+      "rows": 17,
+      "scale_codes_covered": 85,
+      "swizzled_scale_sha256": "c0a97b07bc845f698520b115335b1afe86648b0943c35b1151d2a1801bb0a5bc",
+      "tensors": {
+        "input": {
+          "dtype": "torch.bfloat16",
+          "shape": [
+            17,
+            80
+          ],
+          "stride": [
+            80,
+            1
+          ]
+        },
+        "packed": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            17,
+            40
+          ],
+          "stride": [
+            40,
+            1
+          ]
+        },
+        "scale_linear": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            17,
+            5
+          ],
+          "stride": [
+            5,
+            1
+          ]
+        },
+        "scale_swizzled": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            128,
+            8
+          ],
+          "stride": [
+            8,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "checks": {
+        "cutlass_128x4_scales_exact": true,
+        "hierarchical_reconstruction_exact": true,
+        "linear_packed_values_exact": true,
+        "linear_scales_exact": true,
+        "swizzled_packed_values_exact": true
+      },
+      "columns": 80,
+      "global_scale": 2.0,
+      "global_scale_metadata": {
+        "dtype": "float32",
+        "logical_shape": [],
+        "value": 2.0
+      },
+      "inverse_global_scale_passed_to_flashinfer": 0.5,
+      "logical_scale_shape": [
+        129,
+        5
+      ],
+      "max_abs_reconstruction_error": 0.0,
+      "packed_sha256": "4ad38056d8855f62c3018258d7ea8bfb9a1165ba9ea085afd63c0212a7faddc9",
+      "physical_scale_shape": [
+        256,
+        8
+      ],
+      "rows": 129,
+      "scale_codes_covered": 127,
+      "swizzled_scale_sha256": "f2ec0ba20ec70ec3faba53cc2143ac7ff6dc2aa33e567ef959ae6b2b9909658c",
+      "tensors": {
+        "input": {
+          "dtype": "torch.bfloat16",
+          "shape": [
+            129,
+            80
+          ],
+          "stride": [
+            80,
+            1
+          ]
+        },
+        "packed": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            129,
+            40
+          ],
+          "stride": [
+            40,
+            1
+          ]
+        },
+        "scale_linear": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            129,
+            5
+          ],
+          "stride": [
+            5,
+            1
+          ]
+        },
+        "scale_swizzled": {
+          "dtype": "torch.uint8",
+          "physical_shape": [
+            256,
+            8
+          ],
+          "stride": [
+            8,
+            1
+          ]
+        }
+      }
+    }
+  ],
+  "oracle_independent_of_candidate": true,
+  "schema_version": 1
+}
