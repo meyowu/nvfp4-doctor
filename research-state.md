@@ -5,11 +5,11 @@ only from observed repository, environment, test, and experiment evidence.
 
 ## Current handoff
 
-- Current experiment: `E001-kernel-identity`
-- Current gate: `Gate 0 — Foundation`
-- Status: `in_progress`
-- Decision: `continue`
-- Last verified commit: `5885d04d467af8d99aa76b1d24fa70e03ae66746`
+- Current experiment: `E002-format-oracle`
+- Current gate: `Gate 1 — Format Oracle`
+- Status: `not_started`
+- Decision: `go`
+- Verified baseline commit: `77ca69b3eac94f8dc9f92e1d69653c90f26ec473`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Hardware boundary: one RTX 5080 (`sm_120`, 16 GB)
 
@@ -20,7 +20,7 @@ only from observed repository, environment, test, and experiment evidence.
   output at shape `(16, 128)`.
 - Nsight Systems 2026.1.3 produced a retained, ignored profiler report for the
   smoke run with SHA-256
-  `d9d5086200b4bebcc51df806e7ccfa933b59baf40906fd385f3bd0e681aea1c5`.
+  `62fecf2f03911cd092c32c539c80145bc74a97711fbbe4d7f64d0b9e7507df86`.
 - The initial `src/nvfp4_doctor` package and CPU test boundaries exist.
 - Project code, environment, caches, models, artifacts, and profiler outputs now
   have a canonical project-local directory layout.
@@ -44,43 +44,63 @@ only from observed repository, environment, test, and experiment evidence.
 - The project activation script now exports `LIBRARY_PATH` for package-local
   CUDA runtime and WSL driver libraries; this repaired an observed JIT linker
   failure for `-lcudart` and `-lcuda`.
+- The synthetic workload now uses separate NVTX ranges for quantization, NVFP4
+  GEMM, and the unquantized reference, preventing reference cuBLAS kernels from
+  contaminating the fallback assessment.
+- The E001 classifier returns `not_detected` only when the expected SM120
+  block-scaled CUTLASS E2M1 signature is present and no known fallback signature
+  occurs inside `e001:nvfp4_gemm`; unfamiliar evidence remains `unknown`.
+- Three controlled runs each completed with identical numerical observations,
+  23 unique observed kernel names, fallback status `not_detected`, and the same
+  four-kernel target-range set hash
+  `98aa16a78e2cdb3d74f27a0568bc2ed9f35de0e8584936717180c5e9c76ef10a`.
+- The generated repeatability summary records stable environment and target
+  kernel evidence, complete profiler hashes, `gate0_repeatability=pass`, and a
+  `go` decision.
+- The repository-tracked representative manifest records inputs, packed FP4 storage,
+  block-scale logical/physical layouts, output metadata, environment, command,
+  observed kernels, and the retained report hash.
+- CUTLASS DSL 4.6 requires `nvidia-cuda-nvdisasm>=13.3,<14`; pinning the
+  independent inspection tool to 13.3.73 removed four package-metadata
+  incompatibilities while leaving the CUDA 13.2 compiler/runtime pins intact.
 
-These observations establish kernel identity for one trace. They do not yet
-establish absence of fallback, repeatability, or Gate 0 completion.
+These observations complete Gate 0 for the pinned synthetic matrix. They do not
+establish format correctness or exclude fallback modes unknown to the bounded
+classifier.
 
 ## Last verification
 
 ```bash
 bash -n activate-nvfp4-lab.sh
+.venv/bin/ruff format --check src tests scripts smoke_nvfp4.py
+.venv/bin/ruff check src tests scripts smoke_nvfp4.py
+PYTHONPATH=src .venv/bin/mypy src
 PYTHONPATH=src .venv/bin/python -m pytest -q
-.venv/bin/python -m compileall -q src tests
-PYTHONPATH=src .venv/bin/python smoke_nvfp4.py
-PYTHONPATH=src nsys profile --trace=cuda,nvtx,osrt \
-  --output=.local/profiles/e001-smoke --force-overwrite=true \
-  .venv/bin/python smoke_nvfp4.py
-PYTHONPATH=src .venv/bin/python scripts/attach_e001_nsys.py
+.venv/bin/python -m compileall -q src tests scripts
+uv pip check --python .venv/bin/python
+./scripts/run_e001_week1.sh 3
 ```
 
-Observed result: twenty-one CPU tests plus four subtests passed, Python
-compilation completed, both smoke runs printed `NVFP4_CUTLASS_OK`, and 18
-unique kernel names were attached to the ignored manifest. Ruff and mypy were
-not installed, so lint and static type checks were explicitly skipped rather
-than reported as passing.
+Observed result: thirty-four CPU tests plus eleven subtests passed and Python
+compilation completed. All three profiled runs printed `NVFP4_CUTLASS_OK`; the
+generated summary reported three repetitions, stable environment and target
+kernel sets, complete profiler evidence, repeatability `pass`, and decision
+`go`. Ruff 0.16.3 formatting and lint checks passed, and Mypy 2.3.1 reported no
+issues in seventeen source files. `uv pip check` found all 205 installed
+packages compatible.
 
 ## Next action
 
-Define and test a deterministic backend/fallback classifier whose positive and
-negative rules use independent evidence and explicitly document what kernel
-names cannot prove. Then repeat the profiled run before considering Gate 0.
+Create E002 and begin the independent format oracle with a public-semantics
+source record and exhaustive hand-authored E2M1 decode fixtures.
 
 ## Blockers and limitations
 
-- Fallback detection is not implemented.
-- Only one successful profiler capture has been structured; repeatability is
-  not established.
+- The fallback classifier recognizes only documented E001 signatures; unknown
+  implementations intentionally remain `unknown`.
+- Schema v1 cannot represent zero-dimensional global-scale tensor metadata
+  without inventing a logical shape; Gate 1 must address this explicitly.
 - The migration backup and pre-merge WSL stash remain local recovery artifacts.
-- Profiler extraction, tests, experiment notes, and the activation-path repair
-  are uncommitted on branch `research/e001-profiler-evidence`.
 
 ## Working-tree expectation
 
