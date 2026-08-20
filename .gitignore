@@ -16,3 +16,5 @@ models/
 .env
 .env.*
 !.env.example
+.local/
+.migration-backup/

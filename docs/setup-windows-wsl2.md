@@ -31,16 +31,16 @@ sudo apt install -y build-essential git curl ca-certificates pkg-config ninja-bu
 nvidia-smi
 ```
 
-Keep repositories under the Linux filesystem, for example `~/src`, rather than
-under `/mnt/c`.
+Keep repositories under the Linux filesystem, for example `~/projects`, rather
+than under `/mnt/c`. Use one subdirectory per project.
 
 ## 3. Install uv and Python 3.12
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source "$HOME/.local/bin/env"
-mkdir -p ~/src
-cd ~/src
+mkdir -p ~/projects
+cd ~/projects
 git clone https://github.com/meyowu/nvfp4-doctor.git
 cd nvfp4-doctor
 uv python install 3.12
