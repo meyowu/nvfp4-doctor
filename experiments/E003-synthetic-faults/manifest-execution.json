@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E003-synthetic-faults",
+  "slice": "execution_evidence_faults_v1",
+  "captured_at_utc": "2026-08-20T17:09:18.555358Z",
+  "command": {
+    "argv": [
+      "python",
+      "scripts/run_e003_execution_faults.py"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor",
+    "seed": 0
+  },
+  "git": {
+    "branch": "exp/e003-synthetic-faults",
+    "commit": "4c7cab930f74c7a7f5457b94d1ffc7bf642191cb",
+    "dirty": false
+  },
+  "platform": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "software": {
+    "torch": "2.13.0+cu132",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3"
+  },
+  "model": {
+    "status": "not_applicable_synthetic_execution_evidence"
+  },
+  "execution_backend": {
+    "requested": "cpu_oracle",
+    "reported": "cpu_oracle",
+    "observed_kernel": null
+  },
+  "synthetic_backend_baseline": {
+    "requested": "cutlass",
+    "reported": "cutlass",
+    "observed_kernels": [
+      "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+    ],
+    "fallback_status": "not_detected"
+  },
+  "source_bundle_sha256": "0a9e5587e74205092338448d151b3ce80ed6c03003b5d6ebddebc72c984b1f23",
+  "artifacts": [
+    {
+      "kind": "execution-evidence-fault-results",
+      "path": "experiments/E003-synthetic-faults/results-execution.json",
+      "sha256": "0ec8d156cda6cd9fbce2d54bd3d439a15fa3adc7fe90369120d6ccb5ef4efab1"
+    }
+  ]
+}

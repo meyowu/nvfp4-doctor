@@ -82,9 +82,44 @@ contract. They do not establish arbitrary quantizer rounding, GEMM numerical
 correctness, model-level quality, or support for adapter-specific layouts not
 listed in the contract.
 
+## E003 format-fault slice observation
+
+The first E003 slice defines six exact contracts with explicit domains,
+preconditions, invariants, mismatch metrics, zero-mismatch thresholds, and
+limitations. It injects deterministic, reversible, `synthetic` positive
+controls for packed-nibble order, scale-index shift, block-scale reversal,
+global scale, scale-layout metadata, and physical padding.
+
+Three clean CPU artifacts produced 18 passing contract evaluations. All six
+faults were detected, and every observed failed-contract set exactly matched
+its declared expected set. Clean false rejects, fault false accepts,
+localization failures, and reversibility failures were all zero.
+
+The padding control changed one of 1,403 physical padding bytes in a `(129, 80)`
+CUTLASS-layout artifact. The scale-padding contract detected it while logical
+reconstruction remained unchanged. This is evidence for the bounded synthetic
+matrix only, not a frequency estimate for real faults.
+
+The second E003 slice separates six exact evidence contracts for recorded
+stride, row-major contiguity, requested backend, reported backend, observed
+kernel tuple, and bounded fallback status. One clean snapshot passed every
+contract. Two stride faults and three backend-identity faults were all detected
+with exact failed-contract sets and zero false accepts, clean false rejects,
+localization failures, or reversibility failures.
+
+Changing only the reported backend left the requested-backend and
+observed-kernel contracts passing. The observed fallback kernel was an explicit
+synthetic input, not a profiler observation from this run; real dispatch
+identity still requires target-range profiler evidence.
+
+The final CPU verification for these slices reported 77 tests plus 248 subtests
+passing, 27 Mypy source files clean, 56 Python files formatted, and all 207
+installed packages compatible. No GPU integration was required for this
+CPU-only work.
+
 ## Next gate
 
-Gate 1 passed with a `go` decision. The next bounded experiment is deterministic
-synthetic fault injection against the independent oracle, followed by
-metadata-preserving Qwen3 layer capture for Gate 2. No Gate 1 observation is a
-claim about GEMM accumulation or model outputs.
+Gate 1 passed with a `go` decision. E003 remains in progress with a `continue`
+decision. The next bounded slice is deterministic packed-value block, row, and
+column permutations plus a held-out clean/fault matrix. No E003 observation is
+a claim about real dispatch, GEMM accumulation, or model outputs.

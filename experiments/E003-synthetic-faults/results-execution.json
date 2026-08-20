@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E003-synthetic-faults",
+  "slice": "execution_evidence_faults_v1",
+  "execution_device": "cpu",
+  "seed": 0,
+  "clean_contract_evaluations": 6,
+  "clean_false_rejects": 0,
+  "fault_cases": [
+    {
+      "fault_kind": "stride_axis_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "rank": 2
+      },
+      "expected_failed_contracts": [
+        "tensor_contiguity",
+        "tensor_stride"
+      ],
+      "observed_failed_contracts": [
+        "tensor_contiguity",
+        "tensor_stride"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_evidence": true,
+      "tensor": {
+        "clean_stride": [
+          8,
+          1
+        ],
+        "faulted_stride": [
+          1,
+          8
+        ]
+      },
+      "backend": {
+        "clean": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        },
+        "faulted": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        }
+      },
+      "contract_outcomes": [
+        {
+          "contract_id": "tensor_stride",
+          "passed": false,
+          "mismatch_count": 2,
+          "threshold": 0,
+          "details": "exact recorded-stride comparison"
+        },
+        {
+          "contract_id": "tensor_contiguity",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "clean=True, candidate=False"
+        },
+        {
+          "contract_id": "requested_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "requested format/backend comparison"
+        },
+        {
+          "contract_id": "reported_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "reported adapter identity comparison"
+        },
+        {
+          "contract_id": "observed_kernels",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "observed kernel tuple comparison without backend inference"
+        },
+        {
+          "contract_id": "fallback_status",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "bounded fallback-status comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "stride_gap",
+      "label": "synthetic",
+      "parameters": {
+        "gap": 8
+      },
+      "expected_failed_contracts": [
+        "tensor_contiguity",
+        "tensor_stride"
+      ],
+      "observed_failed_contracts": [
+        "tensor_contiguity",
+        "tensor_stride"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_evidence": true,
+      "tensor": {
+        "clean_stride": [
+          8,
+          1
+        ],
+        "faulted_stride": [
+          16,
+          1
+        ]
+      },
+      "backend": {
+        "clean": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        },
+        "faulted": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        }
+      },
+      "contract_outcomes": [
+        {
+          "contract_id": "tensor_stride",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "exact recorded-stride comparison"
+        },
+        {
+          "contract_id": "tensor_contiguity",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "clean=True, candidate=False"
+        },
+        {
+          "contract_id": "requested_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "requested format/backend comparison"
+        },
+        {
+          "contract_id": "reported_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "reported adapter identity comparison"
+        },
+        {
+          "contract_id": "observed_kernels",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "observed kernel tuple comparison without backend inference"
+        },
+        {
+          "contract_id": "fallback_status",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "bounded fallback-status comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "requested_backend_mismatch",
+      "label": "synthetic",
+      "parameters": {
+        "backend": "cublas"
+      },
+      "expected_failed_contracts": [
+        "requested_backend"
+      ],
+      "observed_failed_contracts": [
+        "requested_backend"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_evidence": true,
+      "tensor": {
+        "clean_stride": [
+          8,
+          1
+        ],
+        "faulted_stride": [
+          8,
+          1
+        ]
+      },
+      "backend": {
+        "clean": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        },
+        "faulted": {
+          "requested": "cublas",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        }
+      },
+      "contract_outcomes": [
+        {
+          "contract_id": "tensor_stride",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact recorded-stride comparison"
+        },
+        {
+          "contract_id": "tensor_contiguity",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "clean=True, candidate=True"
+        },
+        {
+          "contract_id": "requested_backend",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "requested format/backend comparison"
+        },
+        {
+          "contract_id": "reported_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "reported adapter identity comparison"
+        },
+        {
+          "contract_id": "observed_kernels",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "observed kernel tuple comparison without backend inference"
+        },
+        {
+          "contract_id": "fallback_status",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "bounded fallback-status comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "reported_backend_mismatch",
+      "label": "synthetic",
+      "parameters": {
+        "backend": "cublas"
+      },
+      "expected_failed_contracts": [
+        "reported_backend"
+      ],
+      "observed_failed_contracts": [
+        "reported_backend"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_evidence": true,
+      "tensor": {
+        "clean_stride": [
+          8,
+          1
+        ],
+        "faulted_stride": [
+          8,
+          1
+        ]
+      },
+      "backend": {
+        "clean": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        },
+        "faulted": {
+          "requested": "cutlass",
+          "reported": "cublas",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        }
+      },
+      "contract_outcomes": [
+        {
+          "contract_id": "tensor_stride",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact recorded-stride comparison"
+        },
+        {
+          "contract_id": "tensor_contiguity",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "clean=True, candidate=True"
+        },
+        {
+          "contract_id": "requested_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "requested format/backend comparison"
+        },
+        {
+          "contract_id": "reported_backend",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "reported adapter identity comparison"
+        },
+        {
+          "contract_id": "observed_kernels",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "observed kernel tuple comparison without backend inference"
+        },
+        {
+          "contract_id": "fallback_status",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "bounded fallback-status comparison"
+        }
+      ]
+    },
+    {
+      "fault_kind": "observed_fallback_kernel",
+      "label": "synthetic",
+      "parameters": {
+        "kernel": "e003:nvfp4_gemm/cublasGemmEx"
+      },
+      "expected_failed_contracts": [
+        "fallback_status",
+        "observed_kernels"
+      ],
+      "observed_failed_contracts": [
+        "fallback_status",
+        "observed_kernels"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_evidence": true,
+      "tensor": {
+        "clean_stride": [
+          8,
+          1
+        ],
+        "faulted_stride": [
+          8,
+          1
+        ]
+      },
+      "backend": {
+        "clean": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cutlass::device_kernel<MainloopSm120TmaWarpSpecializedBlockScaled,cutlass::float_e2m1_t,SM120_16x8x64_TN_VS>"
+          ],
+          "fallback_status": "not_detected"
+        },
+        "faulted": {
+          "requested": "cutlass",
+          "reported": "cutlass",
+          "observed_kernels": [
+            "e003:nvfp4_gemm/cublasGemmEx"
+          ],
+          "fallback_status": "detected"
+        }
+      },
+      "contract_outcomes": [
+        {
+          "contract_id": "tensor_stride",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact recorded-stride comparison"
+        },
+        {
+          "contract_id": "tensor_contiguity",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "clean=True, candidate=True"
+        },
+        {
+          "contract_id": "requested_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "requested format/backend comparison"
+        },
+        {
+          "contract_id": "reported_backend",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "reported adapter identity comparison"
+        },
+        {
+          "contract_id": "observed_kernels",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "observed kernel tuple comparison without backend inference"
+        },
+        {
+          "contract_id": "fallback_status",
+          "passed": false,
+          "mismatch_count": 1,
+          "threshold": 0,
+          "details": "bounded fallback-status comparison"
+        }
+      ]
+    }
+  ],
+  "faults_injected": 5,
+  "faults_detected": 5,
+  "false_accepts": 0,
+  "localization_failures": 0,
+  "reversibility_failures": 0,
+  "slice_status": "pass",
+  "decision": "continue",
+  "claim_boundary": "Detection and exact localization apply only to five synthetic CPU metadata/evidence controls. Observed kernel strings are explicit synthetic inputs, not profiler observations from this run."
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E003-synthetic-faults",
+  "slice": "format_faults_v1",
+  "captured_at_utc": "2026-08-20T17:08:40.556833Z",
+  "command": {
+    "argv": [
+      "python",
+      "scripts/run_e003_format_faults.py"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor",
+    "seed": 0
+  },
+  "git": {
+    "branch": "exp/e003-synthetic-faults",
+    "commit": "2116fbb5ed76d51119ea79b89da701c25b0ef0d5",
+    "dirty": false
+  },
+  "platform": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "software": {
+    "torch": "2.13.0+cu132",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3"
+  },
+  "model": {
+    "status": "not_applicable_synthetic_format_controls"
+  },
+  "backend": {
+    "requested": "cpu_oracle",
+    "reported": "cpu_oracle",
+    "observed_kernel": null
+  },
+  "source_bundle_sha256": "1029f17f569ee74f509673225ea00977a018adcd5590af08247344a5f2a8bad6",
+  "artifacts": [
+    {
+      "kind": "format-fault-results",
+      "path": "experiments/E003-synthetic-faults/results.json",
+      "sha256": "fd61238e22ea515949ef708ffe145310db6a4a7c40cff8a15dc96fb0003b4757"
+    }
+  ]
+}
