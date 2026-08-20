@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E004-qwen3-layer-capture",
   "slice": "representative_acquisition_plan_v1",
-  "captured_at_utc": "2026-08-20T19:58:50.029939Z",
+  "captured_at_utc": "2026-08-20T20:01:20.476298Z",
   "command": {
     "argv": [
       "python",
@@ -12,8 +12,8 @@
   },
   "git": {
     "branch": "exp/e004-acquisition-plan",
-    "commit": "2f4f6301447dd6f6dc73164d4f30536679bcbb8b",
-    "dirty": true
+    "commit": "76ef175ad885b741068dd21db08149b0902840bd",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",

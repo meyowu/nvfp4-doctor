@@ -16,6 +16,7 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 metadata commit: `68cb4e0328598dd33d3626b0046e704c97ac39b5`
 - Verified E004 header commit: `ee716253c14f0f6b1a8364d2f92253ec01cbe571`
 - Verified E004 acquisition-plan implementation commit: `2f4f6301447dd6f6dc73164d4f30536679bcbb8b`
+- Verified E004 acquisition-plan evidence commit: `76ef175ad885b741068dd21db08149b0902840bd`
 - Active local branch: `exp/e004-acquisition-plan`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
@@ -193,6 +194,11 @@ only from observed repository, environment, test, and experiment evidence.
   ranges.
 - Plan construction executed four header range requests totaling 134,032 bytes
   and no payload requests; payload bytes downloaded remained zero.
+- The acquisition-plan manifest was regenerated from clean evidence commit
+  `76ef175ad885b741068dd21db08149b0902840bd`; it records `dirty=false`, result
+  SHA-256 `c69847d3a8ef8b886bd4904b49e34bcc97cc8e80b6657a8d6d37859068d902c2`,
+  and source-bundle SHA-256
+  `edc9a1efce1c5fa8cec2cdf82b1aecd08272be98f9310485eb85b0abe7ce78d8`.
 
 These observations complete Gate 1 and E003, and support the metadata,
 safetensors-header, and representative acquisition-plan slices of E004. They do
