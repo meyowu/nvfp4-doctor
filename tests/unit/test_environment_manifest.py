@@ -5,7 +5,6 @@ from pathlib import Path
 
 from nvfp4_doctor.env import EnvironmentManifest, ManifestValidationError
 
-
 FIXTURE = Path(__file__).parents[1] / "fixtures" / "e001_manifest_v1.json"
 
 
@@ -43,7 +42,9 @@ class EnvironmentManifestTests(unittest.TestCase):
         data = json.loads(FIXTURE.read_text(encoding="utf-8"))
         data["schema_version"] = 2
 
-        with self.assertRaisesRegex(ManifestValidationError, "unsupported schema_version"):
+        with self.assertRaisesRegex(
+            ManifestValidationError, "unsupported schema_version"
+        ):
             EnvironmentManifest.from_dict(data)
 
     def test_missing_backend_evidence_is_rejected(self) -> None:

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
-from typing import Any, Mapping, Self
-
+from typing import Any, Self
 
 SCHEMA_VERSION = 1
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -95,7 +95,9 @@ class GitFingerprint:
 
     def __post_init__(self) -> None:
         if not _GIT_COMMIT.fullmatch(self.commit):
-            raise ManifestValidationError("git.commit must be a lowercase 40-digit hash")
+            raise ManifestValidationError(
+                "git.commit must be a lowercase 40-digit hash"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,7 +140,9 @@ class BackendEvidence:
         if self.reported_backend is not None:
             _non_empty(self.reported_backend, "backend.reported_backend")
         if any(not kernel.strip() for kernel in self.observed_kernels):
-            raise ManifestValidationError("backend.observed_kernels cannot contain blanks")
+            raise ManifestValidationError(
+                "backend.observed_kernels cannot contain blanks"
+            )
         if self.profiler_artifact_sha256 is not None and not _SHA256.fullmatch(
             self.profiler_artifact_sha256
         ):
@@ -155,7 +159,9 @@ class CommandEvidence:
 
     def __post_init__(self) -> None:
         if not self.argv or any(not value for value in self.argv):
-            raise ManifestValidationError("command.argv must contain non-empty arguments")
+            raise ManifestValidationError(
+                "command.argv must contain non-empty arguments"
+            )
         _non_empty(self.cwd, "command.cwd")
         if self.seed < 0:
             raise ManifestValidationError("command.seed must be non-negative")
@@ -171,7 +177,9 @@ class ArtifactEvidence:
         _non_empty(self.kind, "artifact.kind")
         _non_empty(self.local_path, "artifact.local_path")
         if not _SHA256.fullmatch(self.sha256):
-            raise ManifestValidationError("artifact.sha256 must be a lowercase SHA-256 hash")
+            raise ManifestValidationError(
+                "artifact.sha256 must be a lowercase SHA-256 hash"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -197,10 +205,13 @@ class EnvironmentManifest:
                 "experiment_id must be E001-kernel-identity for schema version 1"
             )
         try:
-            timestamp = datetime.fromisoformat(self.captured_at_utc.replace("Z", "+00:00"))
+            timestamp = datetime.fromisoformat(
+                self.captured_at_utc.replace("Z", "+00:00")
+            )
         except ValueError as error:
             raise ManifestValidationError("captured_at_utc must be ISO 8601") from error
-        if timestamp.utcoffset() is None or timestamp.utcoffset().total_seconds() != 0:
+        offset = timestamp.utcoffset()
+        if offset is None or offset.total_seconds() != 0:
             raise ManifestValidationError("captured_at_utc must include a UTC offset")
         if not self.tensors:
             raise ManifestValidationError("tensors must not be empty")
@@ -246,15 +257,35 @@ class EnvironmentManifest:
         }
         _strict_keys(data, root_keys, "manifest")
         nested = {
-            "gpu": (GPUFingerprint, {"name", "compute_capability", "memory_mib", "driver_version"}),
+            "gpu": (
+                GPUFingerprint,
+                {"name", "compute_capability", "memory_mib", "driver_version"},
+            ),
             "software": (
                 SoftwareFingerprint,
-                {"os", "wsl_version", "kernel", "python", "torch", "cuda_runtime", "cuda_toolkit", "vllm", "flashinfer"},
+                {
+                    "os",
+                    "wsl_version",
+                    "kernel",
+                    "python",
+                    "torch",
+                    "cuda_runtime",
+                    "cuda_toolkit",
+                    "vllm",
+                    "flashinfer",
+                },
             ),
             "git": (GitFingerprint, {"commit", "dirty"}),
             "backend": (
                 BackendEvidence,
-                {"requested_format", "requested_backend", "reported_backend", "observed_kernels", "fallback_status", "profiler_artifact_sha256"},
+                {
+                    "requested_format",
+                    "requested_backend",
+                    "reported_backend",
+                    "observed_kernels",
+                    "fallback_status",
+                    "profiler_artifact_sha256",
+                },
             ),
             "command": (CommandEvidence, {"argv", "cwd", "seed"}),
         }
@@ -278,7 +309,14 @@ class EnvironmentManifest:
         except (TypeError, ValueError) as error:
             raise ManifestValidationError("backend contains invalid values") from error
 
-        tensor_keys = {"name", "logical_shape", "physical_shape", "dtype", "stride", "device"}
+        tensor_keys = {
+            "name",
+            "logical_shape",
+            "physical_shape",
+            "dtype",
+            "stride",
+            "device",
+        }
         tensors = []
         for index, item in enumerate(data["tensors"]):
             if not isinstance(item, dict):

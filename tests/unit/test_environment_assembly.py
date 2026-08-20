@@ -1,7 +1,7 @@
 import json
 import unittest
 from collections.abc import Sequence
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from nvfp4_doctor.env import (
     CommandEvidence,
@@ -51,9 +51,7 @@ class EnvironmentAssemblyTests(unittest.TestCase):
         fingerprint = collect_git(FakeRunner(observations()))
 
         self.assertTrue(fingerprint.dirty)
-        self.assertEqual(
-            fingerprint.commit, "62d672774bd1061556551a96d31c15490155e885"
-        )
+        self.assertEqual(fingerprint.commit, "62d672774bd1061556551a96d31c15490155e885")
 
     def test_manifest_assembly_preserves_unknown_execution_evidence(self) -> None:
         versions = {
@@ -76,7 +74,7 @@ class EnvironmentAssemblyTests(unittest.TestCase):
             ),
             runner=FakeRunner(observations()),
             versions=versions.__getitem__,
-            clock=lambda: datetime(2026, 8, 20, 6, 30, tzinfo=timezone.utc),
+            clock=lambda: datetime(2026, 8, 20, 6, 30, tzinfo=UTC),
             python_version="3.12.3",
             nvcc_executable="nvcc",
         )
@@ -93,9 +91,7 @@ class EnvironmentAssemblyTests(unittest.TestCase):
     def test_non_utc_clock_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "UTC-aware"):
             assemble_e001_manifest(
-                tensors=(
-                    TensorMetadata("a", (1,), (1,), "bfloat16", (1,), "cuda:0"),
-                ),
+                tensors=(TensorMetadata("a", (1,), (1,), "bfloat16", (1,), "cuda:0"),),
                 command=CommandEvidence(("python", "smoke_nvfp4.py"), "/tmp", 0),
                 runner=FakeRunner(observations()),
                 versions=lambda _: "1",
