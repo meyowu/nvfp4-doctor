@@ -35,11 +35,22 @@ backend string alone.
 
 ## Actual observations
 
-A local pre-profiler schema-v1 manifest was generated from the checked-in smoke
-test definition and the current WSL environment. It recorded the requested
-backend as CUTLASS, `git.dirty=true`, no observed kernels, and fallback status
-`unknown`. This is an assembly/collection observation, not kernel-identity
-evidence and not a completed E001 result.
+On 2026-08-20, the checked-in smoke test completed both without and under
+Nsight Systems 2026.1.3 on the RTX 5080. The retained ignored report is
+`.local/profiles/e001-smoke.nsys-rep` with SHA-256
+`d9d5086200b4bebcc51df806e7ccfa933b59baf40906fd385f3bd0e681aea1c5`.
+
+Independent parsing of the `cuda_gpu_kern_sum` CSV found 18 unique CUDA kernel
+names. The observations include an SM120 block-scaled CUTLASS device kernel
+whose operands name `cutlass::float_e2m1_t` and `cutlass::float_ue4m3_t`, plus
+`tensorrt_llm::kernels::quantize_with_block_size`. These names support kernel
+identity for this trace but do not, by themselves, establish the entire format
+contract or prove that no fallback occurred. Accordingly, `reported_backend`
+remains unset and `fallback_status` remains `unknown` in the manifest.
+
+The first rebuild also exposed a missing linker search path for package-local
+CUDA libraries. Exporting `LIBRARY_PATH` alongside `LD_LIBRARY_PATH` in the
+project activation script restored both the unprofiled and profiled smoke run.
 
 ## Threats to validity
 
@@ -51,4 +62,6 @@ evidence and not a completed E001 result.
 
 ## Decision
 
-Pending.
+Continue. Kernel evidence is now structured, but the deterministic fallback
+rule and repeated-run evidence required by the completion criterion are still
+pending.
