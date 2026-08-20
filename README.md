@@ -18,7 +18,9 @@ correctness proof or benchmark result.
 
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
-Research and engineering rules are defined in [AGENTS.md](AGENTS.md).
+The model-validation sequence is specified in
+[docs/research-plan.md](docs/research-plan.md). Research and engineering rules
+are defined in [AGENTS.md](AGENTS.md).
 
 ## Quick start
 
