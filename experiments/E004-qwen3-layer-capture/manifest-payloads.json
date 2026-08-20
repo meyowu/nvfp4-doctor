@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "representative_tensor_acquisition_v1",
+  "captured_at_utc": "2026-08-20T20:13:53.765321Z",
+  "command": {
+    "argv": [
+      "python",
+      "scripts/run_e004_tensor_acquisition.py"
+    ],
+    "cwd": "/home/meyowu/projects/nvfp4-doctor"
+  },
+  "git": {
+    "branch": "exp/e004-tensor-acquisition",
+    "commit": "62db873d3951bbcdcabe638983165a941f62eea2",
+    "dirty": true
+  },
+  "platform": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "software": {
+    "httpx": "0.28.1",
+    "torch": "2.13.0+cu132",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3"
+  },
+  "model": {
+    "repository": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "weight_files_downloaded": false,
+    "tensor_payload_count": 60,
+    "payload_bytes_downloaded": 311427192
+  },
+  "backend": {
+    "requested": "http_range_tensor_acquisition",
+    "reported": "http_206_partial_content",
+    "observed_kernel": null
+  },
+  "source_bundle_sha256": "8093fc825d4d2eb9e98c8bc891234738481fa50db36cf0eda0c141a8fcece4dd",
+  "artifacts": [
+    {
+      "kind": "tensor-payload-inventory",
+      "path": "experiments/E004-qwen3-layer-capture/payloads.json",
+      "sha256": "6ae6088720f14d8a681896a524a638e94b9732c3b1d4d751769548a4d5feb062"
+    }
+  ]
+}

@@ -48,6 +48,11 @@ four NVFP4 tensors for the five projection families to 60 exact shard-local
 ranges. The planned payload is 311,427,192 bytes; plan construction downloaded
 only the 134,032 header bytes and zero payload bytes.
 
+Those 60 authorized ranges have now been acquired into ignored local artifact
+storage. All exact partial-content boundaries and lengths matched the plan, and
+all 311,427,192 local bytes were reverified against recorded per-tensor SHA-256
+values. Neither complete weight shard was downloaded.
+
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
@@ -83,6 +88,7 @@ PYTHONPATH=src python scripts/run_e003_heldout_permutations.py
 PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
 PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
 PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
+PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup
