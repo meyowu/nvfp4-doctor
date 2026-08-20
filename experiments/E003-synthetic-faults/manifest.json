@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E003-synthetic-faults",
   "slice": "format_faults_v1",
-  "captured_at_utc": "2026-08-20T16:59:26.564120Z",
+  "captured_at_utc": "2026-08-20T17:08:40.556833Z",
   "command": {
     "argv": [
       "python",
@@ -13,8 +13,8 @@
   },
   "git": {
     "branch": "exp/e003-synthetic-faults",
-    "commit": "18d9e14cad813abccce09821099517f6ff769be5",
-    "dirty": true
+    "commit": "2116fbb5ed76d51119ea79b89da701c25b0ef0d5",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",
