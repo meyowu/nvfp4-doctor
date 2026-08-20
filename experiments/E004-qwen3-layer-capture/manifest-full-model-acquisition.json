@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "full_model_snapshot_acquisition_v1",
+  "captured_at_utc": "2026-08-20T21:49:35.616501Z",
+  "command": {
+    "argv": [
+      "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python3",
+      "scripts/run_e004_full_model_acquisition.py"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor"
+  },
+  "git": {
+    "branch": "exp/e004-real-activation",
+    "commit": "6dfa5abe03e72f8c852d3e686a474994304a86ef",
+    "dirty": false
+  },
+  "platform": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "software": {
+    "huggingface_hub": "1.28.0"
+  },
+  "model": {
+    "repository": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "local_snapshot_path": "models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "repository_file_count": 15,
+    "repository_bytes": 6413063143,
+    "weight_files_downloaded": true
+  },
+  "backend": {
+    "requested": "huggingface_hub_download",
+    "reported": "hf_cache_verify_and_local_rehash",
+    "observed_kernel": null
+  },
+  "source_bundle_sha256": "8a037c145be7e9925d294543d0c1065e2c80f4366eb1c440a02528f82755d19a",
+  "artifacts": [
+    {
+      "kind": "full-model-snapshot-acquisition",
+      "path": "experiments/E004-qwen3-layer-capture/full-model-acquisition.json",
+      "sha256": "e89cbe137a5c51a10f0fd90b4d4d6192de7b4c97c40a4a9d107bea837dc6c50d"
+    }
+  ]
+}

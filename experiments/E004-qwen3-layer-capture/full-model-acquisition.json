@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "full_model_snapshot_acquisition_v1",
+  "captured_at_utc": "2026-08-20T21:49:35.616501Z",
+  "status": "pass",
+  "decision": "continue",
+  "repository": {
+    "id": "nvidia/Qwen3-8B-NVFP4",
+    "requested_revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "resolved_sha": "ccd10a893cbca613259517c3efe08e151ddf2b8e"
+  },
+  "snapshot": {
+    "local_root": "models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "ignored": true,
+    "inventory_exclusions": [
+      ".cache/"
+    ],
+    "download_cache_metadata_files": 33,
+    "file_count": 15,
+    "total_bytes": 6413063143,
+    "weight_shard_count": 2,
+    "weight_bytes": 6397066384,
+    "tokenizer_and_small_file_bytes": 15996759,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "role": "model_metadata",
+        "size_bytes": 1570,
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "git_blob_id": "52373fe24473b1aa44333d318f578ae6bf04b49b",
+        "lfs_sha256": null
+      },
+      {
+        "path": "README.md",
+        "role": "model_metadata",
+        "size_bytes": 4939,
+        "sha256": "b5a486f89655b460fcf05b11c151e78d775c587fbe26b7fb6d714471a837e950",
+        "git_blob_id": "8f18ecffc5d29a3451ac5b267830f2e09d369584",
+        "lfs_sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "role": "tokenizer",
+        "size_bytes": 707,
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "git_blob_id": "b54f9135e44c1e81047e8d05cb027af8bc039eed",
+        "lfs_sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "role": "tokenizer",
+        "size_bytes": 4168,
+        "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+        "git_blob_id": "01be9b307daa2d425f7c168c9fb145a286e0afb4",
+        "lfs_sha256": null
+      },
+      {
+        "path": "config.json",
+        "role": "model_metadata",
+        "size_bytes": 2679,
+        "sha256": "3442fb5c8fa88d838108bdb7b2ffdba7811d39741759644ac06b4787f5e8346a",
+        "git_blob_id": "c64865cf72cff7fc7e81e7b7da24c312bce68d64",
+        "lfs_sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "role": "model_metadata",
+        "size_bytes": 214,
+        "sha256": "0419e3a8fd1ead1af64a9861a404179d26867fd2e9f98d562d4e5303f6705a8e",
+        "git_blob_id": "8bee77cd88686bbc41a923369862d4969c596c7e",
+        "lfs_sha256": null
+      },
+      {
+        "path": "hf_quant_config.json",
+        "role": "model_metadata",
+        "size_bytes": 268,
+        "sha256": "a7338e63f043d3173377a8aae3796db939243d2727e15a324fe2bd9371b2cae6",
+        "git_blob_id": "a8e61c3980473f7819a7569530854a6a965a7a3d",
+        "lfs_sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "role": "tokenizer",
+        "size_bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "git_blob_id": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7",
+        "lfs_sha256": null
+      },
+      {
+        "path": "model-00001-of-00002.safetensors",
+        "role": "weight_shard",
+        "size_bytes": 4987209424,
+        "sha256": "6c13ef7322f4e5460858782e32da7e34b6c6fa8148cbeb70abcd2b44455d43f0",
+        "git_blob_id": "8410c3dfcfc6b399a9da2821997d7f6d9d0ae067",
+        "lfs_sha256": "6c13ef7322f4e5460858782e32da7e34b6c6fa8148cbeb70abcd2b44455d43f0"
+      },
+      {
+        "path": "model-00002-of-00002.safetensors",
+        "role": "weight_shard",
+        "size_bytes": 1409856960,
+        "sha256": "cf084e6b0e9f4bed9d15b6a454c34c0a1e8c4b74668db62b4063defc5a601c96",
+        "git_blob_id": "78f3b24c91c45b1497441d1e85dd3bc8e3800628",
+        "lfs_sha256": "cf084e6b0e9f4bed9d15b6a454c34c0a1e8c4b74668db62b4063defc5a601c96"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "role": "model_metadata",
+        "size_bytes": 105079,
+        "sha256": "d7cddcad23c80b41201f23e3fccb22ef200ed551da067c61afb0b09f67864f47",
+        "git_blob_id": "3f166c0c39c07ab2f2dfea62f3b98de3549fbf8a",
+        "lfs_sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "role": "tokenizer",
+        "size_bytes": 388,
+        "sha256": "a4c29a7f63146cb43eef20b92caab0e2a5000d13d4dc9cd29888bbfad8059466",
+        "git_blob_id": "9d0327fbaf1691eebf8ed3120327fc40f5774a55",
+        "lfs_sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "role": "tokenizer",
+        "size_bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "git_blob_id": "cd71f61a15a522601badb3dc960d800d9cb3766c",
+        "lfs_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "role": "tokenizer",
+        "size_bytes": 5407,
+        "sha256": "67e5a0a11cd35f9c00ee52e0af4cdc0baa75fea0cb5fce7d1beb251b4621d15c",
+        "git_blob_id": "eb89444dcfb54dacaadc35b8735b57b677b8662a",
+        "lfs_sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "role": "tokenizer",
+        "size_bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "git_blob_id": "4783fe10ac3adce15ac8f358ef5462739852c569",
+        "lfs_sha256": null
+      }
+    ]
+  },
+  "verification": {
+    "hf_cache_verify_files_checked": 15,
+    "hf_cache_verify_checksums_matched": true,
+    "hf_cache_extra_files_are_download_metadata": true,
+    "repository_files_complete": true,
+    "top_level_inventory_exact": true,
+    "all_sizes_exact": true,
+    "all_local_sha256_recorded": true,
+    "all_lfs_sha256_matched": true,
+    "ordinary_git_blob_ids_matched": true
+  },
+  "observations": [
+    "All 15 files from the immutable repository revision are present.",
+    "Ordinary files match their Git blob IDs and all three LFS payloads match SHA-256.",
+    "Hugging Face download metadata is retained under the ignored .cache directory."
+  ],
+  "claim_boundary": "This result establishes byte-complete acquisition and local integrity of the pinned repository snapshot only. It does not establish model loading, RTX 5080 execution, real activation capture, NVFP4 kernel identity, or numerical correctness."
+}
