@@ -4,27 +4,20 @@ import unittest
 from pathlib import Path
 
 from nvfp4_doctor.backends import (
-    E001_GEMM_RANGE,
     NsightEvidenceError,
     NsightKernelEvidence,
-    assess_e001_fallback,
     attach_kernel_evidence,
     extract_kernel_evidence,
     parse_cuda_gpu_kernel_summary,
 )
-from nvfp4_doctor.env import EnvironmentManifest, FallbackStatus
+from nvfp4_doctor.env import EnvironmentManifest
 
-CSV = """Time (%),Total Time (ns),Instances,Name
+
+CSV = '''Time (%),Total Time (ns),Instances,Name
 60.0,600,1,"void cutlass::device_kernel<sm120>()"
 30.0,300,2,"void tensorrt_llm::kernels::quantize_with_block_size()"
 10.0,100,1,"void cutlass::device_kernel<sm120>()"
-"""
-
-EXPECTED_CUTLASS = (
-    f"{E001_GEMM_RANGE}/void cutlass::device_kernel<"
-    "MainloopSm120TmaWarpSpecializedBlockScaled, cutlass::float_e2m1_t, "
-    "SM120_16x8x64_TN_VS>()"
-)
+'''
 
 
 class NsightEvidenceTests(unittest.TestCase):
@@ -65,40 +58,9 @@ class NsightEvidenceTests(unittest.TestCase):
         evidence = NsightKernelEvidence("a" * 64, ("kernel",))
         updated = attach_kernel_evidence(manifest, evidence, Path("capture.nsys-rep"))
         self.assertIsNone(updated.backend.reported_backend)
-        self.assertEqual(
-            updated.backend.fallback_status, manifest.backend.fallback_status
-        )
+        self.assertEqual(updated.backend.fallback_status, manifest.backend.fallback_status)
         self.assertEqual(updated.backend.observed_kernels, ("kernel",))
         self.assertEqual(updated.artifacts[-1].sha256, "a" * 64)
-
-    def test_expected_range_scoped_cutlass_signature_detects_no_fallback(self) -> None:
-        observed = (
-            EXPECTED_CUTLASS,
-            "e001:unquantized_reference/void cublasGemmEx()",
-        )
-        self.assertEqual(assess_e001_fallback(observed), FallbackStatus.NOT_DETECTED)
-
-    def test_known_fallback_inside_target_range_is_detected(self) -> None:
-        observed = (f"{E001_GEMM_RANGE}/void cublasGemmEx()",)
-        self.assertEqual(assess_e001_fallback(observed), FallbackStatus.DETECTED)
-
-    def test_expected_signature_outside_target_range_remains_unknown(self) -> None:
-        observed = (EXPECTED_CUTLASS.removeprefix(f"{E001_GEMM_RANGE}/"),)
-        self.assertEqual(assess_e001_fallback(observed), FallbackStatus.UNKNOWN)
-
-    def test_unrecognized_target_kernel_remains_unknown(self) -> None:
-        observed = (f"{E001_GEMM_RANGE}/void future_nvfp4_kernel()",)
-        self.assertEqual(assess_e001_fallback(observed), FallbackStatus.UNKNOWN)
-
-    def test_attach_records_range_scoped_assessment_without_reported_backend(
-        self,
-    ) -> None:
-        fixture = Path(__file__).parents[1] / "fixtures" / "e001_manifest_v1.json"
-        manifest = EnvironmentManifest.from_path(fixture)
-        evidence = NsightKernelEvidence("b" * 64, (EXPECTED_CUTLASS,))
-        updated = attach_kernel_evidence(manifest, evidence, Path("capture.nsys-rep"))
-        self.assertIsNone(updated.backend.reported_backend)
-        self.assertEqual(updated.backend.fallback_status, FallbackStatus.NOT_DETECTED)
 
 
 if __name__ == "__main__":

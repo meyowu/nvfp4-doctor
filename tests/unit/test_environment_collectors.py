@@ -57,16 +57,10 @@ class EnvironmentCollectorTests(unittest.TestCase):
                 ("uname", "-r"), 0, "6.18.33.2-microsoft-standard-WSL2\n", ""
             ),
             ("wsl.exe", "--version"): CommandResult(
-                ("wsl.exe", "--version"),
-                0,
-                "W\x00S\x00L\x00 \x00v\x00e\x00r\x00s\x00i\x00o\x00n\x00:\x00 \x002\x00.\x007\x00.\x001\x002\x00.\x000\x00\n",
-                "",
+                ("wsl.exe", "--version"), 0, "W\x00S\x00L\x00 \x00v\x00e\x00r\x00s\x00i\x00o\x00n\x00:\x00 \x002\x00.\x007\x00.\x001\x002\x00.\x000\x00\n", ""
             ),
             ("nvcc", "--version"): CommandResult(
-                ("nvcc", "--version"),
-                0,
-                "Cuda compilation tools, release 13.2, V13.2.86\n",
-                "",
+                ("nvcc", "--version"), 0, "Cuda compilation tools, release 13.2, V13.2.86\n", ""
             ),
         }
         versions = {
@@ -147,12 +141,12 @@ class EnvironmentCollectorTests(unittest.TestCase):
         }
 
         def missing(distribution: str) -> str:
-            raise CollectionError(
-                f"required distribution is not installed: {distribution}"
-            )
+            raise CollectionError(f"required distribution is not installed: {distribution}")
 
         with self.assertRaisesRegex(CollectionError, "nvidia-cuda-runtime"):
-            collect_software(FakeRunner(observations), missing, nvcc_executable="nvcc")
+            collect_software(
+                FakeRunner(observations), missing, nvcc_executable="nvcc"
+            )
 
 
 if __name__ == "__main__":

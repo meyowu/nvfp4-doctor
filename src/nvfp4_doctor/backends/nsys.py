@@ -8,21 +8,7 @@ import io
 from dataclasses import dataclass, replace
 from pathlib import Path
 
-from nvfp4_doctor.env import (
-    ArtifactEvidence,
-    BackendEvidence,
-    EnvironmentManifest,
-    FallbackStatus,
-)
-
-E001_GEMM_RANGE = "e001:nvfp4_gemm"
-_E001_CUTLASS_SIGNATURE = (
-    "cutlass::device_kernel",
-    "MainloopSm120TmaWarpSpecializedBlockScaled",
-    "cutlass::float_e2m1_t",
-    "SM120_16x8x64_TN_VS",
-)
-_KNOWN_FALLBACK_SIGNATURES = ("cublas",)
+from nvfp4_doctor.env import ArtifactEvidence, BackendEvidence, EnvironmentManifest
 
 
 class NsightEvidenceError(ValueError):
@@ -84,53 +70,18 @@ def extract_kernel_evidence(report_path: Path, stats_csv: str) -> NsightKernelEv
     )
 
 
-def kernels_in_nvtx_range(
-    observed_kernels: tuple[str, ...], range_name: str
-) -> tuple[str, ...]:
-    prefix = f"{range_name}/"
-    return tuple(
-        name.removeprefix(prefix)
-        for name in observed_kernels
-        if name.startswith(prefix)
-    )
-
-
-def assess_e001_fallback(observed_kernels: tuple[str, ...]) -> FallbackStatus:
-    """Classify only kernels launched inside the E001 NVFP4 GEMM range.
-
-    ``NOT_DETECTED`` means the expected SM120 block-scaled CUTLASS signature was
-    observed and no known fallback signature was observed in that same range.
-    Missing or unfamiliar evidence remains ``UNKNOWN``.
-    """
-    target_kernels = kernels_in_nvtx_range(observed_kernels, E001_GEMM_RANGE)
-    if not target_kernels:
-        return FallbackStatus.UNKNOWN
-    if any(
-        signature in kernel.lower()
-        for kernel in target_kernels
-        for signature in _KNOWN_FALLBACK_SIGNATURES
-    ):
-        return FallbackStatus.DETECTED
-    if any(
-        all(fragment in kernel for fragment in _E001_CUTLASS_SIGNATURE)
-        for kernel in target_kernels
-    ):
-        return FallbackStatus.NOT_DETECTED
-    return FallbackStatus.UNKNOWN
-
-
 def attach_kernel_evidence(
     manifest: EnvironmentManifest,
     evidence: NsightKernelEvidence,
     report_path: Path,
 ) -> EnvironmentManifest:
-    """Attach observations and a range-scoped fallback assessment."""
+    """Attach observations without inferring backend identity or fallback status."""
     backend = BackendEvidence(
         requested_format=manifest.backend.requested_format,
         requested_backend=manifest.backend.requested_backend,
         reported_backend=manifest.backend.reported_backend,
         observed_kernels=evidence.observed_kernels,
-        fallback_status=assess_e001_fallback(evidence.observed_kernels),
+        fallback_status=manifest.backend.fallback_status,
         profiler_artifact_sha256=evidence.report_sha256,
     )
     artifact = ArtifactEvidence(
@@ -139,4 +90,4 @@ def attach_kernel_evidence(
         local_path=str(report_path),
     )
     artifacts = tuple(item for item in manifest.artifacts if item.kind != artifact.kind)
-    return replace(manifest, backend=backend, artifacts=(*artifacts, artifact))
+    return replace(manifest, backend=backend, artifacts=artifacts + (artifact,))

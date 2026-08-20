@@ -56,7 +56,6 @@ compiler-side pins used by the verified environment:
 ```bash
 uv pip install vllm==0.27.1 --torch-backend=auto
 uv pip install -r requirements-research.txt
-uv pip install -r requirements-dev.txt
 ```
 
 Verify the device:
@@ -92,23 +91,22 @@ nsys --version
 ncu --version
 ```
 
-The verified machine used CUDA compiler-side packages 13.2.86, the independently
-packaged `nvdisasm` 13.3.73 required by CUTLASS DSL 4.6, Nsight Systems 2026.1.3,
-and Nsight Compute 2026.2.1. Driver, wheel runtime, compiler, and inspection-tool
-versions are distinct; record their relevant versions with the experiment.
+The verified machine used CUDA compiler-side packages 13.2.86, Nsight Systems
+2026.1.3, and Nsight Compute 2026.2.1. Driver, wheel runtime, and local toolkit
+versions are distinct; record all three in experiment manifests.
 
 ## 6. Run the first NVFP4 smoke test
 
 ```bash
 source ./activate-nvfp4-lab.sh
 python smoke_nvfp4.py
-./scripts/run_e001_week1.sh 3
+nsys profile --trace=cuda,nvtx,osrt --output=/tmp/nvfp4-smoke \
+  --force-overwrite=true python smoke_nvfp4.py
 ```
 
-The E001 script retains profiler reports and run manifests under ignored
-project-local storage, then regenerates the small repository-tracked manifest and
-repeatability summary. It requires at least three repetitions. The test is an
-environment check, not a benchmark or proof of format correctness.
+The test is an environment check, not a benchmark or proof of correctness.
+Record the actual backend and kernel identity before using later runs as
+research evidence.
 
 ## 7. Troubleshooting order
 
