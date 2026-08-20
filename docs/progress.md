@@ -157,6 +157,14 @@ uniformly across 36 layers. These stored shapes and dtypes support acquisition
 planning only; they do not establish logical layouts, runtime strides, backend
 support, or numerical behavior.
 
-The next bounded step is a metadata-only representative-layer and shard-local
-byte-range acquisition plan. No current observation is a claim about real
-dispatch, GEMM accumulation, or model outputs.
+The third E004 slice fixed layers 0, 18, and 35 as early, middle, and late
+representatives. It mapped four required tensors for each of five projection
+families to 60 unique, non-overlapping, in-bounds HTTP ranges. Each layer
+accounts for 103,809,064 bytes and the full plan accounts for 311,427,192 bytes.
+Construction repeated only the four header requests and downloaded zero payload
+bytes.
+
+The next bounded step requires separate authorization to acquire those planned
+payload ranges into ignored local storage and hash each result. No current
+observation is a claim about payload validity, real dispatch, GEMM accumulation,
+or model outputs.

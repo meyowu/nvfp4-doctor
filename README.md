@@ -43,6 +43,11 @@ safetensors prefixes and JSON headers. All 1,227 tensor names aligned with the
 pinned index, and the five capture-target families had uniform stored dtypes and
 shapes across 36 layers. Payload bytes downloaded remained zero.
 
+A metadata-only acquisition plan now fixes layers 0, 18, and 35 and maps all
+four NVFP4 tensors for the five projection families to 60 exact shard-local
+ranges. The planned payload is 311,427,192 bytes; plan construction downloaded
+only the 134,032 header bytes and zero payload bytes.
+
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
@@ -77,6 +82,7 @@ PYTHONPATH=src python scripts/run_e003_execution_faults.py
 PYTHONPATH=src python scripts/run_e003_heldout_permutations.py
 PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
 PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
+PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup
