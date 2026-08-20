@@ -27,7 +27,7 @@
     ],
     "torch": "2.13.0+cu132"
   },
-  "captured_at_utc": "2026-08-20T08:35:00.487610Z",
+  "captured_at_utc": "2026-08-20T15:33:49.421476Z",
   "command": {
     "argv": [
       "python",
@@ -39,8 +39,8 @@
   "experiment_id": "E002-format-oracle",
   "git": {
     "branch": "exp/e002-format-oracle",
-    "commit": "fdc0beab037c1f35115de10a0b1539deeeadf38e",
-    "dirty": true
+    "commit": "f0be51513892d8b10968090fb081a8dafbee0b89",
+    "dirty": false
   },
   "gpu": {
     "compute_capability": "12.0",
