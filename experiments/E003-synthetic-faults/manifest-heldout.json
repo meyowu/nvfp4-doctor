@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E003-synthetic-faults",
+  "slice": "packed_permutation_heldout_v1",
+  "captured_at_utc": "2026-08-20T17:27:27.043667Z",
+  "command": {
+    "argv": [
+      "python",
+      "scripts/run_e003_heldout_permutations.py"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor",
+    "seed": 20260820
+  },
+  "git": {
+    "branch": "exp/e003-heldout-permutations",
+    "commit": "e9cbd9055be5e74a9f32569e1cadedf546dce84e",
+    "dirty": true
+  },
+  "platform": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "software": {
+    "torch": "2.13.0+cu132",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3"
+  },
+  "model": {
+    "status": "not_applicable_synthetic_format_controls"
+  },
+  "backend": {
+    "requested": "cpu_oracle",
+    "reported": "cpu_oracle",
+    "observed_kernel": null
+  },
+  "source_bundle_sha256": "fe3a273cbd28ae1b3354ff8ea7b02402d0df891b9640dffe185cd76b4cc88d94",
+  "artifacts": [
+    {
+      "kind": "heldout-packed-permutation-results",
+      "path": "experiments/E003-synthetic-faults/results-heldout.json",
+      "sha256": "a228b0a75b50c99ffa661d37640c5d8bbdf211f7aae6c79942fd9f698dbf5e74"
+    }
+  ]
+}
