@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E003-synthetic-faults",
   "slice": "execution_evidence_faults_v1",
-  "captured_at_utc": "2026-08-20T17:08:41.000017Z",
+  "captured_at_utc": "2026-08-20T17:09:18.555358Z",
   "command": {
     "argv": [
       "python",
@@ -13,8 +13,8 @@
   },
   "git": {
     "branch": "exp/e003-synthetic-faults",
-    "commit": "2116fbb5ed76d51119ea79b89da701c25b0ef0d5",
-    "dirty": true
+    "commit": "4c7cab930f74c7a7f5457b94d1ffc7bf642191cb",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",

@@ -11,7 +11,8 @@ only from observed repository, environment, test, and experiment evidence.
 - Decision: `continue`
 - Verified baseline commit: `18d9e14cad813abccce09821099517f6ff769be5`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
-- Active local branch: `exp/e003-synthetic-faults` (uncommitted)
+- Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
+- Active local branch: `exp/e003-synthetic-faults`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -119,6 +120,14 @@ only from observed repository, environment, test, and experiment evidence.
   separate rather than being inferred from one another.
 - The fallback-kernel string in this slice is labeled synthetic and is not
   represented as a profiler observation from the run.
+- The final format-fault manifest was regenerated from clean implementation
+  commit `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`; it records `dirty=false` and
+  source-bundle SHA-256
+  `1029f17f569ee74f509673225ea00977a018adcd5590af08247344a5f2a8bad6`.
+- The final execution-evidence manifest was regenerated from clean provenance
+  commit `4c7cab930f74c7a7f5457b94d1ffc7bf642191cb`; it records `dirty=false` and
+  source-bundle SHA-256
+  `0a9e5587e74205092338448d151b3ce80ed6c03003b5d6ebddebc72c984b1f23`.
 
 These observations complete Gate 1 and support two E003 CPU synthetic-fault
 slices. E003 remains in progress. They do not establish real runtime stride or
@@ -183,7 +192,8 @@ localization, and reversibility before deciding whether E003 is complete.
 
 ## Working-tree expectation
 
-Preserve the uncommitted E003 format-fault slice on
-`exp/e003-synthetic-faults`. Review and commit it only after explicit user
-authorization. Do not infer permission to push, open a PR, merge, download
-model weights, or publish external results from this state file.
+Keep verified E003 work committed and pushed on the focused
+`exp/e003-synthetic-faults` branch. The configured research closeout workflow
+authorizes commit and push for verified in-scope changes only; opening a PR,
+merging, downloading model weights, or publishing external results still
+requires separate explicit authorization.
