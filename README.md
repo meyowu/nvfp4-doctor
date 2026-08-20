@@ -22,6 +22,12 @@ The model-validation sequence is specified in
 [docs/research-plan.md](docs/research-plan.md). Research and engineering rules
 are defined in [AGENTS.md](AGENTS.md).
 
+To resume a research session, read [research-state.md](research-state.md) and run:
+
+```bash
+python scripts/research_status.py
+```
+
 ## Quick start
 
 Inside Ubuntu on WSL2:
