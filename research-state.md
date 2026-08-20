@@ -13,6 +13,7 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
+- Verified E004 metadata commit: `68cb4e0328598dd33d3626b0046e704c97ac39b5`
 - Active local branch: `exp/e004-checkpoint-metadata`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
@@ -159,6 +160,11 @@ only from observed repository, environment, test, and experiment evidence.
 - The two remote weight shards total 6,397,066,384 bytes and expose immutable
   LFS SHA-256 values. Only 112,965 bytes of four metadata files were downloaded
   to ignored artifact storage; no weight shard was downloaded.
+- The E004 metadata manifest was regenerated from clean commit
+  `68cb4e0328598dd33d3626b0046e704c97ac39b5`; it records `dirty=false`, result
+  SHA-256 `3d87bff0ff6147dd022398e465968ebc1ae06a8fb868efcd2059e8dc4f547e81`,
+  and source-bundle SHA-256
+  `a8dd847464f82efcb1f6213b09816f084573aaedb7b3f0032dfff574bdc5f0b6`.
 
 These observations complete Gate 1 and E003, and support the metadata-planning
 slice of E004. They do not establish safetensors shapes or dtypes, real runtime

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E004-qwen3-layer-capture",
   "slice": "checkpoint_metadata_v1",
-  "captured_at_utc": "2026-08-20T17:41:33.077086Z",
+  "captured_at_utc": "2026-08-20T17:43:43.773747Z",
   "command": {
     "argv": [
       "python",
@@ -12,8 +12,8 @@
   },
   "git": {
     "branch": "exp/e004-checkpoint-metadata",
-    "commit": "252a6e6d3115b3e61a512f41087a06f7b45e3089",
-    "dirty": true
+    "commit": "68cb4e0328598dd33d3626b0046e704c97ac39b5",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",
