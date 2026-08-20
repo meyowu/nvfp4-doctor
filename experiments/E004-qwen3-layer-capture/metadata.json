@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "checkpoint_metadata_v1",
+  "status": "pass",
+  "decision": "continue",
+  "repository": {
+    "id": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "resolved_sha": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "private": false,
+    "gated": false,
+    "library_name": "Model Optimizer",
+    "pipeline_tag": "text-generation",
+    "created_at": "2025-09-09T21:15:18Z",
+    "last_modified": "2025-09-09T21:15:18Z"
+  },
+  "metadata_sources": [
+    {
+      "path": "README.md",
+      "size_bytes": 4939,
+      "git_blob_id": "8f18ecffc5d29a3451ac5b267830f2e09d369584",
+      "lfs_sha256": null,
+      "lfs_pointer_size": null,
+      "sha256": "b5a486f89655b460fcf05b11c151e78d775c587fbe26b7fb6d714471a837e950",
+      "source_url": "https://huggingface.co/nvidia/Qwen3-8B-NVFP4/resolve/ccd10a893cbca613259517c3efe08e151ddf2b8e/README.md"
+    },
+    {
+      "path": "config.json",
+      "size_bytes": 2679,
+      "git_blob_id": "c64865cf72cff7fc7e81e7b7da24c312bce68d64",
+      "lfs_sha256": null,
+      "lfs_pointer_size": null,
+      "sha256": "3442fb5c8fa88d838108bdb7b2ffdba7811d39741759644ac06b4787f5e8346a",
+      "source_url": "https://huggingface.co/nvidia/Qwen3-8B-NVFP4/resolve/ccd10a893cbca613259517c3efe08e151ddf2b8e/config.json"
+    },
+    {
+      "path": "hf_quant_config.json",
+      "size_bytes": 268,
+      "git_blob_id": "a8e61c3980473f7819a7569530854a6a965a7a3d",
+      "lfs_sha256": null,
+      "lfs_pointer_size": null,
+      "sha256": "a7338e63f043d3173377a8aae3796db939243d2727e15a324fe2bd9371b2cae6",
+      "source_url": "https://huggingface.co/nvidia/Qwen3-8B-NVFP4/resolve/ccd10a893cbca613259517c3efe08e151ddf2b8e/hf_quant_config.json"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "size_bytes": 105079,
+      "git_blob_id": "3f166c0c39c07ab2f2dfea62f3b98de3549fbf8a",
+      "lfs_sha256": null,
+      "lfs_pointer_size": null,
+      "sha256": "d7cddcad23c80b41201f23e3fccb22ef200ed551da067c61afb0b09f67864f47",
+      "source_url": "https://huggingface.co/nvidia/Qwen3-8B-NVFP4/resolve/ccd10a893cbca613259517c3efe08e151ddf2b8e/model.safetensors.index.json"
+    }
+  ],
+  "metadata_download_bytes": 112965,
+  "weight_shards": [
+    {
+      "path": "model-00001-of-00002.safetensors",
+      "size_bytes": 4987209424,
+      "git_blob_id": "8410c3dfcfc6b399a9da2821997d7f6d9d0ae067",
+      "lfs_sha256": "6c13ef7322f4e5460858782e32da7e34b6c6fa8148cbeb70abcd2b44455d43f0",
+      "lfs_pointer_size": 135
+    },
+    {
+      "path": "model-00002-of-00002.safetensors",
+      "size_bytes": 1409856960,
+      "git_blob_id": "78f3b24c91c45b1497441d1e85dd3bc8e3800628",
+      "lfs_sha256": "cf084e6b0e9f4bed9d15b6a454c34c0a1e8c4b74668db62b4063defc5a601c96",
+      "lfs_pointer_size": 135
+    }
+  ],
+  "weight_file_bytes": 6397066384,
+  "tensor_payload_bytes": 6396932352,
+  "safetensors_header_overhead_bytes": 134032,
+  "weight_files_downloaded": false,
+  "inspection": {
+    "architecture": "Qwen3ForCausalLM",
+    "model_type": "qwen3",
+    "hidden_size": 4096,
+    "intermediate_size": 12288,
+    "num_hidden_layers": 36,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "vocab_size": 151936,
+    "torch_dtype": "bfloat16",
+    "quant_algo": "NVFP4",
+    "group_size": 16,
+    "weight_num_bits": 4,
+    "input_num_bits": 4,
+    "kv_cache_quant_algo": "FP8",
+    "excluded_modules": [
+      "lm_head"
+    ],
+    "producer_name": "modelopt",
+    "producer_version": "0.35.0",
+    "tensor_count": 1227,
+    "total_parameters": 4717851648,
+    "tensor_payload_bytes": 6396932352,
+    "shards": [
+      "model-00001-of-00002.safetensors",
+      "model-00002-of-00002.safetensors"
+    ],
+    "target_projections": [
+      {
+        "projection": "q_proj",
+        "layer_count": 36,
+        "tensor_count": 144,
+        "tensor_suffixes": [
+          "input_scale",
+          "weight",
+          "weight_scale",
+          "weight_scale_2"
+        ],
+        "shards": [
+          "model-00001-of-00002.safetensors",
+          "model-00002-of-00002.safetensors"
+        ]
+      },
+      {
+        "projection": "o_proj",
+        "layer_count": 36,
+        "tensor_count": 144,
+        "tensor_suffixes": [
+          "input_scale",
+          "weight",
+          "weight_scale",
+          "weight_scale_2"
+        ],
+        "shards": [
+          "model-00001-of-00002.safetensors",
+          "model-00002-of-00002.safetensors"
+        ]
+      },
+      {
+        "projection": "gate_proj",
+        "layer_count": 36,
+        "tensor_count": 144,
+        "tensor_suffixes": [
+          "input_scale",
+          "weight",
+          "weight_scale",
+          "weight_scale_2"
+        ],
+        "shards": [
+          "model-00001-of-00002.safetensors",
+          "model-00002-of-00002.safetensors"
+        ]
+      },
+      {
+        "projection": "up_proj",
+        "layer_count": 36,
+        "tensor_count": 144,
+        "tensor_suffixes": [
+          "input_scale",
+          "weight",
+          "weight_scale",
+          "weight_scale_2"
+        ],
+        "shards": [
+          "model-00001-of-00002.safetensors",
+          "model-00002-of-00002.safetensors"
+        ]
+      },
+      {
+        "projection": "down_proj",
+        "layer_count": 36,
+        "tensor_count": 144,
+        "tensor_suffixes": [
+          "input_scale",
+          "weight",
+          "weight_scale",
+          "weight_scale_2"
+        ],
+        "shards": [
+          "model-00001-of-00002.safetensors",
+          "model-00002-of-00002.safetensors"
+        ]
+      }
+    ]
+  },
+  "capture_targets": [
+    "q_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "observations": [
+    "config.json and hf_quant_config.json agree on NVFP4 group size 16",
+    "weights and input activations are declared as static 4-bit float",
+    "lm_head is excluded and the KV-cache scheme is separately declared FP8",
+    "all five capture-target projections have four quantization tensors in every layer"
+  ],
+  "claim_boundary": "This metadata-only inspection does not read safetensors headers or payloads, load the model, establish runtime tensor shapes or layouts, identify an executed backend, or demonstrate numerical correctness."
+}
