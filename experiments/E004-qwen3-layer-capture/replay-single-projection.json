@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "single_projection_replay_v1",
+  "captured_at_utc": "2026-08-20T20:33:30.458730Z",
+  "status": "pass",
+  "decision": "continue",
+  "repository": {
+    "id": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e"
+  },
+  "case": {
+    "layer": 0,
+    "projection": "o_proj",
+    "selection_rationale": "unfused vLLM projection with all four acquired tensors",
+    "activation_provenance": "synthetic_deterministic",
+    "activation_recipe": "bf16((((arange + seed*17) % 257) - 128) / 512)",
+    "seed": 0,
+    "logical_mnk": [
+      16,
+      4096,
+      4096
+    ]
+  },
+  "source_tensors": [
+    {
+      "suffix": "input_scale",
+      "tensor_name": "model.layers.0.self_attn.o_proj.input_scale",
+      "local_path": "artifacts/E004-qwen3-layer-capture/tensor-payloads/layer-00/o_proj/input_scale.bin",
+      "dtype": "F32",
+      "shape": [],
+      "byte_length": 4,
+      "sha256": "83eae1783b2c6d492881eb861a2adab9fd5b0437bf96a2aa65e7d6e8b9e6c89a"
+    },
+    {
+      "suffix": "weight",
+      "tensor_name": "model.layers.0.self_attn.o_proj.weight",
+      "local_path": "artifacts/E004-qwen3-layer-capture/tensor-payloads/layer-00/o_proj/weight.bin",
+      "dtype": "U8",
+      "shape": [
+        4096,
+        2048
+      ],
+      "byte_length": 8388608,
+      "sha256": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a"
+    },
+    {
+      "suffix": "weight_scale",
+      "tensor_name": "model.layers.0.self_attn.o_proj.weight_scale",
+      "local_path": "artifacts/E004-qwen3-layer-capture/tensor-payloads/layer-00/o_proj/weight_scale.bin",
+      "dtype": "F8_E4M3",
+      "shape": [
+        4096,
+        256
+      ],
+      "byte_length": 1048576,
+      "sha256": "9e255b8003f0d80086b762b8a4bb9cd1f8e5be482bdc3590dc65662289f77d19"
+    },
+    {
+      "suffix": "weight_scale_2",
+      "tensor_name": "model.layers.0.self_attn.o_proj.weight_scale_2",
+      "local_path": "artifacts/E004-qwen3-layer-capture/tensor-payloads/layer-00/o_proj/weight_scale_2.bin",
+      "dtype": "F32",
+      "shape": [],
+      "byte_length": 4,
+      "sha256": "08337a1b36f654e8f433655f5262db64d0f83f50da0d48d2eda403e3260de0ce"
+    }
+  ],
+  "runtime_tensors": [
+    {
+      "name": "activation_bf16",
+      "logical_shape": [
+        16,
+        4096
+      ],
+      "physical_shape": [
+        16,
+        4096
+      ],
+      "dtype": "bfloat16",
+      "stride": [
+        4096,
+        1
+      ],
+      "device": "cuda:0",
+      "layout": "row_major",
+      "sha256": "740622d338ffdb95f5103e99ee5a77bf78340be5f80ebe9f577357c7cfadae63"
+    },
+    {
+      "name": "activation_fp4",
+      "logical_shape": [
+        16,
+        4096
+      ],
+      "physical_shape": [
+        16,
+        2048
+      ],
+      "dtype": "uint8",
+      "stride": [
+        2048,
+        1
+      ],
+      "device": "cuda:0",
+      "layout": "packed_low_nibble_first",
+      "sha256": "4155280879724f8895d117c4bb1370423709d7b34b6d5e3794dffea3ae065ed8"
+    },
+    {
+      "name": "activation_scale",
+      "logical_shape": [
+        16,
+        256
+      ],
+      "physical_shape": [
+        128,
+        256
+      ],
+      "dtype": "float8_e4m3fn",
+      "stride": [
+        256,
+        1
+      ],
+      "device": "cuda:0",
+      "layout": "cutlass_128x4",
+      "sha256": "73032a5982cdcca8e03680900c80725725c9b330d52c9b1452119af120a3f936"
+    },
+    {
+      "name": "weight",
+      "logical_shape": [
+        4096,
+        4096
+      ],
+      "physical_shape": [
+        4096,
+        2048
+      ],
+      "dtype": "uint8",
+      "stride": [
+        2048,
+        1
+      ],
+      "device": "cuda:0",
+      "layout": "packed_low_nibble_first_row_major",
+      "sha256": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a"
+    },
+    {
+      "name": "weight_scale",
+      "logical_shape": [
+        4096,
+        256
+      ],
+      "physical_shape": [
+        4096,
+        256
+      ],
+      "dtype": "float8_e4m3fn",
+      "stride": [
+        256,
+        1
+      ],
+      "device": "cuda:0",
+      "layout": "cutlass_128x4",
+      "sha256": "4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2"
+    },
+    {
+      "name": "output",
+      "logical_shape": [
+        16,
+        4096
+      ],
+      "physical_shape": [
+        16,
+        4096
+      ],
+      "dtype": "bfloat16",
+      "stride": [
+        4096,
+        1
+      ],
+      "device": "cuda:0",
+      "layout": "row_major",
+      "sha256": "ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf"
+    }
+  ],
+  "transforms": [
+    {
+      "name": "packed_weight_materialization",
+      "operation": "frombuffer + recorded reshape + CUDA copy",
+      "source_layout": "safetensors row-major U8, low nibble first",
+      "destination_layout": "CUDA row-major U8, low nibble first",
+      "source_sha256": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a",
+      "destination_sha256": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a",
+      "padding_bytes": 0
+    },
+    {
+      "name": "weight_scale_swizzle",
+      "operation": "independent linear-to-CUTLASS 128x4 byte permutation",
+      "source_layout": "linear_row_major",
+      "destination_layout": "cutlass_128x4",
+      "source_shape": [
+        4096,
+        256
+      ],
+      "destination_shape": [
+        4096,
+        256
+      ],
+      "source_sha256": "9e255b8003f0d80086b762b8a4bb9cd1f8e5be482bdc3590dc65662289f77d19",
+      "destination_sha256": "4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2",
+      "vllm_candidate_byte_exact": true
+    },
+    {
+      "name": "gemm_b_metadata_views",
+      "operation": "vLLM adapter passes weight.t() and weight_scale.t()",
+      "weight_source_shape": [
+        4096,
+        2048
+      ],
+      "weight_source_stride": [
+        2048,
+        1
+      ],
+      "weight_view_shape": [
+        2048,
+        4096
+      ],
+      "weight_view_stride": [
+        1,
+        2048
+      ],
+      "scale_source_shape": [
+        4096,
+        256
+      ],
+      "scale_source_stride": [
+        256,
+        1
+      ],
+      "scale_view_shape": [
+        256,
+        4096
+      ],
+      "scale_view_stride": [
+        1,
+        256
+      ],
+      "storage_bytes_changed": false
+    }
+  ],
+  "scaling": {
+    "formula": "dequant = E2M1 * E4M3 * weight_scale_2; alpha = input_scale * weight_scale_2",
+    "input_scale": 0.00012715657067019492,
+    "weight_scale_2": 0.0002702985657379031,
+    "input_global_scale_inv_math": 7864.320300000011,
+    "input_global_scale_inv_runtime_f32": 7864.3203125,
+    "alpha_math": 3.4370238676304006e-08,
+    "alpha_runtime_f32": 3.437023821106777e-08,
+    "activation_max_abs": 0.25,
+    "checkpoint_calibrated_max_abs": 0.34179686196148396
+  },
+  "replay": {
+    "warmup_runs": 1,
+    "repetitions": 3,
+    "synchronized": true,
+    "output_shape": [
+      16,
+      4096
+    ],
+    "output_dtype": "bfloat16",
+    "all_finite": true,
+    "output_sha256s": [
+      "ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf",
+      "ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf",
+      "ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf"
+    ],
+    "output_hash_stable": true
+  },
+  "backend": {
+    "requested_format": "nvfp4",
+    "requested_backend": "cutlass",
+    "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+    "reported_backend": null,
+    "target_nvtx_range": "e004:layer_00:o_proj:nvfp4_gemm",
+    "observed_kernels": [
+      "e004:layer_00:o_proj:nvfp4_gemm/void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)2, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<long, cute::C<(int)1>, long>, cutlass::bfloat16_t, cute::tuple<long, cute::C<(int)1>, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)32>>, cute::tuple<cute::C<(int)32>, cute::C<(int)1>>>>, cute::SM75_U32x2_LDSM_N, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)32>>, cute::tuple<cute::C<(int)32>, cute::C<(int)1>>>>, cute::SM90_U32x2_STSM_N, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)",
+      "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::and_kernel_cuda(at::TensorIterator &)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(bool, bool) (instance 1)]>, unsigned int, bool, (int)4, (int)4>>(T3)",
+      "void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)2, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<long, cute::C<(int)1>, long>, cutlass::bfloat16_t, cute::tuple<long, cute::C<(int)1>, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)32>>, cute::tuple<cute::C<(int)32>, cute::C<(int)1>>>>, cute::SM75_U32x2_LDSM_N, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)32>>, cute::tuple<cute::C<(int)32>, cute::C<(int)1>>>>, cute::SM90_U32x2_STSM_N, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)",
+      "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::func_wrapper_t<c10::BFloat16, at::native::MaxNanFunctor<c10::BFloat16>>, unsigned int, c10::BFloat16, (int)4, (int)4>>(T3)",
+      "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::float8_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda(c10::Float8_e4m3fn) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::AbsFunctor<c10::BFloat16>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+      "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)], std::array<char *, (unsigned long)2>, (int)4, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T4, T5, T6, T7)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, bool, at::native::<unnamed>::CompareEqFunctor<c10::BFloat16>>, std::array<char *, (unsigned long)3>>(int, T2, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::BinaryFunctor<bool, bool, bool, at::native::binary_internal::MulFunctor<bool>>, std::array<char *, (unsigned long)3>>(int, T2, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::AUnaryFunctor<c10::BFloat16, c10::BFloat16, bool, at::native::<unnamed>::CompareEqFunctor<c10::BFloat16>>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<c10::Float8_e4m3fn>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::CUDAFunctorOnSelf_add<int>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+      "void vllm::cvt_fp16_to_fp4<__nv_bfloat16, (bool)0>(int, int, int, int, const T1 *, const float *, unsigned int *, unsigned int *)",
+      "void <unnamed>::elementwise_kernel_with_index<int, at::native::arange_cuda_out(const c10::Scalar &, const c10::Scalar &, const c10::Scalar &, at::Tensor &)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 3)]::operator ()() const::[lambda(long) (instance 1)]>(T1, T2, function_traits<T2>::result_type *)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::BUnaryFunctor<int, int, int, at::native::remainder_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 3)]::operator ()() const::[lambda(int, int) (instance 1)]>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::BUnaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+      "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)"
+    ],
+    "target_kernels": [
+      "void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)2, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<long, cute::C<(int)1>, long>, cutlass::bfloat16_t, cute::tuple<long, cute::C<(int)1>, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)128>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)32>>, cute::tuple<cute::C<(int)32>, cute::C<(int)1>>>>, cute::SM75_U32x2_LDSM_N, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)32>>, cute::tuple<cute::C<(int)32>, cute::C<(int)1>>>>, cute::SM90_U32x2_STSM_N, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)"
+    ],
+    "expected_sm120_cutlass_signature_present": true,
+    "fallback_status": "not_detected",
+    "profiler_sha256": "faadecc958a5a0b2730a90e6325f650bf4e761b79ea377079699e9f2edf3702d"
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5080",
+    "compute_capability": [
+      12,
+      0
+    ],
+    "memory_bytes": 17094475776
+  },
+  "command": {
+    "argv": [
+      "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python",
+      "/home/meyowu/projects/nvfp4-doctor/scripts/run_e004_projection_replay.py",
+      "--layer",
+      "0",
+      "--projection",
+      "o_proj",
+      "--rows",
+      "16",
+      "--seed",
+      "0",
+      "--repetitions",
+      "3",
+      "--output",
+      "/home/meyowu/projects/nvfp4-doctor/artifacts/E004-qwen3-layer-capture/replay/layer-00-o-proj.json"
+    ],
+    "cwd": "/home/meyowu/projects/nvfp4-doctor"
+  },
+  "claim_boundary": "The observed result establishes deterministic replay of one real layer-0 o_proj weight with a synthetic activation through the selected vLLM FlashInfer-CUTLASS path. It does not establish real Qwen activation capture, numerical correctness, model accuracy, or general backend support."
+}

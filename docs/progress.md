@@ -170,7 +170,28 @@ response returned the exact planned HTTP 206 boundaries and lengths; all
 inventory records a SHA-256 for every tensor while retaining the full shard LFS
 hash as source identity. Neither complete shard was downloaded.
 
-The next bounded step is to establish the checkpoint-to-runtime layout
-transform and replay one representative projection without a silent reshape or
-cast. No current observation is a claim about logical payload semantics, real
-dispatch, GEMM accumulation, or model outputs.
+The fifth E004 slice loaded layer-0 `o_proj` without an implicit cast or layout
+inference. Its packed U8 weight bytes were unchanged, weight padding was zero,
+and the independent linear-to-CUTLASS 128x4 scale permutation matched vLLM
+byte-for-byte. vLLM selected `FlashInferCutlassNvFp4LinearKernel`; three
+synchronized BF16 output hashes were identical and finite.
+
+Nsight Systems attributed the expected SM120 block-scaled CUTLASS E2M1/UE4M3
+kernel to the exact `o_proj` target range and found no known fallback signature
+there. This is range-scoped dispatch evidence, not a numerical correctness
+result.
+
+The sixth slice expanded the same preflight to the complete 3-layer by
+5-projection matrix. All 15 cases and 45 measured repetitions were finite and
+within-case hash-stable. Every weight remained byte-identical, every padding
+count was zero, and every independent scale transform matched vLLM. The six
+`o_proj`/`down_proj` cases are production-aligned unfused replays; the nine
+`q_proj`/`gate_proj`/`up_proj` cases are explicitly individual fused-family
+kernel preflights.
+
+E004 is now at the real-activation acquisition boundary. The selected tensors
+cannot run Qwen3 or produce its layer inputs. The complete pinned repository is
+6,413,063,143 bytes, including 6,397,066,384 bytes of weight shards. Downloading
+that additional model payload requires explicit authorization. No current
+observation is a claim about real Qwen activations, GEMM numerical correctness,
+model outputs, or production quality.

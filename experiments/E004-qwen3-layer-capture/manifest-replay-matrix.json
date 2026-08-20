@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "representative_projection_replay_matrix_v1",
+  "captured_at_utc": "2026-08-20T20:40:41.076152Z",
+  "git": {
+    "commit": "603e914253548f8b4e7adeb83d07f13b170b0433",
+    "branch": "exp/e004-payload-replay",
+    "dirty": false
+  },
+  "host": {
+    "os": "Ubuntu 24.04.4 LTS",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3"
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5080",
+    "compute_capability": "12.0",
+    "memory_mib": 16303,
+    "driver_version": "595.95"
+  },
+  "software": {
+    "os": "Ubuntu 24.04.4 LTS",
+    "wsl_version": "2.7.12.0",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "torch": "2.13.0+cu132",
+    "cuda_runtime": "13.2.75",
+    "cuda_toolkit": "13.2.86",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3"
+  },
+  "model": {
+    "repository": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "weight_files_downloaded": false,
+    "acquired_tensor_count": 60,
+    "replayed_case_count": 15
+  },
+  "command": {
+    "argv": [
+      "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python",
+      "scripts/run_e004_replay_matrix.py"
+    ],
+    "cwd": "/home/meyowu/projects/nvfp4-doctor",
+    "subprocess": "scripts/run_e004_projection_replay.py per matrix case"
+  },
+  "source_bundle_sha256": "21a386b4f714d90f099f3ebedca04cd71e3e42d4b1859a516eb56590e77d3e0a",
+  "backend_identity_anchor": {
+    "case": {
+      "layer": 0,
+      "projection": "o_proj"
+    },
+    "requested_backend": "cutlass",
+    "selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+    "reported_backend": null,
+    "target_nvtx_range": "e004:layer_00:o_proj:nvfp4_gemm",
+    "expected_sm120_cutlass_signature_present": true,
+    "fallback_status": "not_detected",
+    "profiler_sha256": "faadecc958a5a0b2730a90e6325f650bf4e761b79ea377079699e9f2edf3702d"
+  },
+  "artifacts": [
+    {
+      "kind": "normalized-replay-matrix",
+      "path": "experiments/E004-qwen3-layer-capture/replay-matrix.json",
+      "sha256": "36083ab5b465f230ef8eb2d52a0662d53fc99d9acdfe7c198dc8f439d209ffb4"
+    },
+    {
+      "kind": "profiled-single-replay",
+      "path": "experiments/E004-qwen3-layer-capture/replay-single-projection.json",
+      "sha256": "9accb8639bce58ca9445415c97cd4adc568e7f01b413f3447c68e2367d1db59e"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-q_proj.json",
+      "sha256": "e4376590c390a49a0b828ad411206e6c8b78161a15135c0efccfcd3d63490fb4"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-o_proj.json",
+      "sha256": "3ae310749ec7bbaf6fe18759ab02b1234925e498f6649de2d9bf70fa5852c8ef"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-gate_proj.json",
+      "sha256": "59072c090ec0d754527b9350562165ed2c58e28eccf270f438d0aaa5f453178f"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-up_proj.json",
+      "sha256": "2c82e74f84eba42c3d03883d6896c82ba5ece46fef015e8ba5043b4832ae6cc1"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-00-down_proj.json",
+      "sha256": "09f996c9ff6469c39925bc6e87b735506e6f15415450282d5c6e3c64d497bfc6"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-q_proj.json",
+      "sha256": "ad2e553e80284da05e372c9e286be1be7be714be31997650ea261806abf8e3ec"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-o_proj.json",
+      "sha256": "dcb2bc2f5d1a9b28b5c144cc8331dd8d4f935e8769a3facc33dac8830404f94b"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-gate_proj.json",
+      "sha256": "684cb6bf3c254ed26bc480acf254e9ecf12fb2738da39589c95e36a601ee7062"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-up_proj.json",
+      "sha256": "a5be9327a6284d1632dce7127da57a945682163ebfdfcb0a1f4453b107a42cd7"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-18-down_proj.json",
+      "sha256": "96b40a99c0cf715c76663b1c97cb4655dab9f89e08c49b20660804929a897ac7"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-q_proj.json",
+      "sha256": "3efeeb7cfbd529bff440e918dba811289a16995ccf1c35e76053ab04062ae598"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-o_proj.json",
+      "sha256": "46624713b5237c8e9a81a5a6458514e3e712d5cd968766b0d5e37eea6135df55"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-gate_proj.json",
+      "sha256": "e5ce0e793aafc3743e131064345605678431c0cb9b90c7b05db2aa0592eda74f"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-up_proj.json",
+      "sha256": "a65e24113eb2bb102dbf60f4607e9ad5675fad4eebae8822d3d9ba046a4d17e1"
+    },
+    {
+      "kind": "raw-matrix-case",
+      "path": "artifacts/E004-qwen3-layer-capture/replay-matrix/layer-35-down_proj.json",
+      "sha256": "892142c398977e019c8be07111bbb1c354862621d3cc665b1330107b3316a1f1"
+    }
+  ]
+}
