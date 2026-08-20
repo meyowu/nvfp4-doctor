@@ -5,15 +5,15 @@ only from observed repository, environment, test, and experiment evidence.
 
 ## Current handoff
 
-- Current experiment: `E003-synthetic-faults`
-- Current gate: `Gate 2 entry — Qwen3 checkpoint pinning and inspection`
-- Status: `complete`
+- Current experiment: `E004-qwen3-layer-capture`
+- Current gate: `Gate 2 — Qwen3 checkpoint metadata and capture planning`
+- Status: `in_progress`
 - Decision: `continue`
 - Verified baseline commit: `e9cbd9055be5e74a9f32569e1cadedf546dce84e`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
-- Active local branch: `exp/e003-heldout-permutations`
+- Active local branch: `exp/e004-checkpoint-metadata`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -145,11 +145,25 @@ only from observed repository, environment, test, and experiment evidence.
   SHA-256 `a228b0a75b50c99ffa661d37640c5d8bbdf211f7aae6c79942fd9f698dbf5e74`,
   and source-bundle SHA-256
   `fe3a273cbd28ae1b3354ff8ea7b02402d0df891b9640dffe185cd76b4cc88d94`.
+- E004 pins public, ungated repository `nvidia/Qwen3-8B-NVFP4` at immutable
+  revision `ccd10a893cbca613259517c3efe08e151ddf2b8e`.
+- `config.json` and `hf_quant_config.json` agree on NVFP4, static 4-bit float
+  weights and input activations, group size 16, excluded `lm_head`, FP8 KV
+  cache, and ModelOpt 0.35.0.
+- The model config declares Qwen3ForCausalLM with 36 layers, hidden size 4096,
+  intermediate size 12288, 32 attention heads, 8 key/value heads, and BF16 as
+  the unquantized model dtype field.
+- The safetensors index contains 1,227 names over two shards. Each of `q_proj`,
+  `o_proj`, `gate_proj`, `up_proj`, and `down_proj` has `weight`, `input_scale`,
+  `weight_scale`, and `weight_scale_2` entries in all 36 layers.
+- The two remote weight shards total 6,397,066,384 bytes and expose immutable
+  LFS SHA-256 values. Only 112,965 bytes of four metadata files were downloaded
+  to ignored artifact storage; no weight shard was downloaded.
 
-These observations complete Gate 1 and the declared three-slice E003 CPU
-synthetic-fault matrix. They do not establish real runtime stride or dispatch
-detection, arbitrary-input rounding, NVFP4 GEMM correctness or performance,
-production model quality, or model-level fault propagation.
+These observations complete Gate 1 and E003, and support the metadata-planning
+slice of E004. They do not establish safetensors shapes or dtypes, real runtime
+stride or dispatch, arbitrary-input rounding, NVFP4 GEMM correctness or
+performance, production model quality, or model-level fault propagation.
 
 ## Last verification
 
@@ -167,23 +181,28 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_format_faults.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_execution_faults.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_heldout_permutations.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_checkpoint_metadata.py
 ```
 
-Observed result: 83 tests plus 261 subtests passed and Python compilation
+Observed result: 91 tests plus 272 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-27 source files, and `uv pip check` found all 207 installed packages compatible.
+28 source files, and `uv pip check` found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
 reversibility failures, slice status `pass`, and decision `continue`.
 The held-out runner added 18 clean contract passes and detected all nine packed
 permutation faults with the same zero-failure metrics; it reported E003 status
 `complete` and decision `continue`.
+The E004 metadata runner resolved the immutable revision, downloaded 112,965
+metadata bytes, validated all five target projection inventories, downloaded no
+weight files, and reported status `pass` and decision `continue`.
 
 ## Next action
 
-Start E004 by resolving and recording an immutable revision for
-`nvidia/Qwen3-8B-NVFP4`, then inspect its public quantization configuration and
-checkpoint metadata before downloading model weights or designing capture.
+Retrieve only the two pinned remote safetensors headers with HTTP range
+requests, validate header length and file boundaries, and record the exact
+dtypes and shapes of the five capture-target projection families before
+choosing representative layers or downloading weight payloads.
 
 ## Blockers and limitations
 
@@ -205,6 +224,11 @@ checkpoint metadata before downloading model weights or designing capture.
   profiler-backed replay remains a later experiment boundary.
 - The held-out E003 permutations are cyclic and axis-aligned; arbitrary partial
   permutations and compound faults remain outside the completion boundary.
+- E004 currently validates config and index metadata only. The index does not
+  expose stored tensor shapes, dtypes, offsets, strides, or layout semantics;
+  those require bounded safetensors-header inspection.
+- The model card documents TensorRT-LLM on B200, not vLLM/FlashInfer on RTX
+  5080. Runtime support and actual kernel identity therefore remain unknown.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -212,8 +236,8 @@ checkpoint metadata before downloading model weights or designing capture.
 
 ## Working-tree expectation
 
-Keep verified E003 completion work committed and pushed on the focused
-`exp/e003-heldout-permutations` branch. The configured research closeout workflow
+Keep verified E004 metadata work committed and pushed on the stacked focused
+`exp/e004-checkpoint-metadata` branch. The configured research closeout workflow
 authorizes commit and push for verified in-scope changes only; opening a PR,
 merging, downloading model weights, or publishing external results still
 requires separate explicit authorization.

@@ -31,6 +31,13 @@ permutations to three new clean artifacts. All nine held-out faults were
 detected and localized with zero clean false rejects or fault false accepts.
 Real dispatch replay, GEMM, and model-level fault propagation remain pending.
 
+E004 has started with a metadata-only inspection of the immutable
+`nvidia/Qwen3-8B-NVFP4` revision
+`ccd10a893cbca613259517c3efe08e151ddf2b8e`. Its two public quantization
+declarations agree on NVFP4 group size 16, and all five planned projection
+families expose the expected quantization tensor names across 36 layers. Only
+112,965 bytes of small metadata were downloaded; no model weight was fetched.
+
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
@@ -63,6 +70,7 @@ PYTHONPATH=src python scripts/run_e002_gate1.py
 PYTHONPATH=src python scripts/run_e003_format_faults.py
 PYTHONPATH=src python scripts/run_e003_execution_faults.py
 PYTHONPATH=src python scripts/run_e003_heldout_permutations.py
+PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup

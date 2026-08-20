@@ -139,6 +139,13 @@ GEMM, or model-level detection.
 ## Next gate
 
 Gate 1 and E003 passed their bounded criteria with a `continue` decision. The
-next step is E004: pin and inspect the primary Qwen3-8B NVFP4 checkpoint before
-designing metadata-preserving representative-layer capture. No E003 observation
-is a claim about real dispatch, GEMM accumulation, or model outputs.
+first E004 slice pinned revision
+`ccd10a893cbca613259517c3efe08e151ddf2b8e` of
+`nvidia/Qwen3-8B-NVFP4` and inspected four public metadata files without
+downloading weights. The declarations agree on NVFP4 group size 16, and each
+planned projection family has four quantization tensor names in all 36 layers.
+
+The next bounded step is remote safetensors-header inspection to establish exact
+stored shapes and dtypes before selecting representative capture layers. No
+current observation is a claim about real dispatch, GEMM accumulation, or model
+outputs.
