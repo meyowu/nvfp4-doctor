@@ -7,9 +7,10 @@ import os
 import platform
 import re
 import subprocess
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol, Sequence
+from typing import Protocol
 
 from .manifest import GPUFingerprint, SoftwareFingerprint
 
@@ -59,7 +60,9 @@ def installed_version(distribution: str) -> str:
     try:
         return importlib.metadata.version(distribution)
     except importlib.metadata.PackageNotFoundError as error:
-        raise CollectionError(f"required distribution is not installed: {distribution}") from error
+        raise CollectionError(
+            f"required distribution is not installed: {distribution}"
+        ) from error
 
 
 def _successful(runner: CommandRunner, argv: Sequence[str]) -> str:
@@ -88,7 +91,9 @@ def collect_gpu(runner: CommandRunner = run_command) -> GPUFingerprint:
         raise CollectionError(f"expected exactly one GPU row, observed {len(rows)}")
     fields = [field.strip() for field in rows[0].split(",")]
     if len(fields) != 4:
-        raise CollectionError(f"expected four nvidia-smi fields, observed {len(fields)}")
+        raise CollectionError(
+            f"expected four nvidia-smi fields, observed {len(fields)}"
+        )
     name, driver_version, memory_mib, compute_capability = fields
     try:
         memory = int(memory_mib)
@@ -129,9 +134,7 @@ def collect_software(
     if nvcc_executable is None:
         cuda_home = os.environ.get("CUDA_HOME")
         nvcc_executable = str(Path(cuda_home) / "bin" / "nvcc") if cuda_home else "nvcc"
-    toolkit = _parse_cuda_toolkit(
-        _successful(runner, (nvcc_executable, "--version"))
-    )
+    toolkit = _parse_cuda_toolkit(_successful(runner, (nvcc_executable, "--version")))
     cuda_runtime = versions("nvidia-cuda-runtime")
     return SoftwareFingerprint(
         os=os_name,

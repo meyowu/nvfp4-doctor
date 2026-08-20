@@ -10,9 +10,10 @@ from pathlib import Path
 from nvfp4_doctor.backends import attach_kernel_evidence, extract_kernel_evidence
 from nvfp4_doctor.env import EnvironmentManifest
 
-
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MANIFEST = ROOT / ".local" / "artifacts" / "E001-kernel-identity" / "manifest.json"
+DEFAULT_MANIFEST = (
+    ROOT / ".local" / "artifacts" / "E001-kernel-identity" / "manifest.json"
+)
 DEFAULT_REPORT = ROOT / ".local" / "profiles" / "e001-smoke.nsys-rep"
 
 
@@ -30,7 +31,7 @@ def main() -> None:
             "nsys",
             "stats",
             "--report",
-            "cuda_gpu_kern_sum",
+            "cuda_gpu_kern_sum:nvtx-name",
             "--format",
             "csv",
             str(args.report),
