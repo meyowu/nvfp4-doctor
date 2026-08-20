@@ -6,13 +6,14 @@ only from observed repository, environment, test, and experiment evidence.
 ## Current handoff
 
 - Current experiment: `E003-synthetic-faults`
-- Current gate: `Gate 2 preparation — Synthetic Fault Injection`
-- Status: `in_progress`
+- Current gate: `Gate 2 entry — Qwen3 checkpoint pinning and inspection`
+- Status: `complete`
 - Decision: `continue`
-- Verified baseline commit: `18d9e14cad813abccce09821099517f6ff769be5`
+- Verified baseline commit: `e9cbd9055be5e74a9f32569e1cadedf546dce84e`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
-- Active local branch: `exp/e003-synthetic-faults`
+- Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
+- Active local branch: `exp/e003-heldout-permutations`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -128,11 +129,27 @@ only from observed repository, environment, test, and experiment evidence.
   commit `4c7cab930f74c7a7f5457b94d1ffc7bf642191cb`; it records `dirty=false` and
   source-bundle SHA-256
   `0a9e5587e74205092338448d151b3ce80ed6c03003b5d6ebddebc72c984b1f23`.
+- E003's final slice adds reversible cyclic permutations of complete packed
+  value blocks, rows, and logical columns without changing scale storage or
+  metadata.
+- Three held-out clean artifacts with shapes `(3, 48)`, `(5, 64)`, and
+  `(131, 80)` produced 18 passing contract evaluations. Their data salts and
+  linear/CUTLASS layouts differ from the development matrix.
+- Gate 1 exact zero-mismatch thresholds were frozen before the held-out matrix
+  was constructed and were not tuned on its cases.
+- All nine held-out permutation faults were detected and localized exactly to
+  packed values plus reconstruction. Clean false rejects, fault false accepts,
+  localization failures, and reversibility failures were zero.
+- The held-out manifest was regenerated from clean completion commit
+  `326522ce74b70ee5934373a2a5fa72d512cd8390`; it records `dirty=false`, result
+  SHA-256 `a228b0a75b50c99ffa661d37640c5d8bbdf211f7aae6c79942fd9f698dbf5e74`,
+  and source-bundle SHA-256
+  `fe3a273cbd28ae1b3354ff8ea7b02402d0df891b9640dffe185cd76b4cc88d94`.
 
-These observations complete Gate 1 and support two E003 CPU synthetic-fault
-slices. E003 remains in progress. They do not establish real runtime stride or
-dispatch detection, arbitrary-input rounding, NVFP4 GEMM correctness or
-performance, production model quality, or model-level fault propagation.
+These observations complete Gate 1 and the declared three-slice E003 CPU
+synthetic-fault matrix. They do not establish real runtime stride or dispatch
+detection, arbitrary-input rounding, NVFP4 GEMM correctness or performance,
+production model quality, or model-level fault propagation.
 
 ## Last verification
 
@@ -149,21 +166,24 @@ uv pip check --python /home/meyowu/projects/nvfp4-doctor/.venv/bin/python
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e002_gate1.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_format_faults.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_execution_faults.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e003_heldout_permutations.py
 ```
 
-Observed result: 77 tests plus 248 subtests passed and Python compilation
+Observed result: 83 tests plus 261 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
 27 source files, and `uv pip check` found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
 reversibility failures, slice status `pass`, and decision `continue`.
+The held-out runner added 18 clean contract passes and detected all nine packed
+permutation faults with the same zero-failure metrics; it reported E003 status
+`complete` and decision `continue`.
 
 ## Next action
 
-Add deterministic packed-value block, row, and column permutation controls,
-then evaluate all E003 detectors on a held-out clean/fault matrix that is not
-used to tune later thresholds. Measure clean false rejects, fault false accepts,
-localization, and reversibility before deciding whether E003 is complete.
+Start E004 by resolving and recording an immutable revision for
+`nvidia/Qwen3-8B-NVFP4`, then inspect its public quantization configuration and
+checkpoint metadata before downloading model weights or designing capture.
 
 ## Blockers and limitations
 
@@ -177,14 +197,14 @@ localization, and reversibility before deciding whether E003 is complete.
   of scope.
 - NVFP4 GEMM correctness, throughput, accuracy on real model weights and
   activations, and end-to-end model quality remain future-gate questions.
-- The first E003 slice covers six deterministic CPU format controls only. It
-  does not yet cover stride, non-contiguous storage, backend mismatch, fallback,
-  arbitrary corruptions, or held-out fault distributions.
+- The first E003 slice covers six deterministic CPU format controls only; the
+  later execution-evidence and held-out permutation slices extend that matrix
+  without turning it into a distribution of naturally occurring faults.
 - The second E003 slice covers metadata and backend-identity fields using
   synthetic evidence. It does not establish actual runtime storage or dispatch;
   profiler-backed replay remains a later experiment boundary.
-- Packed-value block, row, and column permutations plus a held-out evaluation
-  matrix remain required before E003 can be considered complete.
+- The held-out E003 permutations are cyclic and axis-aligned; arbitrary partial
+  permutations and compound faults remain outside the completion boundary.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -192,8 +212,8 @@ localization, and reversibility before deciding whether E003 is complete.
 
 ## Working-tree expectation
 
-Keep verified E003 work committed and pushed on the focused
-`exp/e003-synthetic-faults` branch. The configured research closeout workflow
+Keep verified E003 completion work committed and pushed on the focused
+`exp/e003-heldout-permutations` branch. The configured research closeout workflow
 authorizes commit and push for verified in-scope changes only; opening a PR,
 merging, downloading model weights, or publishing external results still
 requires separate explicit authorization.

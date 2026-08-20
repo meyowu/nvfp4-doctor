@@ -1,0 +1,662 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E003-synthetic-faults",
+  "slice": "packed_permutation_heldout_v1",
+  "execution_device": "cpu",
+  "seed": 20260820,
+  "evaluation_role": "held_out",
+  "threshold_policy": {
+    "source": "Gate 1 exact zero-mismatch contract thresholds",
+    "frozen_before_matrix_construction": true,
+    "tuned_on_held_out_cases": false
+  },
+  "clean_artifact_ids": [
+    "linear_3x48_salt11",
+    "linear_5x64_salt23",
+    "cutlass_131x80_salt37"
+  ],
+  "clean_artifacts_checked": 3,
+  "clean_contract_evaluations": 18,
+  "clean_false_rejects": 0,
+  "fault_cases": [
+    {
+      "artifact_id": "linear_3x48_salt11",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_block_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 1
+      },
+      "clean_shape": [
+        3,
+        48
+      ],
+      "clean_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 72,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 142,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "linear_3x48_salt11",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_row_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 1
+      },
+      "clean_shape": [
+        3,
+        48
+      ],
+      "clean_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 72,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 135,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "linear_3x48_salt11",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_column_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 3
+      },
+      "clean_shape": [
+        3,
+        48
+      ],
+      "clean_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 72,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 140,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "linear_5x64_salt23",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_block_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 2
+      },
+      "clean_shape": [
+        5,
+        64
+      ],
+      "clean_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 160,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 316,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "linear_5x64_salt23",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_row_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 2
+      },
+      "clean_shape": [
+        5,
+        64
+      ],
+      "clean_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 160,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 289,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "linear_5x64_salt23",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_column_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 5
+      },
+      "clean_shape": [
+        5,
+        64
+      ],
+      "clean_layout": "linear",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 142,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "not applicable"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 270,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "cutlass_131x80_salt37",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_block_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 3
+      },
+      "clean_shape": [
+        131,
+        80
+      ],
+      "clean_layout": "cutlass_128x4",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 5114,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "checked 1393 physical padding bytes"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 9912,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "cutlass_131x80_salt37",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_row_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 3
+      },
+      "clean_shape": [
+        131,
+        80
+      ],
+      "clean_layout": "cutlass_128x4",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 5240,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "checked 1393 physical padding bytes"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 9234,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    },
+    {
+      "artifact_id": "cutlass_131x80_salt37",
+      "evaluation_role": "held_out",
+      "fault_kind": "packed_column_permutation",
+      "label": "synthetic",
+      "parameters": {
+        "offset": 7
+      },
+      "clean_shape": [
+        131,
+        80
+      ],
+      "clean_layout": "cutlass_128x4",
+      "expected_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "observed_failed_contracts": [
+        "packed_values",
+        "reconstruction"
+      ],
+      "exact_localization": true,
+      "detected": true,
+      "reversible": true,
+      "fault_changes_artifact": true,
+      "contract_outcomes": [
+        {
+          "contract_id": "metadata",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "all declared fields match"
+        },
+        {
+          "contract_id": "packed_values",
+          "passed": false,
+          "mismatch_count": 5222,
+          "threshold": 0,
+          "details": "exact packed-byte comparison"
+        },
+        {
+          "contract_id": "logical_scales",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "layout-normalized logical scale comparison"
+        },
+        {
+          "contract_id": "scale_padding",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "checked 1393 physical padding bytes"
+        },
+        {
+          "contract_id": "global_scale",
+          "passed": true,
+          "mismatch_count": 0,
+          "threshold": 0,
+          "details": "exact scalar comparison"
+        },
+        {
+          "contract_id": "reconstruction",
+          "passed": false,
+          "mismatch_count": 10403,
+          "threshold": 0,
+          "details": "exact logical value comparison"
+        }
+      ]
+    }
+  ],
+  "faults_injected": 9,
+  "faults_detected": 9,
+  "false_accepts": 0,
+  "localization_failures": 0,
+  "reversibility_failures": 0,
+  "slice_status": "pass",
+  "e003_status": "complete",
+  "decision": "continue",
+  "claim_boundary": "Detection and exact localization apply only to three deterministic packed-value permutation families over this held-out CPU matrix. Runtime storage, dispatch, GEMM, and model propagation are not tested."
+}

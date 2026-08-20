@@ -117,9 +117,28 @@ passing, 27 Mypy source files clean, 56 Python files formatted, and all 207
 installed packages compatible. No GPU integration was required for this
 CPU-only work.
 
+## E003 held-out permutation observation
+
+The final E003 slice added deterministic, reversible cyclic permutations of
+complete packed-value blocks, rows, and logical columns. It evaluated all three
+fault families over held-out `(3, 48)`, `(5, 64)`, and `(131, 80)` artifacts
+with distinct data salts and both linear and CUTLASS 128x4 scale layouts.
+
+The exact zero-mismatch thresholds came from Gate 1 and were frozen before this
+matrix was constructed; none was tuned on the held-out cases. All 18 clean
+contract evaluations passed. All nine injected faults were detected and
+localized to the packed-value and reconstruction contracts, with zero false
+accepts, clean false rejects, localization failures, or reversibility failures.
+
+The final CPU verification reported 83 tests plus 261 subtests passing, 27 Mypy
+source files clean, 58 Python files formatted, and all 207 installed packages
+compatible. These results complete the declared synthetic E003 matrix only;
+they do not estimate naturally occurring fault rates or establish runtime,
+GEMM, or model-level detection.
+
 ## Next gate
 
-Gate 1 passed with a `go` decision. E003 remains in progress with a `continue`
-decision. The next bounded slice is deterministic packed-value block, row, and
-column permutations plus a held-out clean/fault matrix. No E003 observation is
-a claim about real dispatch, GEMM accumulation, or model outputs.
+Gate 1 and E003 passed their bounded criteria with a `continue` decision. The
+next step is E004: pin and inspect the primary Qwen3-8B NVFP4 checkpoint before
+designing metadata-preserving representative-layer capture. No E003 observation
+is a claim about real dispatch, GEMM accumulation, or model outputs.

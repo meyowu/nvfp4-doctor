@@ -9,7 +9,9 @@ from enum import StrEnum
 from nvfp4_doctor.formats import (
     ScaleFactorLayout,
     cutlass_128x4_offset,
+    pack_e2m1,
     scale_storage_size,
+    unpack_e2m1,
     unswizzle_scales_128x4,
 )
 from nvfp4_doctor.oracle import NVFP4Tensor
@@ -24,6 +26,9 @@ class NVFP4FaultKind(StrEnum):
     GLOBAL_SCALE_MULTIPLIER = "global_scale_multiplier"
     SCALE_LAYOUT_MISLABEL = "scale_layout_mislabel"
     PADDING_CORRUPTION = "padding_corruption"
+    PACKED_BLOCK_PERMUTATION = "packed_block_permutation"
+    PACKED_ROW_PERMUTATION = "packed_row_permutation"
+    PACKED_COLUMN_PERMUTATION = "packed_column_permutation"
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,6 +78,69 @@ def swap_packed_nibbles(tensor: NVFP4Tensor) -> NVFP4Tensor:
         ((value & 0xF) << 4) | (value >> 4) for value in tensor.packed_values
     )
     return replace(tensor, packed_values=swapped)
+
+
+def _cyclic_permutation(items: tuple[int, ...], offset: int) -> tuple[int, ...]:
+    normalized_offset = offset % len(items)
+    return tuple(
+        items[(index - normalized_offset) % len(items)] for index in range(len(items))
+    )
+
+
+def _permutation_offset(offset: int, extent: int, dimension: str) -> int:
+    if isinstance(offset, bool) or not isinstance(offset, int):
+        raise ValueError("offset must be an integer")
+    normalized_offset = offset % extent
+    if extent < 2 or normalized_offset == 0:
+        raise ValueError(f"{dimension} permutation must move at least one item")
+    return normalized_offset
+
+
+def permute_packed_blocks(tensor: NVFP4Tensor, offset: int) -> NVFP4Tensor:
+    """Cyclically permute complete E2M1 quantization blocks within every row."""
+    block_columns = tensor.columns // tensor.block_size
+    normalized_offset = _permutation_offset(offset, block_columns, "block")
+    codes = unpack_e2m1(tensor.packed_values)
+    permuted: list[int] = []
+    for row in range(tensor.rows):
+        row_start = row * tensor.columns
+        blocks = tuple(
+            codes[
+                row_start + block * tensor.block_size : row_start
+                + (block + 1) * tensor.block_size
+            ]
+            for block in range(block_columns)
+        )
+        for block in _cyclic_permutation(
+            tuple(range(block_columns)), normalized_offset
+        ):
+            permuted.extend(blocks[block])
+    return replace(tensor, packed_values=pack_e2m1(permuted))
+
+
+def permute_packed_rows(tensor: NVFP4Tensor, offset: int) -> NVFP4Tensor:
+    """Cyclically permute complete packed E2M1 rows."""
+    normalized_offset = _permutation_offset(offset, tensor.rows, "row")
+    codes = unpack_e2m1(tensor.packed_values)
+    row_order = _cyclic_permutation(tuple(range(tensor.rows)), normalized_offset)
+    permuted = (
+        code
+        for row in row_order
+        for code in codes[row * tensor.columns : (row + 1) * tensor.columns]
+    )
+    return replace(tensor, packed_values=pack_e2m1(permuted))
+
+
+def permute_packed_columns(tensor: NVFP4Tensor, offset: int) -> NVFP4Tensor:
+    """Cyclically permute logical E2M1 columns within every row."""
+    normalized_offset = _permutation_offset(offset, tensor.columns, "column")
+    codes = unpack_e2m1(tensor.packed_values)
+    permuted: list[int] = []
+    for row in range(tensor.rows):
+        row_start = row * tensor.columns
+        row_codes = codes[row_start : row_start + tensor.columns]
+        permuted.extend(_cyclic_permutation(row_codes, normalized_offset))
+    return replace(tensor, packed_values=pack_e2m1(permuted))
 
 
 def shift_scale_indices(tensor: NVFP4Tensor, offset: int) -> NVFP4Tensor:
@@ -226,6 +294,35 @@ def inject_padding_corruption(
     )
 
 
+def inject_packed_block_permutation(tensor: NVFP4Tensor, offset: int) -> FaultInjection:
+    return FaultInjection(
+        NVFP4FaultKind.PACKED_BLOCK_PERMUTATION,
+        tensor,
+        permute_packed_blocks(tensor, offset),
+        (("offset", offset),),
+    )
+
+
+def inject_packed_row_permutation(tensor: NVFP4Tensor, offset: int) -> FaultInjection:
+    return FaultInjection(
+        NVFP4FaultKind.PACKED_ROW_PERMUTATION,
+        tensor,
+        permute_packed_rows(tensor, offset),
+        (("offset", offset),),
+    )
+
+
+def inject_packed_column_permutation(
+    tensor: NVFP4Tensor, offset: int
+) -> FaultInjection:
+    return FaultInjection(
+        NVFP4FaultKind.PACKED_COLUMN_PERMUTATION,
+        tensor,
+        permute_packed_columns(tensor, offset),
+        (("offset", offset),),
+    )
+
+
 def revert_fault(injection: FaultInjection) -> NVFP4Tensor:
     """Apply the mathematical inverse and return the restored clean artifact."""
     parameters = dict(injection.parameters)
@@ -243,4 +340,10 @@ def revert_fault(injection: FaultInjection) -> NVFP4Tensor:
         return relabel_scale_layout(injection.faulted, injection.clean.scale_layout)
     if injection.kind == NVFP4FaultKind.PADDING_CORRUPTION:
         return toggle_padding_byte(injection.faulted, int(parameters["offset"]))
+    if injection.kind == NVFP4FaultKind.PACKED_BLOCK_PERMUTATION:
+        return permute_packed_blocks(injection.faulted, -int(parameters["offset"]))
+    if injection.kind == NVFP4FaultKind.PACKED_ROW_PERMUTATION:
+        return permute_packed_rows(injection.faulted, -int(parameters["offset"]))
+    if injection.kind == NVFP4FaultKind.PACKED_COLUMN_PERMUTATION:
+        return permute_packed_columns(injection.faulted, -int(parameters["offset"]))
     raise ValueError(f"unsupported fault kind: {injection.kind!r}")
