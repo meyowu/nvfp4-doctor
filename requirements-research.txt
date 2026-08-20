@@ -1,0 +1,10 @@
+# Verified 2026-08-19 on RTX 5080 / WSL2 / Ubuntu 24.04.
+# Install vLLM first with: uv pip install vllm==0.27.1 --torch-backend=auto
+# Then force the CUDA compiler-side packages below to 13.2 to match torch cu132.
+vllm==0.27.1
+flashinfer-python==0.6.16.post3
+nvidia-cuda-nvcc==13.2.86
+nvidia-cuda-cccl==13.2.86
+nvidia-cuda-crt==13.2.86
+nvidia-cuda-nvdisasm==13.2.86
+nvidia-nvvm==13.2.86
