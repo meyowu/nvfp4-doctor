@@ -14,6 +14,7 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
 - Verified E004 metadata commit: `68cb4e0328598dd33d3626b0046e704c97ac39b5`
+- Verified E004 header commit: `ee716253c14f0f6b1a8364d2f92253ec01cbe571`
 - Active local branch: `exp/e004-safetensors-headers`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
@@ -177,6 +178,11 @@ only from observed repository, environment, test, and experiment evidence.
   scales as scalar F32. Stored weight shapes are `(4096, 2048)` for `q_proj`
   and `o_proj`, `(12288, 2048)` for `gate_proj` and `up_proj`, and
   `(4096, 6144)` for `down_proj`.
+- The E004 header manifest was regenerated from clean commit
+  `ee716253c14f0f6b1a8364d2f92253ec01cbe571`; it records `dirty=false`, result
+  SHA-256 `8d6b32d2bc36b8f3477b88e11b5bc8542fcabc70778a12bdbe3f1b8fd5fd64d9`,
+  and source-bundle SHA-256
+  `c5789594fe59ae05bb22efdd10836cb37143fdde6a64d9ea875bbe82b11c8049`.
 
 These observations complete Gate 1 and E003, and support the metadata-planning
 and safetensors-header slices of E004. They do not establish logical checkpoint

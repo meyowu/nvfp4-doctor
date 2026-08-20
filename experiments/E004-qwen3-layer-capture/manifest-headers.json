@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E004-qwen3-layer-capture",
   "slice": "safetensors_headers_v1",
-  "captured_at_utc": "2026-08-20T19:35:45.268053Z",
+  "captured_at_utc": "2026-08-20T19:36:41.662232Z",
   "command": {
     "argv": [
       "python",
@@ -12,8 +12,8 @@
   },
   "git": {
     "branch": "exp/e004-safetensors-headers",
-    "commit": "229e4190e7604ae623f449bcefca2f8f4ad4cbbf",
-    "dirty": true
+    "commit": "ee716253c14f0f6b1a8364d2f92253ec01cbe571",
+    "dirty": false
   },
   "platform": {
     "os": "Linux",
