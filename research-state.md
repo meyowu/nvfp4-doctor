@@ -6,8 +6,8 @@ only from observed repository, environment, test, and experiment evidence.
 ## Current handoff
 
 - Current experiment: `E004-qwen3-layer-capture`
-- Current gate: `Gate 2 — Qwen3 payload validation and replay planning`
-- Status: `in_progress`
+- Current gate: `Gate 2 — real-activation acquisition boundary`
+- Status: `awaiting_explicit_download_authorization`
 - Decision: `continue`
 - Verified baseline commit: `eacd176e34daa0a2c9eb16a45d8fc3706374e3f7`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
@@ -19,7 +19,13 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 acquisition-plan evidence commit: `76ef175ad885b741068dd21db08149b0902840bd`
 - Verified E004 tensor-acquisition implementation commit: `62db873d3951bbcdcabe638983165a941f62eea2`
 - Verified E004 tensor-acquisition evidence commit: `60c05df86936ca958088d4685b25001f77ad0da0`
-- Active local branch: `exp/e004-tensor-acquisition`
+- Verified E004 tensor-acquisition seal commit: `597d076e01bbbc7fb9df246220d67b049cb62f4e`
+- Verified E004 payload-loader commit: `729eaadd32233e806756d0a58a5cf75b012533b4`
+- Verified E004 single-replay implementation commit: `816fee61f0de6014029730c065a73a14a7b8a3be`
+- Verified E004 single-replay evidence commit: `63d0d7a971dd5c30e9309b9451de6c399b5365c9`
+- Verified E004 replay-matrix implementation commit: `603e914253548f8b4e7adeb83d07f13b170b0433`
+- Verified E004 replay-matrix evidence commit: `7fc5cec640affb0af2143ce90a8887b0460a3293`
+- Active local branch: `exp/e004-payload-replay`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -213,19 +219,51 @@ only from observed repository, environment, test, and experiment evidence.
   SHA-256 `6ae6088720f14d8a681896a524a638e94b9732c3b1d4d751769548a4d5feb062`,
   and source-bundle SHA-256
   `8093fc825d4d2eb9e98c8bc891234738481fa50db36cf0eda0c141a8fcece4dd`.
+- The strict payload loader reads exactly four tensors for a selected projection,
+  validates recorded length, dtype, shape, and SHA-256, parses scalar F32 values
+  explicitly as little-endian, and rejects negative or non-finite E4M3 scale
+  codes. It does not silently cast, transpose, pad, or infer layout from shape.
+- ModelOpt checkpoint weights are row-major U8 with two low-nibble-first E2M1
+  values per byte. Their block scales are stored in linear F8_E4M3 order and
+  require an explicit CUTLASS 128x4 byte permutation. The stored scale shape can
+  remain unchanged through that permutation, so shape alone cannot identify it.
+- The bounded layer-0 `o_proj` replay preserved the packed weight SHA-256,
+  required zero weight padding, and produced independent and vLLM scale-swizzle
+  SHA-256
+  `4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2`.
+- vLLM selected `FlashInferCutlassNvFp4LinearKernel` on the RTX 5080. Three
+  synchronized layer-0 `o_proj` replays produced the same finite BF16
+  `(16, 4096)` output SHA-256
+  `ae14a5d1cf6c304e3c57cbeee2f024fbc7a26963e7b53d59d34963a77b4e3faf`.
+- Nsight Systems attributed the expected SM120 block-scaled CUTLASS E2M1/UE4M3
+  kernel to the exact E004 target range. No known fallback signature occurred
+  in that range; the retained report SHA-256 is
+  `faadecc958a5a0b2730a90e6325f650bf4e761b79ea377079699e9f2edf3702d`.
+- All 15 early/middle/late projection cases completed three synchronized
+  replays with finite, hash-stable outputs. Every packed weight remained
+  byte-identical, every weight padding count was zero, and every scale swizzle
+  matched vLLM byte-for-byte.
+- Six `o_proj` and `down_proj` cases are production-aligned unfused replays.
+  Nine `q_proj`, `gate_proj`, and `up_proj` cases remain individual fused-family
+  kernel preflights and are not represented as exact model-layer replay.
+- The complete pinned repository contains 6,413,063,143 bytes, including
+  6,397,066,384 weight-shard bytes and 15,996,759 bytes of tokenizer and small
+  files. Standard full-snapshot acquisition cannot directly reuse the 60
+  separately stored range artifacts. The WSL filesystem currently has
+  1,010,492,313,600 free bytes, so storage is not the blocker.
 
-These observations complete Gate 1 and E003, and support the metadata,
-safetensors-header, representative acquisition-plan, and transport-integrity
-slices of E004. They do not establish logical checkpoint layout semantics, real
-runtime stride or dispatch, arbitrary-input rounding, NVFP4 GEMM correctness or
-performance, production model quality, or model-level fault propagation.
+These observations complete Gate 1 and E003, and support E004 metadata, header,
+acquisition, strict layout transformation, deterministic real-weight replay,
+and one profiler-backed dispatch case. They do not establish real Qwen
+activation capture, arbitrary-input rounding, NVFP4 GEMM numerical correctness
+or performance, production model quality, or model-level fault propagation.
 
 ## Last verification
 
 ```bash
 source /home/meyowu/projects/nvfp4-doctor/activate-nvfp4-lab.sh
-cd /mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor
-bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh
+cd /home/meyowu/projects/nvfp4-doctor
+bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff format --check src tests scripts smoke_nvfp4.py
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff check src tests scripts smoke_nvfp4.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/mypy src
@@ -240,11 +278,13 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_safetensors_headers.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_acquisition_plan.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_tensor_acquisition.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_projection_replay.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_replay_matrix.py
 ```
 
-Observed result: 114 tests plus 402 subtests passed and Python compilation
+Observed result: 135 tests plus 419 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-30 source files, and `uv pip check` found all 207 installed packages compatible.
+31 source files, and `uv pip check` found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
 reversibility failures, slice status `pass`, and decision `continue`.
@@ -265,12 +305,20 @@ The tensor-acquisition runner completed all 60 planned requests, wrote
 311,427,192 bytes, recorded a SHA-256 for each ignored local artifact, and
 reported status `pass` and decision `continue`. A separate local verification
 recomputed all lengths and hashes successfully.
+The single replay selected FlashInfer CUTLASS, preserved all recorded source
+metadata, matched the independent scale transform, produced three identical
+finite outputs, and retained range-scoped Nsight kernel evidence. The matrix
+runner then passed all 15 cases and 45 measured repetitions without a weight
+mutation, padding requirement, scale-transform mismatch, non-finite output, or
+within-case hash change.
 
 ## Next action
 
-Load the acquired tensors without silent reshape or cast, establish the exact
-checkpoint-to-runtime layout transform, and test one representative projection
-replay before expanding to the early/middle/late matrix.
+After explicit authorization, acquire the complete pinned 6,413,063,143-byte
+repository snapshot into ignored project-local model storage, verify both shard
+LFS hashes and tokenizer hash, and attempt a conservative one-prompt vLLM load
+to capture real inputs for layers 0, 18, and 35. Until that authorization is
+given, do not download any additional model payload.
 
 ## Blockers and limitations
 
@@ -298,8 +346,12 @@ replay before expanding to the early/middle/late matrix.
 - Upstream provides whole-shard LFS hashes rather than per-tensor hashes. The
   acquired ranges therefore use local SHA-256 values for repeatability while
   retaining the immutable shard hashes as source identity.
-- The model card documents TensorRT-LLM on B200, not vLLM/FlashInfer on RTX
-  5080. Runtime support and actual kernel identity therefore remain unknown.
+- The model card documents TensorRT-LLM on B200. The observed RTX 5080 result
+  establishes only the pinned vLLM/FlashInfer single-projection path, not a full
+  checkpoint load or general support.
+- The selected 60 tensors cannot produce a genuine Qwen activation. Standard
+  full-model loading requires the complete 6.413 GB pinned snapshot; that
+  additional model acquisition has not been authorized.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -307,8 +359,8 @@ replay before expanding to the early/middle/late matrix.
 
 ## Working-tree expectation
 
-Keep verified E004 tensor-acquisition work on the focused
-`exp/e004-tensor-acquisition` branch. Use the configured research closeout
+Keep verified E004 replay work on the focused `exp/e004-payload-replay` branch.
+Use the configured research closeout
 workflow for commit, push, PR creation, and merge. Downloading tensor payloads,
 deleting branches, or publishing external results still requires separate
 explicit authorization.

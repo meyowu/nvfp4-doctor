@@ -53,6 +53,18 @@ storage. All exact partial-content boundaries and lengths matched the plan, and
 all 311,427,192 local bytes were reverified against recorded per-tensor SHA-256
 values. Neither complete weight shard was downloaded.
 
+A strict loader then replayed acquired layer-0 `o_proj` weights with a
+deterministic synthetic activation. Packed weight bytes were preserved, the
+independent CUTLASS 128x4 scale transform matched vLLM byte-for-byte, and vLLM
+selected its FlashInfer CUTLASS NVFP4 kernel. Three synchronized outputs were
+finite and hash-identical; Nsight observed the expected SM120 block-scaled E2M1
+kernel in the exact target range with no known fallback signature there.
+
+The same bounded preflight passed all 15 early/middle/late projection cases and
+45 measured repetitions. This is real-weight, synthetic-activation execution
+evidence. Real Qwen activation capture remains pending because it requires a
+separately authorized 6,413,063,143-byte complete pinned repository snapshot.
+
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
@@ -89,6 +101,8 @@ PYTHONPATH=src python scripts/run_e004_checkpoint_metadata.py
 PYTHONPATH=src python scripts/run_e004_safetensors_headers.py
 PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
 PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
+bash scripts/run_e004_projection_profile.sh
+PYTHONPATH=src python scripts/run_e004_replay_matrix.py
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup
