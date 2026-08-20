@@ -6,10 +6,10 @@ only from observed repository, environment, test, and experiment evidence.
 ## Current handoff
 
 - Current experiment: `E004-qwen3-layer-capture`
-- Current gate: `Gate 2 — real-activation acquisition boundary`
-- Status: `awaiting_explicit_download_authorization`
+- Current gate: `Gate 2 — representative real-activation coverage`
+- Status: `single_real_activation_replay_pass`
 - Decision: `continue`
-- Verified baseline commit: `eacd176e34daa0a2c9eb16a45d8fc3706374e3f7`
+- Verified baseline commit: `3dfd06fbd3ca5e01b8218967def5506135b4bba4`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
@@ -25,7 +25,12 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 single-replay evidence commit: `63d0d7a971dd5c30e9309b9451de6c399b5365c9`
 - Verified E004 replay-matrix implementation commit: `603e914253548f8b4e7adeb83d07f13b170b0433`
 - Verified E004 replay-matrix evidence commit: `7fc5cec640affb0af2143ce90a8887b0460a3293`
-- Active local branch: `exp/e004-payload-replay`
+- Verified E004 full-snapshot verifier commit: `6dfa5abe03e72f8c852d3e686a474994304a86ef`
+- Verified E004 full-snapshot evidence commit: `96cfaed51e0357a58219c597961bcf7e7ed3a669`
+- Verified E004 real-activation capture commit: `95bc5d7dbf6256bee32814e347903facd1d77ace`
+- Verified E004 real-activation finalizer commit: `c7884800ce20a9669386e46a53772ed4f4d18796`
+- Verified E004 real-activation evidence commit: `3dfd06fbd3ca5e01b8218967def5506135b4bba4`
+- Active local branch: `exp/e004-real-activation`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -248,22 +253,32 @@ only from observed repository, environment, test, and experiment evidence.
   kernel preflights and are not represented as exact model-layer replay.
 - The complete pinned repository contains 6,413,063,143 bytes, including
   6,397,066,384 weight-shard bytes and 15,996,759 bytes of tokenizer and small
-  files. Standard full-snapshot acquisition cannot directly reuse the 60
-  separately stored range artifacts. The WSL filesystem currently has
-  1,010,492,313,600 free bytes, so storage is not the blocker.
+  files. All 15 pinned files were acquired under ignored `models/` storage and
+  passed the Hub checksum inventory.
+- One fixed hashed token-ID request produced a real BF16 layer-0 `o_proj`
+  prefill input at shape `(9, 4096)` with SHA-256
+  `c4c16cadca3b8981e8bdfdd7bd20b2b7b6c6e2be7b34ffa9e98cd6f23890893c`.
+- Three synchronized replays were finite, hash-stable, and byte-exact to the
+  captured module output with SHA-256
+  `da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f`.
+- The real-activation range contained the expected SM120 block-scaled CUTLASS
+  E2M1/UE4M3 signature and no known fallback. The retained ignored Nsight report
+  has SHA-256
+  `394f15f9e944713a01cd04ff7e200df59e411b77bb9f0decd90e6af1f35dc38a`.
 
 These observations complete Gate 1 and E003, and support E004 metadata, header,
 acquisition, strict layout transformation, deterministic real-weight replay,
-and one profiler-backed dispatch case. They do not establish real Qwen
-activation capture, arbitrary-input rounding, NVFP4 GEMM numerical correctness
-or performance, production model quality, or model-level fault propagation.
+complete-snapshot integrity, and one profiler-backed real-activation replay.
+They do not establish representative real-activation coverage, arbitrary-input
+rounding, NVFP4 GEMM numerical correctness or performance, production model
+quality, or model-level fault propagation.
 
 ## Last verification
 
 ```bash
 source /home/meyowu/projects/nvfp4-doctor/activate-nvfp4-lab.sh
-cd /home/meyowu/projects/nvfp4-doctor
-bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh
+cd /mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor
+bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh scripts/run_e004_real_activation_profile.sh
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff format --check src tests scripts smoke_nvfp4.py
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff check src tests scripts smoke_nvfp4.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/mypy src
@@ -280,11 +295,14 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_tensor_acquisition.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_projection_replay.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_replay_matrix.py
+PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_full_model_acquisition.py
+bash scripts/run_e004_real_activation_profile.sh
 ```
 
-Observed result: 135 tests plus 419 subtests passed and Python compilation
+Observed result: 163 tests plus 419 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-31 source files, and `uv pip check` found all 207 installed packages compatible.
+31 source files, Ruff reported 90 Python files formatted, and `uv pip check`
+found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
 reversibility failures, slice status `pass`, and decision `continue`.
@@ -311,14 +329,21 @@ finite outputs, and retained range-scoped Nsight kernel evidence. The matrix
 runner then passed all 15 cases and 45 measured repetitions without a weight
 mutation, padding requirement, scale-transform mismatch, non-finite output, or
 within-case hash change.
+The full-snapshot verifier passed all 15 pinned files and 6,413,063,143 bytes.
+The real-activation workflow then loaded the complete model, captured one BF16
+layer-0 `o_proj` prefill input, preserved its declared transfer metadata, and
+produced three finite, hash-stable, byte-exact same-module replays. Nsight found
+the expected SM120 block-scaled CUTLASS signature and no known fallback in the
+exact target range; the normalized result reports status `pass` and decision
+`continue`.
 
 ## Next action
 
-After explicit authorization, acquire the complete pinned 6,413,063,143-byte
-repository snapshot into ignored project-local model storage, verify both shard
-LFS hashes and tokenizer hash, and attempt a conservative one-prompt vLLM load
-to capture real inputs for layers 0, 18, and 35. Until that authorization is
-given, do not download any additional model payload.
+Extend the real-activation capture into a bounded representative matrix. Start
+with unfused `o_proj` and `down_proj` at early, middle, and late layers, then
+design fused `qkv_proj` and `gate_up_proj` cases that preserve production module
+boundaries. Keep prompt identities hashed, raw activations ignored, and each
+case separately profiled or tied to an explicit backend-identity anchor.
 
 ## Blockers and limitations
 
@@ -347,11 +372,11 @@ given, do not download any additional model payload.
   acquired ranges therefore use local SHA-256 values for repeatability while
   retaining the immutable shard hashes as source identity.
 - The model card documents TensorRT-LLM on B200. The observed RTX 5080 result
-  establishes only the pinned vLLM/FlashInfer single-projection path, not a full
-  checkpoint load or general support.
-- The selected 60 tensors cannot produce a genuine Qwen activation. Standard
-  full-model loading requires the complete 6.413 GB pinned snapshot; that
-  additional model acquisition has not been authorized.
+  establishes only the pinned vLLM/FlashInfer environment and tested cases, not
+  general support.
+- The first real-activation result covers one fixed request and layer-0
+  `o_proj`. It does not cover prompt diversity, other layers, fused module
+  families, final logits, model quality, or a numerical reference comparison.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -359,8 +384,9 @@ given, do not download any additional model payload.
 
 ## Working-tree expectation
 
-Keep verified E004 replay work on the focused `exp/e004-payload-replay` branch.
+Keep verified E004 real-activation work on the focused
+`exp/e004-real-activation` branch.
 Use the configured research closeout
-workflow for commit, push, PR creation, and merge. Downloading tensor payloads,
-deleting branches, or publishing external results still requires separate
-explicit authorization.
+workflow for commit, push, PR creation, and merge. Acquiring additional model
+payloads outside the pinned snapshot, deleting branches, or publishing external
+results still requires separate explicit authorization.

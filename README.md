@@ -62,8 +62,21 @@ kernel in the exact target range with no known fallback signature there.
 
 The same bounded preflight passed all 15 early/middle/late projection cases and
 45 measured repetitions. This is real-weight, synthetic-activation execution
-evidence. Real Qwen activation capture remains pending because it requires a
-separately authorized 6,413,063,143-byte complete pinned repository snapshot.
+evidence.
+
+The complete pinned repository snapshot has now been acquired into ignored
+local `models/` storage. All 15 files and 6,413,063,143 bytes passed the pinned
+Hugging Face checksum inventory; the two weight shards account for
+6,397,066,384 bytes. This establishes local acquisition integrity only.
+
+A first real-activation slice then ran the full Qwen3 checkpoint with one fixed,
+hashed token-ID request and captured the layer-0 `o_proj` prefill input. The BF16
+activation had shape `(9, 4096)`. Three synchronized standalone replays were
+finite, hash-stable, and byte-exact to the captured module output. vLLM selected
+`FlashInferCutlassNvFp4LinearKernel`, and Nsight found the expected SM120
+block-scaled CUTLASS signature with no known fallback in the exact target range.
+This is one prompt and one unfused projection; Gate 2 remains open, and no
+numerical-correctness or model-quality conclusion follows from it.
 
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
@@ -103,6 +116,8 @@ PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
 PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
 bash scripts/run_e004_projection_profile.sh
 PYTHONPATH=src python scripts/run_e004_replay_matrix.py
+PYTHONPATH=src python scripts/run_e004_full_model_acquisition.py
+bash scripts/run_e004_real_activation_profile.sh
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup

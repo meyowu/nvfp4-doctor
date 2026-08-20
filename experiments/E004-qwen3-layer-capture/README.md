@@ -2,13 +2,13 @@
 
 ## Current slice
 
-Six E004 slices now pin public checkpoint metadata, validate the two remote
-safetensors headers, produce a representative-layer acquisition plan, and
-acquire only those planned tensor payloads into ignored local storage. The fifth
-slice strictly loads one unfused `o_proj`, validates its checkpoint-to-runtime
-transform, and executes it with a deterministic synthetic activation. It does
-not load the model or capture a real Qwen activation. The sixth slice extends
-the same bounded replay to all 15 acquired early/middle/late projection cases.
+Eight E004 slices now progress from public checkpoint metadata and bounded
+payload acquisition through synthetic projection replay, complete pinned
+snapshot acquisition, and one real Qwen activation capture. The latest slice
+loads the full model, captures the layer-0 unfused `o_proj` prefill input for one
+fixed hashed token-ID request, and replays that activation three times with
+range-scoped profiler evidence. This is a single-case observation; Gate 2
+remains open.
 
 ## Hypothesis
 
@@ -38,6 +38,15 @@ vLLM-selected FlashInfer kernel with profiler-backed dispatch evidence.
 The sixth-slice hypothesis is that the same explicit loading and transformation
 contract holds over the frozen 3-layer by 5-projection matrix, with stable finite
 outputs and no case-specific weight mutation or padding.
+
+The seventh-slice hypothesis is that all files in the immutable repository
+snapshot can be acquired into ignored local storage and verified against the
+pinned Hub checksum inventory before any full-model execution.
+
+The eighth-slice hypothesis is that one real layer-0 `o_proj` prefill activation
+can be captured with explicit tensor metadata, replayed deterministically
+through the same loaded module, and attributed to the expected SM120 NVFP4
+kernel without committing prompt contents or raw tensors.
 
 ## Completion criterion
 
@@ -104,14 +113,32 @@ The representative replay matrix passes only if:
 - fused-family cases remain labeled as individual kernel preflights rather than
   production model-layer replays.
 
+The full-model acquisition slice passes only if all 15 pinned snapshot files
+and 6,413,063,143 bytes are present, every pinned checksum verifies, both weight
+shards match their immutable identities, and model bytes remain ignored.
+
+The first real-activation slice passes only if:
+
+- the full checkpoint loads as `Qwen3ForCausalLM` under the frozen single-GPU,
+  eager, no-CPU-offload configuration;
+- one fixed hashed request produces exactly one layer-0 `o_proj` prefill input;
+- the captured BF16 input has shape `(9, 4096)` and preserves shape, dtype,
+  stride, storage offset, and canonical logical bytes across the recorded
+  CUDA-to-CPU transfer;
+- three synchronized replays are finite, hash-stable, and byte-exact to the
+  captured module output;
+- vLLM selects `FlashInferCutlassNvFp4LinearKernel`; and
+- the exact NVTX range contains the expected SM120 block-scaled CUTLASS
+  E2M1/UE4M3 signature and no known fallback.
+
 ## Controlled variables
 
 - repository: `nvidia/Qwen3-8B-NVFP4`;
 - revision: `ccd10a893cbca613259517c3efe08e151ddf2b8e`;
 - metadata files: `README.md`, `config.json`, `hf_quant_config.json`, and
   `model.safetensors.index.json`;
-- execution device: CPU, metadata only;
-- model weights downloaded: false.
+- execution device: one RTX 5080 (`sm_120`) for replay slices; and
+- full snapshot location: ignored project-local `models/` storage.
 
 The four small source files are retained under ignored local artifact storage.
 The tracked normalized result records their immutable URLs and hashes.
@@ -137,6 +164,13 @@ target NVTX range; the range contains the selected projection GEMM only.
 The matrix uses the same 16-row recipe and seed independently for every case.
 Each case runs in a separate process so no preceding projection weight remains
 resident on the 16 GB GPU.
+
+The real-activation case fixes a nine-token identity by SHA-256 while omitting
+the token array and prompt text from tracked evidence. vLLM runs in single-
+process eager mode with WSL2 pinned memory enabled, FlashInfer sampling disabled
+as unrelated to the target, tensor parallelism 1, CPU offload 0, and a 256 MiB
+KV cache. Its target NVTX range includes the production module's activation
+quantization and NVFP4 GEMM, while validation and device copies remain outside.
 
 ## Actual observations
 
@@ -214,6 +248,20 @@ distinct hashes. Six `o_proj`/`down_proj` cases are labeled
 `production_aligned_unfused`; nine `q_proj`/`gate_proj`/`up_proj` cases are
 labeled `individual_fused_family_preflight`.
 
+The complete immutable snapshot was then acquired under ignored `models/`
+storage. Its 15 files total 6,413,063,143 bytes, including 6,397,066,384 bytes
+across the two safetensors shards, and all pinned Hub checksums verified.
+
+The full model loaded on the RTX 5080 and produced one real BF16 layer-0
+`o_proj` prefill input with shape `(9, 4096)` and SHA-256
+`c4c16cadca3b8981e8bdfdd7bd20b2b7b6c6e2be7b34ffa9e98cd6f23890893c`.
+Three synchronized standalone replays were finite and byte-exact to the
+captured module output, with common SHA-256
+`da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f`.
+vLLM selected `FlashInferCutlassNvFp4LinearKernel`; Nsight found the expected
+SM120 block-scaled CUTLASS E2M1/UE4M3 signature and no known fallback in
+`e004:real_activation:layer_00:o_proj:nvfp4_gemm`.
+
 Run the slice with network access using:
 
 ```bash
@@ -224,6 +272,8 @@ PYTHONPATH=src python scripts/run_e004_acquisition_plan.py
 PYTHONPATH=src python scripts/run_e004_tensor_acquisition.py
 bash scripts/run_e004_projection_profile.sh
 PYTHONPATH=src python scripts/run_e004_replay_matrix.py
+PYTHONPATH=src python scripts/run_e004_full_model_acquisition.py
+bash scripts/run_e004_real_activation_profile.sh
 ```
 
 The normalized evidence is retained in [metadata.json](metadata.json) and
@@ -244,6 +294,13 @@ The complete bounded matrix and its clean provenance are retained in
 [replay-matrix.json](replay-matrix.json) and
 [manifest-replay-matrix.json](manifest-replay-matrix.json); per-case raw runs
 remain ignored and local.
+Complete-snapshot integrity is retained in
+[full-model-acquisition.json](full-model-acquisition.json) and
+[manifest-full-model-acquisition.json](manifest-full-model-acquisition.json).
+The normalized real-activation observation and clean provenance are retained in
+[real-activation-replay.json](real-activation-replay.json) and
+[manifest-real-activation-replay.json](manifest-real-activation-replay.json);
+raw tensors and the Nsight report remain ignored and local.
 
 ## Interpretation
 
@@ -281,6 +338,11 @@ runtime transform and deterministic execution preflight held for all acquired
 cases. This expands structural and execution coverage but still supplies no real
 Qwen activations or numerical reference outputs.
 
+The full-snapshot integrity hypothesis and the first real-activation hypothesis
+are supported for their bounded cases. The latter establishes one captured
+module input, stable same-module replay, and range-scoped kernel identity. It is
+not a numerical reference comparison or a representative activation matrix.
+
 ## Threats to validity
 
 - Safetensors headers establish stored shapes, dtypes, and byte offsets but not
@@ -291,15 +353,15 @@ Qwen activations or numerical reference outputs.
   establish vLLM/FlashInfer execution or RTX 5080 compatibility.
 - An immutable repository revision prevents upstream drift but does not
   independently validate the producer's quantization claims.
-- No tokenizer, prompt, real model activation, or full-model execution is part
-  of the replay slice.
+- The tracked result stores only hashes for the fixed token IDs and generated
+  token; it does not establish prompt diversity or tokenizer-level semantics.
 - Individual tensor ranges do not have upstream per-tensor hashes. A future
   clean-room reproduction must compare newly computed local hashes while still
   pinning each source shard by its immutable LFS SHA-256.
 - Exact transport and local hashes do not prove that the producer's logical
   NVFP4 layout matches the Gate 1 oracle.
-- The replay activation is synthetic and is not evidence about the activation
-  distribution of Qwen3.
+- The 15-case replay matrix uses synthetic activations; only the latest layer-0
+  `o_proj` case uses a real Qwen prefill activation.
 - `o_proj` is unfused in the inspected vLLM path. Individual `q_proj`,
   `gate_proj`, and `up_proj` replays would not reproduce their fused model-layer
   loading behavior without the companion tensors.
@@ -307,10 +369,12 @@ Qwen activations or numerical reference outputs.
   environment and case; it does not establish numerical correctness.
 - The matrix reuses the single profiled `o_proj` as its backend-identity anchor;
   it does not contain a separate profiler report for every case.
+- One fixed request and one unfused projection do not characterize other
+  prompts, layers, fused module families, final logits, or model quality.
 
 ## Decision
 
-Continue to the real-activation boundary. The selected 60 tensor artifacts are
-sufficient for strict projection replay but not for running Qwen3 or producing
-its layer inputs. Full pinned checkpoint and tokenizer acquisition requires a
-separate explicit authorization before real activation capture can begin.
+Continue within Gate 2. Complete snapshot integrity and one real layer-0
+`o_proj` capture/replay now pass, so the next bounded step is a representative
+real-activation matrix spanning additional layers and module families. Gate 2
+is not complete, and no numerical-correctness or model-quality claim is made.

@@ -189,9 +189,20 @@ count was zero, and every independent scale transform matched vLLM. The six
 `q_proj`/`gate_proj`/`up_proj` cases are explicitly individual fused-family
 kernel preflights.
 
-E004 is now at the real-activation acquisition boundary. The selected tensors
-cannot run Qwen3 or produce its layer inputs. The complete pinned repository is
-6,413,063,143 bytes, including 6,397,066,384 bytes of weight shards. Downloading
-that additional model payload requires explicit authorization. No current
-observation is a claim about real Qwen activations, GEMM numerical correctness,
-model outputs, or production quality.
+The seventh slice acquired the complete immutable repository into ignored local
+`models/` storage. All 15 files and 6,413,063,143 bytes matched the pinned Hub
+inventory; the two weight shards account for 6,397,066,384 bytes. This is local
+snapshot-integrity evidence, not an execution result.
+
+The eighth slice loaded the full model and captured one real BF16 layer-0
+`o_proj` prefill input with shape `(9, 4096)` from a fixed hashed token-ID
+request. Shape, dtype, stride, storage offset, and canonical logical bytes were
+preserved across the recorded CUDA-to-CPU transfer. Three synchronized replays
+were finite, hash-stable, and byte-exact to the captured module output.
+
+vLLM selected `FlashInferCutlassNvFp4LinearKernel`. Nsight attributed the
+expected SM120 block-scaled CUTLASS E2M1/UE4M3 signature to the exact
+`e004:real_activation:layer_00:o_proj:nvfp4_gemm` range and detected no known
+fallback there. This advances Gate 2 but does not complete it: one prompt and
+one projection do not establish numerical correctness, final-logit or model
+quality, or representative real-activation coverage.
