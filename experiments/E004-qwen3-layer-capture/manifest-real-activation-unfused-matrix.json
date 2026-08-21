@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "representative_unfused_real_activation_replay_matrix_v1",
+  "captured_at_utc": "2026-08-21T00:47:27.309566Z",
+  "git": {
+    "commit": "493b0fe988d10816d55fad87941f54ac3a9c5257",
+    "branch": "exp/e004-real-activation-matrix",
+    "dirty": false
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5080",
+    "compute_capability": "12.0",
+    "memory_mib": 16303,
+    "driver_version": "595.95"
+  },
+  "software": {
+    "os": "Ubuntu 24.04.4 LTS",
+    "wsl_version": "2.7.12.0",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "torch": "2.13.0+cu132",
+    "cuda_runtime": "13.2.75",
+    "cuda_toolkit": "13.2.86",
+    "vllm": "0.27.1",
+    "flashinfer": "0.6.16.post3",
+    "nsight_systems": "NVIDIA Nsight Systems version 2026.1.3.425-261338342291v0"
+  },
+  "model": {
+    "repository": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "local_snapshot_path": "models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "complete_snapshot_acquired": true,
+    "layers": [
+      0,
+      18,
+      35
+    ],
+    "projections": [
+      "o_proj",
+      "down_proj"
+    ],
+    "adapter_scope": "production_aligned_unfused",
+    "activation_provenance": "real_qwen_prefill"
+  },
+  "dependencies": [
+    {
+      "kind": "full-model-acquisition-result",
+      "path": "experiments/E004-qwen3-layer-capture/full-model-acquisition.json",
+      "sha256": "e89cbe137a5c51a10f0fd90b4d4d6192de7b4c97c40a4a9d107bea837dc6c50d"
+    },
+    {
+      "kind": "full-model-acquisition-manifest",
+      "path": "experiments/E004-qwen3-layer-capture/manifest-full-model-acquisition.json",
+      "sha256": "039ec44ca952bfa9bc8ae49542632b1896f7ca2931476bd939dc5963319505a4"
+    },
+    {
+      "kind": "representative-replay-matrix-result",
+      "path": "experiments/E004-qwen3-layer-capture/replay-matrix.json",
+      "sha256": "36083ab5b465f230ef8eb2d52a0662d53fc99d9acdfe7c198dc8f439d209ffb4"
+    },
+    {
+      "kind": "representative-replay-matrix-manifest",
+      "path": "experiments/E004-qwen3-layer-capture/manifest-replay-matrix.json",
+      "sha256": "d39420a91df350fa06a8dfffde1e06260fd17deb1290cdd141acfc8012058348"
+    },
+    {
+      "kind": "single-real-activation-result",
+      "path": "experiments/E004-qwen3-layer-capture/real-activation-replay.json",
+      "sha256": "39ededed6cf7e612487c1f327074a28dd0bcd4712cfe01eb6ab7abaa27a1fafd"
+    },
+    {
+      "kind": "single-real-activation-manifest",
+      "path": "experiments/E004-qwen3-layer-capture/manifest-real-activation-replay.json",
+      "sha256": "ae4a8162901e0fb8a957ff3418c9b7ece5bdc861175c468a1a9c931f6bc6230c"
+    }
+  ],
+  "commands": {
+    "workflow": [
+      "bash",
+      "scripts/run_e004_real_activation_matrix_profile.sh"
+    ],
+    "profile": [
+      "nsys",
+      "profile",
+      "--trace=cuda,nvtx,osrt",
+      "--capture-range=cudaProfilerApi",
+      "--capture-range-end=stop",
+      "--flush-on-cudaprofilerstop=true",
+      "--sample=none",
+      "--cpuctxsw=none",
+      "--wait=primary",
+      "--output=.local/profiles/e004-real-activation-unfused-matrix",
+      "--force-overwrite=true",
+      "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python",
+      "-m",
+      "scripts.run_e004_real_activation_matrix",
+      "--model-dir",
+      "models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+      "--artifact-root",
+      "artifacts/E004-qwen3-layer-capture/real-activation-matrix",
+      "--output",
+      "artifacts/E004-qwen3-layer-capture/real-activation-matrix/unfused-matrix.json",
+      "--profile-capture"
+    ],
+    "stats": [
+      "nsys",
+      "stats",
+      "--force-export=true",
+      "--report",
+      "cuda_gpu_kern_sum:nvtx-name",
+      "--format",
+      "csv",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/.local/profiles/e004-real-activation-unfused-matrix.nsys-rep"
+    ],
+    "runtime": {
+      "argv": [
+        "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python",
+        "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/scripts/run_e004_real_activation_matrix.py",
+        "--model-dir",
+        "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+        "--artifact-root",
+        "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/artifacts/E004-qwen3-layer-capture/real-activation-matrix",
+        "--output",
+        "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/artifacts/E004-qwen3-layer-capture/real-activation-matrix/unfused-matrix.json",
+        "--profile-capture"
+      ],
+      "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor"
+    },
+    "finalize": [
+      "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/scripts/finalize_e004_real_activation_matrix.py",
+      "--run-evidence",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/artifacts/E004-qwen3-layer-capture/real-activation-matrix/unfused-matrix.json",
+      "--report",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/.local/profiles/e004-real-activation-unfused-matrix.nsys-rep"
+    ]
+  },
+  "backend": {
+    "requested_format": "nvfp4",
+    "requested_backend": "auto",
+    "expected_selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+    "reported_backend": null,
+    "profiler_sha256": "96351a88df4c7b256e909a38b0ea79e51ef68e3da1e3a16da02dbeb40973c79c",
+    "kernel_catalog": [
+      {
+        "kernel_id": "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
+        "name": "void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)7, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)128>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)128>>, cute::tuple<cute::C<(int)128>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)2>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)128>>, cute::tuple<cute::C<(int)128>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)2>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)128>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<cute::C<(int)1>, long, long>, cutlass::bfloat16_t, cute::tuple<cute::C<(int)1>, long, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)128>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM75_U16x4_LDSM_T, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM90_U16x4_STSM_T, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)"
+      },
+      {
+        "kernel_id": "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+        "name": "void vllm::cvt_fp16_to_fp4<__nv_bfloat16, (bool)0>(int, int, int, int, const T1 *, const float *, unsigned int *, unsigned int *)"
+      },
+      {
+        "kernel_id": "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851",
+        "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)"
+      },
+      {
+        "kernel_id": "bffb83516834a1d7418750716d11ae7c43b8bd759668018090d4a5397d6249f5",
+        "name": "void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)3, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)256>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<cute::C<(int)1>, long, long>, cutlass::bfloat16_t, cute::tuple<cute::C<(int)1>, long, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM75_U16x4_LDSM_T, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM90_U16x4_STSM_T, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)"
+      }
+    ]
+  },
+  "source_bundle_sha256": "d669b40b1dd27da800daeb2a9d28089981df4238427b01f6dbaed537d2445181",
+  "artifacts": [
+    {
+      "kind": "normalized-real-activation-unfused-matrix-result",
+      "path": "experiments/E004-qwen3-layer-capture/real-activation-unfused-matrix.json",
+      "sha256": "0ea500a2823aff6017d4027ce4ad1bcc84c03205400fdde43258a56af1c97651",
+      "ignored": false
+    },
+    {
+      "kind": "raw-real-activation-unfused-matrix-observation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/unfused-matrix.json",
+      "sha256": "ab799d38ad87ed100852a4fc9e7478d7741f9f374cae00d847d52fe9d7b12950",
+      "ignored": true
+    },
+    {
+      "kind": "layer-00-o-proj-captured-activation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-o-proj-input.pt",
+      "sha256": "4517f3166355be4c6260942aa3fbca1a05d64ba58b768b230944366fc2fc6bcd",
+      "ignored": true
+    },
+    {
+      "kind": "layer-00-o-proj-captured-module-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-o-proj-captured-module-output.pt",
+      "sha256": "87182054302e1fc87f3251d4003d1ac102dd4a6cfe9a0dcd62c5c81f08cf1109",
+      "ignored": true
+    },
+    {
+      "kind": "layer-00-o-proj-replay-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-o-proj-replay-output.pt",
+      "sha256": "d34275931c08375d4d960bb941ff8f3ddbd374ef215856b197eb73dde81abb31",
+      "ignored": true
+    },
+    {
+      "kind": "layer-00-down-proj-captured-activation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-down-proj-input.pt",
+      "sha256": "34e7ebfa2a458511a2267f92f9a2945d61248663a85b67322ff6d60e23fdbb97",
+      "ignored": true
+    },
+    {
+      "kind": "layer-00-down-proj-captured-module-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-down-proj-captured-module-output.pt",
+      "sha256": "0e6990a62c6ba7648f1d634422511a7e0fa5cc040a5729f8642d395192fa434d",
+      "ignored": true
+    },
+    {
+      "kind": "layer-00-down-proj-replay-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-down-proj-replay-output.pt",
+      "sha256": "54faa62146c50dfd0441f307c5a97fce005a84bd4b539c7a7980c7b037e45348",
+      "ignored": true
+    },
+    {
+      "kind": "layer-18-o-proj-captured-activation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-o-proj-input.pt",
+      "sha256": "ca218b61d65776cf4032d1d5e60ae1e66db46b6903acbe5656afa60afe8c1a14",
+      "ignored": true
+    },
+    {
+      "kind": "layer-18-o-proj-captured-module-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-o-proj-captured-module-output.pt",
+      "sha256": "6a3640c8d7acaa51e53ee644d2599c6de498fbe6c48995c48e8be7db78455df8",
+      "ignored": true
+    },
+    {
+      "kind": "layer-18-o-proj-replay-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-o-proj-replay-output.pt",
+      "sha256": "fac78b2f79120b076bd627542834cc7271bcea160ff397ecb4d57dc942f841e8",
+      "ignored": true
+    },
+    {
+      "kind": "layer-18-down-proj-captured-activation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-down-proj-input.pt",
+      "sha256": "8a09597fd0d7d8c0b5e8dc523b7a45398bf0986ad030a53e5e03a81ccfbe33f6",
+      "ignored": true
+    },
+    {
+      "kind": "layer-18-down-proj-captured-module-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-down-proj-captured-module-output.pt",
+      "sha256": "3a9d88e7cac9bcb8a02ae4ba89a626530509a013df14e11ee75a80d088e08927",
+      "ignored": true
+    },
+    {
+      "kind": "layer-18-down-proj-replay-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-down-proj-replay-output.pt",
+      "sha256": "343f6c55df826e493a6e3b67f52476561d9549699cdd673eb826557599fb47dc",
+      "ignored": true
+    },
+    {
+      "kind": "layer-35-o-proj-captured-activation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-o-proj-input.pt",
+      "sha256": "968b4fc35cdfe0e9a57ba42a05775aef004b1994fb0e344d73ccfd89e115cdff",
+      "ignored": true
+    },
+    {
+      "kind": "layer-35-o-proj-captured-module-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-o-proj-captured-module-output.pt",
+      "sha256": "53bc44d054986607d025a3b3aa04a3a6c94b13cc1070c2f560def4decba14014",
+      "ignored": true
+    },
+    {
+      "kind": "layer-35-o-proj-replay-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-o-proj-replay-output.pt",
+      "sha256": "c943d48c3c961d24933a612dd1e919cc16d7830b35cfe8afd9c55896250d5327",
+      "ignored": true
+    },
+    {
+      "kind": "layer-35-down-proj-captured-activation",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-down-proj-input.pt",
+      "sha256": "4425f6679d792ceb44d7ada7763a15f8a873dc0a70914c6e97b8eea20a0b764e",
+      "ignored": true
+    },
+    {
+      "kind": "layer-35-down-proj-captured-module-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-down-proj-captured-module-output.pt",
+      "sha256": "c44e0d319afe06f0d755a4b65e81043da005c5b4b6cf090bcac1f784d48a0ae7",
+      "ignored": true
+    },
+    {
+      "kind": "layer-35-down-proj-replay-output",
+      "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-down-proj-replay-output.pt",
+      "sha256": "09b89566dc1c9481c1cb711390e6c5346e8929c85333b4c250858620624d8eed",
+      "ignored": true
+    },
+    {
+      "kind": "nsight-systems-report",
+      "path": ".local/profiles/e004-real-activation-unfused-matrix.nsys-rep",
+      "sha256": "96351a88df4c7b256e909a38b0ea79e51ef68e3da1e3a16da02dbeb40973c79c",
+      "ignored": true
+    }
+  ]
+}

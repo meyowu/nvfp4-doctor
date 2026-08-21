@@ -1,0 +1,2056 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E004-qwen3-layer-capture",
+  "slice": "representative_unfused_real_activation_replay_matrix_v1",
+  "captured_at_utc": "2026-08-21T00:47:27.309566Z",
+  "status": "pass",
+  "decision": "continue",
+  "repository": {
+    "id": "nvidia/Qwen3-8B-NVFP4",
+    "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e"
+  },
+  "model_load": {
+    "local_snapshot_path": "models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "frozen_environment": {
+      "VLLM_ENABLE_V1_MULTIPROCESSING": "0",
+      "VLLM_WSL2_ENABLE_PIN_MEMORY": "1",
+      "VLLM_USE_FLASHINFER_SAMPLER": "0",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1",
+      "TOKENIZERS_PARALLELISM": "false"
+    },
+    "requested_args": {
+      "runner": "generate",
+      "tensor_parallel_size": 1,
+      "dtype": "bfloat16",
+      "quantization": "modelopt_fp4",
+      "load_format": "safetensors",
+      "trust_remote_code": false,
+      "skip_tokenizer_init": true,
+      "max_model_len": 64,
+      "max_num_seqs": 1,
+      "max_num_batched_tokens": 64,
+      "gpu_memory_utilization": 0.8,
+      "cpu_offload_gb": 0,
+      "kv_cache_dtype": "auto",
+      "kv_cache_memory_bytes": 268435456,
+      "enable_prefix_caching": false,
+      "enable_chunked_prefill": false,
+      "enforce_eager": true,
+      "compilation_config": 0,
+      "linear_backend": "auto",
+      "seed": 0
+    },
+    "observed_model_class": "Qwen3ForCausalLM",
+    "model_load_count": 1,
+    "request_count": 1,
+    "request_completed": true,
+    "free_memory_before_bytes": 15666774016,
+    "free_memory_after_load_bytes": 8190427136,
+    "peak_allocated_bytes": 7189731328,
+    "peak_reserved_bytes": 7331643392
+  },
+  "input_identity": {
+    "provenance": "fixed_public_token_sequence",
+    "token_ids_committed_in_result": false,
+    "token_ids_encoding": "little_endian_signed_int32",
+    "token_count": 9,
+    "token_ids_sha256": "154c66e5fa3bad6f385105bb54d93b6f2ab1e3bc9e3b1452bffcbfa6fd97413e",
+    "generated_token_count": 1,
+    "generated_token_ids_sha256": "c9ef9bd66be720a334bfda5cb425f28b35f20c5c82cf95c86a41995bdaab34c9",
+    "tokenizer_initialized": false,
+    "tokenizer_revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+    "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "sampling": {
+      "temperature": 0.0,
+      "max_tokens": 1,
+      "detokenize": false,
+      "seed": 0
+    }
+  },
+  "matrix": {
+    "layers": [
+      0,
+      18,
+      35
+    ],
+    "layer_roles": [
+      "early",
+      "middle",
+      "late"
+    ],
+    "projections": [
+      "o_proj",
+      "down_proj"
+    ],
+    "case_ids": [
+      "layer-00-o-proj",
+      "layer-00-down-proj",
+      "layer-18-o-proj",
+      "layer-18-down-proj",
+      "layer-35-o-proj",
+      "layer-35-down-proj"
+    ],
+    "case_count": 6,
+    "repetitions_per_case": 3,
+    "hook_count": 12,
+    "hook_event_order": [
+      "layer-00-o-proj:input",
+      "layer-00-o-proj:module_output",
+      "layer-00-down-proj:input",
+      "layer-00-down-proj:module_output",
+      "layer-18-o-proj:input",
+      "layer-18-o-proj:module_output",
+      "layer-18-down-proj:input",
+      "layer-18-down-proj:module_output",
+      "layer-35-o-proj:input",
+      "layer-35-o-proj:module_output",
+      "layer-35-down-proj:input",
+      "layer-35-down-proj:module_output"
+    ],
+    "distinct_input_sha256_count": 6,
+    "distinct_module_output_sha256_count": 6,
+    "layer_00_o_proj_regression_match": true,
+    "evaluated_range_count": 6,
+    "observed_target_range_count": 6
+  },
+  "identity_dependency": {
+    "path": "experiments/E004-qwen3-layer-capture/replay-matrix.json",
+    "sha256": "36083ab5b465f230ef8eb2d52a0662d53fc99d9acdfe7c198dc8f439d209ffb4",
+    "slice": "representative_projection_replay_matrix_v1"
+  },
+  "backend": {
+    "requested_format": "nvfp4",
+    "requested_backend": "auto",
+    "expected_selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
+    "reported_backend": null,
+    "profiler_sha256": "96351a88df4c7b256e909a38b0ea79e51ef68e3da1e3a16da02dbeb40973c79c",
+    "kernel_catalog": [
+      {
+        "kernel_id": "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
+        "name": "void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)7, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)128>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)128>>, cute::tuple<cute::C<(int)128>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)2>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)2, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)128>>, cute::tuple<cute::C<(int)128>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)2>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)128>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<cute::C<(int)1>, long, long>, cutlass::bfloat16_t, cute::tuple<cute::C<(int)1>, long, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)128>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM75_U16x4_LDSM_T, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM90_U16x4_STSM_T, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)"
+      },
+      {
+        "kernel_id": "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+        "name": "void vllm::cvt_fp16_to_fp4<__nv_bfloat16, (bool)0>(int, int, int, int, const T1 *, const float *, unsigned int *, unsigned int *)"
+      },
+      {
+        "kernel_id": "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851",
+        "name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)"
+      },
+      {
+        "kernel_id": "bffb83516834a1d7418750716d11ae7c43b8bd759668018090d4a5397d6249f5",
+        "name": "void cutlass::device_kernel<cutlass::gemm::kernel::GemmUniversal<cute::tuple<int, int, int, int>, cutlass::gemm::collective::CollectiveMma<cutlass::gemm::MainloopSm120TmaWarpSpecializedBlockScaled<(int)3, (int)3, cute::tuple<cute::C<(int)1>, cute::C<(int)1>, cute::C<(int)1>>, cutlass::gemm::KernelTmaWarpSpecializedCooperativeBlockScaledSm120<(int)3>>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)256>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::tuple<cutlass::float_e2m1_t, cutlass::float_ue4m3_t>, cute::tuple<cute::tuple<long, cute::C<(int)1>, long>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::C<(int)1>, int>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, int>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)512>>, cute::tuple<cute::C<(int)0>, int>>>>, cute::TiledMMA<cute::MMA_Atom<cute::SM120::BLOCKSCALED::SM120_16x8x64_TN_VS<cutlass::float_e2m1_t, cutlass::float_e2m1_t, float, cutlass::float_ue4m3_t, (int)16>>, cute::Layout<cute::tuple<cute::C<(int)4>, cute::C<(int)2>, cute::C<(int)1>>, cute::tuple<cute::C<(int)1>, cute::C<(int)4>, cute::C<(int)0>>>, cute::tuple<cute::C<(int)128>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)2>, cute::C<(int)2>>, cute::tuple<cute::C<(int)1>, cute::C<(int)16>, cute::C<(int)8>>>, cute::C<(int)64>>>, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity, cute::tuple<cute::SM90_TMA_LOAD, cute::SM90_TMA_LOAD>, cute::tuple<cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)4>, cute::Layout<cute::tuple<cute::C<(int)8>, cute::C<(int)256>>, cute::tuple<cute::C<(int)256>, cute::C<(int)1>>>>, cute::Layout<cute::tuple<cute::tuple<cute::tuple<cute::C<(int)32>, cute::C<(int)4>>, cute::C<(int)1>>, cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)1>, cute::C<(int)4>>>, cute::tuple<cute::tuple<cute::tuple<cute::C<(int)16>, cute::C<(int)4>>, cute::C<(int)512>>, cute::tuple<cute::tuple<cute::C<(int)0>, cute::C<(int)1>>, cute::C<(int)4>, cute::C<(int)512>>>>>, cute::tuple<cute::Copy_Atom<cute::SM75_U32x4_LDSM_N, cutlass::integer_subbyte<(int)4, (bool)0>>, cute::Copy_Atom<cute::UniversalCopy<cutlass::float_ue4m3_t, cutlass::float_ue4m3_t>, cutlass::float_ue4m3_t>>, cute::identity>, cutlass::epilogue::collective::CollectiveEpilogue<cutlass::epilogue::Sm90TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, void, cute::tuple<cute::C<(int)1>, long, long>, cutlass::bfloat16_t, cute::tuple<cute::C<(int)1>, long, long>, cutlass::epilogue::fusion::FusionCallbacks<cutlass::epilogue::Sm120TmaWarpSpecialized<(int)2, (int)2, (int)4, (bool)0, (bool)1>, cutlass::epilogue::fusion::LinearCombination<cutlass::bfloat16_t, float, void, float, (cutlass::FloatRoundStyle)2>, cute::tuple<cute::C<(int)128>, cute::C<(int)32>, cute::C<(int)256>>, cute::tuple<cute::C<(int)64>, cute::C<(int)32>>, >, cute::SM90_TMA_LOAD, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM75_U16x4_LDSM_T, cute::SM90_TMA_STORE, cute::ComposedLayout<cute::Swizzle<(int)3, (int)4, (int)3>, cute::smem_ptr_flag_bits<(int)16>, cute::Layout<cute::tuple<cute::C<(int)64>, cute::C<(int)8>>, cute::tuple<cute::C<(int)1>, cute::C<(int)64>>>>, cute::SM90_U16x4_STSM_T, cute::Copy_Atom<cute::SM90_U32x2_STSM_N, cutlass::half_t>, void>, cutlass::gemm::StaticPersistentScheduler, void>>(T1::Params)"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "layer-00-o-proj",
+      "layer": 0,
+      "role": "early",
+      "projection": "o_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "module_path": "model.layers.0.self_attn.o_proj",
+      "tensor_role": "module_input",
+      "phase": "prefill",
+      "event_count": 1,
+      "activation_provenance": "real_qwen_prefill",
+      "checkpoint_identity": {
+        "checkpoint_source_tensor_sha256": {
+          "input_scale": "83eae1783b2c6d492881eb861a2adab9fd5b0437bf96a2aa65e7d6e8b9e6c89a",
+          "weight": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a",
+          "weight_scale": "9e255b8003f0d80086b762b8a4bb9cd1f8e5be482bdc3590dc65662289f77d19",
+          "weight_scale_2": "08337a1b36f654e8f433655f5262db64d0f83f50da0d48d2eda403e3260de0ce"
+        },
+        "runtime_packed_weight_sha256": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a",
+        "runtime_weight_scale_sha256": "4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2",
+        "packed_weight_shape": [
+          4096,
+          2048
+        ],
+        "weight_scale_shape": [
+          4096,
+          256
+        ],
+        "expected_runtime_scalars": {
+          "input_global_scale": 0.00012715657067019492,
+          "weight_global_scale": 0.0002702985657379031,
+          "alpha": 3.437023821106777e-08
+        }
+      },
+      "capture": {
+        "input_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-o-proj-input.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 75979,
+          "file_sha256": "4517f3166355be4c6260942aa3fbca1a05d64ba58b768b230944366fc2fc6bcd",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "c4c16cadca3b8981e8bdfdd7bd20b2b7b6c6e2be7b34ffa9e98cd6f23890893c",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "c4c16cadca3b8981e8bdfdd7bd20b2b7b6c6e2be7b34ffa9e98cd6f23890893c",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "captured_module_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-o-proj-captured-module-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76162,
+          "file_sha256": "87182054302e1fc87f3251d4003d1ac102dd4a6cfe9a0dcd62c5c81f08cf1109",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "metadata_preserved_fields": [
+          "shape",
+          "dtype",
+          "stride",
+          "storage_offset",
+          "byte_length",
+          "sha256"
+        ],
+        "device_transfer_recorded": true
+      },
+      "runtime_projection": {
+        "module_path": "model.layers.0.self_attn.o_proj",
+        "module_class": "RowParallelLinear",
+        "quant_method_class": "ModelOptNvFp4LinearMethod",
+        "selected_kernel": "FlashInferCutlassNvFp4LinearKernel",
+        "packed_weight": {
+          "shape": [
+            4096,
+            2048
+          ],
+          "dtype": "uint8",
+          "stride": [
+            2048,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 8388608,
+          "byte_length": 8388608,
+          "sha256": "1db669cf9be8e913653ff5aea1e30d4db2da2e86a2a635c952f8fa8346056f8a",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "runtime_weight_scale": {
+          "shape": [
+            4096,
+            256
+          ],
+          "dtype": "float8_e4m3fn",
+          "stride": [
+            256,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 1048576,
+          "byte_length": 1048576,
+          "sha256": "4e6992cbfa93bd7136816762fbf212861a103944f1d6054cd6d13eac15347be2",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "weights_padding_cols": 0,
+        "input_global_scale": 0.00012715657067019492,
+        "weight_global_scale": 0.0002702985657379031,
+        "alpha": 3.437023821106777e-08
+      },
+      "replay": {
+        "warmup_runs": 1,
+        "repetitions": 3,
+        "synchronized": true,
+        "all_finite": true,
+        "output_shape": [
+          9,
+          4096
+        ],
+        "output_dtype": "bfloat16",
+        "output_sha256s": [
+          "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+          "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+          "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f"
+        ],
+        "output_hash_stable": true,
+        "captured_module_output_sha256": "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+        "logical_byte_exact_captured_module_output_matches": [
+          true,
+          true,
+          true
+        ],
+        "reconstructed_activation_metadata": {
+          "shape": [
+            9,
+            4096
+          ],
+          "dtype": "bfloat16",
+          "stride": [
+            4096,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 36864,
+          "byte_length": 73728,
+          "sha256": "c4c16cadca3b8981e8bdfdd7bd20b2b7b6c6e2be7b34ffa9e98cd6f23890893c",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "logical_byte_exact_captured_input_match": true,
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "input_sha256": "c4c16cadca3b8981e8bdfdd7bd20b2b7b6c6e2be7b34ffa9e98cd6f23890893c",
+        "replay_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-o-proj-replay-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76099,
+          "file_sha256": "d34275931c08375d4d960bb941ff8f3ddbd374ef215856b197eb73dde81abb31",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "da6b9fd682b8fd312ca95379f9993ca4fd1dec4a1f38ca3b1629c87f3b0abf2f",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        }
+      },
+      "backend_range": {
+        "target_nvtx_range": "e004:real_activation_matrix:layer_00:o_proj:nvfp4_gemm",
+        "target_kernel_ids": [
+          "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
+          "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+          "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851"
+        ],
+        "target_kernel_set_sha256": "34a0557d0bb8e37aec1cc338f4853dc85613a3d2f20ed99ab9d5818e966b9411",
+        "expected_sm120_cutlass_signature_present": true,
+        "activation_quantization_signature_present": true,
+        "fallback_status": "not_detected"
+      }
+    },
+    {
+      "case_id": "layer-00-down-proj",
+      "layer": 0,
+      "role": "early",
+      "projection": "down_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "module_path": "model.layers.0.mlp.down_proj",
+      "tensor_role": "module_input",
+      "phase": "prefill",
+      "event_count": 1,
+      "activation_provenance": "real_qwen_prefill",
+      "checkpoint_identity": {
+        "checkpoint_source_tensor_sha256": {
+          "input_scale": "ac7bab9067dd0183074ede2fee59c95f55889e8beab00be5c8ff2c6688a11f62",
+          "weight": "873812a4e2ab9dcd12b5ec2ffcbcc7528afa21d8aeeff1fb1345215dceb3b9fc",
+          "weight_scale": "905b6971a5d3c2dd1b79f8212dfad357a924a46515ecdaeb999e9a029829d98b",
+          "weight_scale_2": "23bd3da24e9b5bf1e248445591ed3ed0f549498b779e0243598ef94ac68ed202"
+        },
+        "runtime_packed_weight_sha256": "873812a4e2ab9dcd12b5ec2ffcbcc7528afa21d8aeeff1fb1345215dceb3b9fc",
+        "runtime_weight_scale_sha256": "91f409bb8a3764c3352a978a32ef0ab78e2cc8e56d4182627b1127006adc12a9",
+        "packed_weight_shape": [
+          4096,
+          6144
+        ],
+        "weight_scale_shape": [
+          4096,
+          768
+        ],
+        "expected_runtime_scalars": {
+          "input_global_scale": 0.0047898064367473125,
+          "weight_global_scale": 0.0003197079640813172,
+          "alpha": 1.5313393078031368e-06
+        }
+      },
+      "capture": {
+        "input_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-down-proj-input.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 223520,
+          "file_sha256": "34e7ebfa2a458511a2267f92f9a2945d61248663a85b67322ff6d60e23fdbb97",
+          "tensor": {
+            "shape": [
+              9,
+              12288
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              12288,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 110592,
+            "byte_length": 221184,
+            "sha256": "bb2448b43501160994fdb336417df8a2cde32efed0c609ec1cc24beed8f5f4bb",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              12288
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              12288,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 110592,
+            "byte_length": 221184,
+            "sha256": "bb2448b43501160994fdb336417df8a2cde32efed0c609ec1cc24beed8f5f4bb",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "captured_module_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-down-proj-captured-module-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76183,
+          "file_sha256": "0e6990a62c6ba7648f1d634422511a7e0fa5cc040a5729f8642d395192fa434d",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "metadata_preserved_fields": [
+          "shape",
+          "dtype",
+          "stride",
+          "storage_offset",
+          "byte_length",
+          "sha256"
+        ],
+        "device_transfer_recorded": true
+      },
+      "runtime_projection": {
+        "module_path": "model.layers.0.mlp.down_proj",
+        "module_class": "RowParallelLinear",
+        "quant_method_class": "ModelOptNvFp4LinearMethod",
+        "selected_kernel": "FlashInferCutlassNvFp4LinearKernel",
+        "packed_weight": {
+          "shape": [
+            4096,
+            6144
+          ],
+          "dtype": "uint8",
+          "stride": [
+            6144,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 25165824,
+          "byte_length": 25165824,
+          "sha256": "873812a4e2ab9dcd12b5ec2ffcbcc7528afa21d8aeeff1fb1345215dceb3b9fc",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "runtime_weight_scale": {
+          "shape": [
+            4096,
+            768
+          ],
+          "dtype": "float8_e4m3fn",
+          "stride": [
+            768,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 3145728,
+          "byte_length": 3145728,
+          "sha256": "91f409bb8a3764c3352a978a32ef0ab78e2cc8e56d4182627b1127006adc12a9",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "weights_padding_cols": 0,
+        "input_global_scale": 0.0047898064367473125,
+        "weight_global_scale": 0.0003197079640813172,
+        "alpha": 1.5313393078031368e-06
+      },
+      "replay": {
+        "warmup_runs": 1,
+        "repetitions": 3,
+        "synchronized": true,
+        "all_finite": true,
+        "output_shape": [
+          9,
+          4096
+        ],
+        "output_dtype": "bfloat16",
+        "output_sha256s": [
+          "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+          "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+          "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37"
+        ],
+        "output_hash_stable": true,
+        "captured_module_output_sha256": "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+        "logical_byte_exact_captured_module_output_matches": [
+          true,
+          true,
+          true
+        ],
+        "reconstructed_activation_metadata": {
+          "shape": [
+            9,
+            12288
+          ],
+          "dtype": "bfloat16",
+          "stride": [
+            12288,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 110592,
+          "byte_length": 221184,
+          "sha256": "bb2448b43501160994fdb336417df8a2cde32efed0c609ec1cc24beed8f5f4bb",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "logical_byte_exact_captured_input_match": true,
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "input_sha256": "bb2448b43501160994fdb336417df8a2cde32efed0c609ec1cc24beed8f5f4bb",
+        "replay_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-00-down-proj-replay-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76120,
+          "file_sha256": "54faa62146c50dfd0441f307c5a97fce005a84bd4b539c7a7980c7b037e45348",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9b9daeb4bb6b9f0f654ef1790530107e3f41f6daa4271f17b336a8dd94854f37",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        }
+      },
+      "backend_range": {
+        "target_nvtx_range": "e004:real_activation_matrix:layer_00:down_proj:nvfp4_gemm",
+        "target_kernel_ids": [
+          "bffb83516834a1d7418750716d11ae7c43b8bd759668018090d4a5397d6249f5",
+          "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+          "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851"
+        ],
+        "target_kernel_set_sha256": "bd90ecdd262e1a0d198b7fbd4dc661aac10f113e40991243556f4397e08a5f84",
+        "expected_sm120_cutlass_signature_present": true,
+        "activation_quantization_signature_present": true,
+        "fallback_status": "not_detected"
+      }
+    },
+    {
+      "case_id": "layer-18-o-proj",
+      "layer": 18,
+      "role": "middle",
+      "projection": "o_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "module_path": "model.layers.18.self_attn.o_proj",
+      "tensor_role": "module_input",
+      "phase": "prefill",
+      "event_count": 1,
+      "activation_provenance": "real_qwen_prefill",
+      "checkpoint_identity": {
+        "checkpoint_source_tensor_sha256": {
+          "input_scale": "0600b2c66d5ae81c3909c5320f6cecc928e9913d184c2b1df86c59fe73c92bee",
+          "weight": "0bc9adc4e11fc0245ec163c363dde7e253ce0e14af40a8f7aac19ebaf23480e0",
+          "weight_scale": "368ed3b0ac7eb37d7196816cb7d8ea17999e512ba96b2fa24371397be7b8479b",
+          "weight_scale_2": "e7f142d94d4ca7d43ae019ddc81aa4475b759a5cdab7c5e99064df91bbab28bf"
+        },
+        "runtime_packed_weight_sha256": "0bc9adc4e11fc0245ec163c363dde7e253ce0e14af40a8f7aac19ebaf23480e0",
+        "runtime_weight_scale_sha256": "d1ea9df26a41d37570cae30eb3a435a3595f59c7c5b1e172e2a59cfd046fe69e",
+        "packed_weight_shape": [
+          4096,
+          2048
+        ],
+        "weight_scale_shape": [
+          4096,
+          256
+        ],
+        "expected_runtime_scalars": {
+          "input_global_scale": 0.0023018973879516125,
+          "weight_global_scale": 0.00025721959536895156,
+          "alpha": 5.920931016589748e-07
+        }
+      },
+      "capture": {
+        "input_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-o-proj-input.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 75979,
+          "file_sha256": "ca218b61d65776cf4032d1d5e60ae1e66db46b6903acbe5656afa60afe8c1a14",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "44254d76073176c98be92708b4a414ed9c8a78383f733ec9edddf7a23b6e76cf",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "44254d76073176c98be92708b4a414ed9c8a78383f733ec9edddf7a23b6e76cf",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "captured_module_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-o-proj-captured-module-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76162,
+          "file_sha256": "6a3640c8d7acaa51e53ee644d2599c6de498fbe6c48995c48e8be7db78455df8",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "metadata_preserved_fields": [
+          "shape",
+          "dtype",
+          "stride",
+          "storage_offset",
+          "byte_length",
+          "sha256"
+        ],
+        "device_transfer_recorded": true
+      },
+      "runtime_projection": {
+        "module_path": "model.layers.18.self_attn.o_proj",
+        "module_class": "RowParallelLinear",
+        "quant_method_class": "ModelOptNvFp4LinearMethod",
+        "selected_kernel": "FlashInferCutlassNvFp4LinearKernel",
+        "packed_weight": {
+          "shape": [
+            4096,
+            2048
+          ],
+          "dtype": "uint8",
+          "stride": [
+            2048,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 8388608,
+          "byte_length": 8388608,
+          "sha256": "0bc9adc4e11fc0245ec163c363dde7e253ce0e14af40a8f7aac19ebaf23480e0",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "runtime_weight_scale": {
+          "shape": [
+            4096,
+            256
+          ],
+          "dtype": "float8_e4m3fn",
+          "stride": [
+            256,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 1048576,
+          "byte_length": 1048576,
+          "sha256": "d1ea9df26a41d37570cae30eb3a435a3595f59c7c5b1e172e2a59cfd046fe69e",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "weights_padding_cols": 0,
+        "input_global_scale": 0.0023018973879516125,
+        "weight_global_scale": 0.00025721959536895156,
+        "alpha": 5.920931016589748e-07
+      },
+      "replay": {
+        "warmup_runs": 1,
+        "repetitions": 3,
+        "synchronized": true,
+        "all_finite": true,
+        "output_shape": [
+          9,
+          4096
+        ],
+        "output_dtype": "bfloat16",
+        "output_sha256s": [
+          "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+          "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+          "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e"
+        ],
+        "output_hash_stable": true,
+        "captured_module_output_sha256": "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+        "logical_byte_exact_captured_module_output_matches": [
+          true,
+          true,
+          true
+        ],
+        "reconstructed_activation_metadata": {
+          "shape": [
+            9,
+            4096
+          ],
+          "dtype": "bfloat16",
+          "stride": [
+            4096,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 36864,
+          "byte_length": 73728,
+          "sha256": "44254d76073176c98be92708b4a414ed9c8a78383f733ec9edddf7a23b6e76cf",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "logical_byte_exact_captured_input_match": true,
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "input_sha256": "44254d76073176c98be92708b4a414ed9c8a78383f733ec9edddf7a23b6e76cf",
+        "replay_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-o-proj-replay-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76099,
+          "file_sha256": "fac78b2f79120b076bd627542834cc7271bcea160ff397ecb4d57dc942f841e8",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "9a4130925666d7452b2de53859e4fe052e3ce405515f89c649d53f860e6b122e",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        }
+      },
+      "backend_range": {
+        "target_nvtx_range": "e004:real_activation_matrix:layer_18:o_proj:nvfp4_gemm",
+        "target_kernel_ids": [
+          "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
+          "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+          "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851"
+        ],
+        "target_kernel_set_sha256": "34a0557d0bb8e37aec1cc338f4853dc85613a3d2f20ed99ab9d5818e966b9411",
+        "expected_sm120_cutlass_signature_present": true,
+        "activation_quantization_signature_present": true,
+        "fallback_status": "not_detected"
+      }
+    },
+    {
+      "case_id": "layer-18-down-proj",
+      "layer": 18,
+      "role": "middle",
+      "projection": "down_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "module_path": "model.layers.18.mlp.down_proj",
+      "tensor_role": "module_input",
+      "phase": "prefill",
+      "event_count": 1,
+      "activation_provenance": "real_qwen_prefill",
+      "checkpoint_identity": {
+        "checkpoint_source_tensor_sha256": {
+          "input_scale": "ebb2b2c78facb01467eddef24ed860f4e9628e438bc3724889ae8864d67d09ea",
+          "weight": "c2a521ed2554282ad6e4499690c645497bfbae4086eb2f830ccc82aa0d9e0454",
+          "weight_scale": "7197ebedae740507d043a3378fc4720317d5a8a11c7e6a03bf5587352186a6d3",
+          "weight_scale_2": "a09e46be3fbfebe623a8728c2cf403e4ade5abdf4fd2d84532a720ea34ebf514"
+        },
+        "runtime_packed_weight_sha256": "c2a521ed2554282ad6e4499690c645497bfbae4086eb2f830ccc82aa0d9e0454",
+        "runtime_weight_scale_sha256": "c4dafb5f3a2afd685062caf64596f448172aeab4e23ecf3e147ce19cb8f82509",
+        "packed_weight_shape": [
+          4096,
+          6144
+        ],
+        "weight_scale_shape": [
+          4096,
+          768
+        ],
+        "expected_runtime_scalars": {
+          "input_global_scale": 0.0262276791036129,
+          "weight_global_scale": 0.0004504975804593414,
+          "alpha": 1.1815505786216818e-05
+        }
+      },
+      "capture": {
+        "input_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-down-proj-input.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 223520,
+          "file_sha256": "8a09597fd0d7d8c0b5e8dc523b7a45398bf0986ad030a53e5e03a81ccfbe33f6",
+          "tensor": {
+            "shape": [
+              9,
+              12288
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              12288,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 110592,
+            "byte_length": 221184,
+            "sha256": "b16c1fb4f76e3716a4c69606b5e60e1e5cd7e577fbdfd9470074b845e054b6d4",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              12288
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              12288,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 110592,
+            "byte_length": 221184,
+            "sha256": "b16c1fb4f76e3716a4c69606b5e60e1e5cd7e577fbdfd9470074b845e054b6d4",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "captured_module_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-down-proj-captured-module-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76183,
+          "file_sha256": "3a9d88e7cac9bcb8a02ae4ba89a626530509a013df14e11ee75a80d088e08927",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "metadata_preserved_fields": [
+          "shape",
+          "dtype",
+          "stride",
+          "storage_offset",
+          "byte_length",
+          "sha256"
+        ],
+        "device_transfer_recorded": true
+      },
+      "runtime_projection": {
+        "module_path": "model.layers.18.mlp.down_proj",
+        "module_class": "RowParallelLinear",
+        "quant_method_class": "ModelOptNvFp4LinearMethod",
+        "selected_kernel": "FlashInferCutlassNvFp4LinearKernel",
+        "packed_weight": {
+          "shape": [
+            4096,
+            6144
+          ],
+          "dtype": "uint8",
+          "stride": [
+            6144,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 25165824,
+          "byte_length": 25165824,
+          "sha256": "c2a521ed2554282ad6e4499690c645497bfbae4086eb2f830ccc82aa0d9e0454",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "runtime_weight_scale": {
+          "shape": [
+            4096,
+            768
+          ],
+          "dtype": "float8_e4m3fn",
+          "stride": [
+            768,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 3145728,
+          "byte_length": 3145728,
+          "sha256": "c4dafb5f3a2afd685062caf64596f448172aeab4e23ecf3e147ce19cb8f82509",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "weights_padding_cols": 0,
+        "input_global_scale": 0.0262276791036129,
+        "weight_global_scale": 0.0004504975804593414,
+        "alpha": 1.1815505786216818e-05
+      },
+      "replay": {
+        "warmup_runs": 1,
+        "repetitions": 3,
+        "synchronized": true,
+        "all_finite": true,
+        "output_shape": [
+          9,
+          4096
+        ],
+        "output_dtype": "bfloat16",
+        "output_sha256s": [
+          "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+          "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+          "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9"
+        ],
+        "output_hash_stable": true,
+        "captured_module_output_sha256": "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+        "logical_byte_exact_captured_module_output_matches": [
+          true,
+          true,
+          true
+        ],
+        "reconstructed_activation_metadata": {
+          "shape": [
+            9,
+            12288
+          ],
+          "dtype": "bfloat16",
+          "stride": [
+            12288,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 110592,
+          "byte_length": 221184,
+          "sha256": "b16c1fb4f76e3716a4c69606b5e60e1e5cd7e577fbdfd9470074b845e054b6d4",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "logical_byte_exact_captured_input_match": true,
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "input_sha256": "b16c1fb4f76e3716a4c69606b5e60e1e5cd7e577fbdfd9470074b845e054b6d4",
+        "replay_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-18-down-proj-replay-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76120,
+          "file_sha256": "343f6c55df826e493a6e3b67f52476561d9549699cdd673eb826557599fb47dc",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "33eb9efc23365b8eb6b50f2491f008cb243a0e4ae9f90a12309b6d7a42c02fd9",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        }
+      },
+      "backend_range": {
+        "target_nvtx_range": "e004:real_activation_matrix:layer_18:down_proj:nvfp4_gemm",
+        "target_kernel_ids": [
+          "bffb83516834a1d7418750716d11ae7c43b8bd759668018090d4a5397d6249f5",
+          "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+          "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851"
+        ],
+        "target_kernel_set_sha256": "bd90ecdd262e1a0d198b7fbd4dc661aac10f113e40991243556f4397e08a5f84",
+        "expected_sm120_cutlass_signature_present": true,
+        "activation_quantization_signature_present": true,
+        "fallback_status": "not_detected"
+      }
+    },
+    {
+      "case_id": "layer-35-o-proj",
+      "layer": 35,
+      "role": "late",
+      "projection": "o_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "module_path": "model.layers.35.self_attn.o_proj",
+      "tensor_role": "module_input",
+      "phase": "prefill",
+      "event_count": 1,
+      "activation_provenance": "real_qwen_prefill",
+      "checkpoint_identity": {
+        "checkpoint_source_tensor_sha256": {
+          "input_scale": "ed0ecc590b97a6196aca775e14dae50b47a6396bc108250ebf89a890da013811",
+          "weight": "aed64b412b68a7e5242868a1d99a8be2b8d96fc6b6b250b619cdd3cba8c62a41",
+          "weight_scale": "2d5683f2a042a0ca7c80c84446c0fc6101de4f7e2e39204c78902ede9f8efc9c",
+          "weight_scale_2": "23bd3da24e9b5bf1e248445591ed3ed0f549498b779e0243598ef94ac68ed202"
+        },
+        "runtime_packed_weight_sha256": "aed64b412b68a7e5242868a1d99a8be2b8d96fc6b6b250b619cdd3cba8c62a41",
+        "runtime_weight_scale_sha256": "e090c97c547b193de8cbf41d4098eccfb2ef7a3f75f6e8ab2c2323d51bdf7d6c",
+        "packed_weight_shape": [
+          4096,
+          2048
+        ],
+        "weight_scale_shape": [
+          4096,
+          256
+        ],
+        "expected_runtime_scalars": {
+          "input_global_scale": 0.0260416679084301,
+          "weight_global_scale": 0.0003197079640813172,
+          "alpha": 8.325728231284302e-06
+        }
+      },
+      "capture": {
+        "input_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-o-proj-input.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 75979,
+          "file_sha256": "968b4fc35cdfe0e9a57ba42a05775aef004b1994fb0e344d73ccfd89e115cdff",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "3a54eb38bcdd52cf844144c716d8571e03faa84fc34b99cd82145a7a3b9bd57d",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "3a54eb38bcdd52cf844144c716d8571e03faa84fc34b99cd82145a7a3b9bd57d",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "captured_module_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-o-proj-captured-module-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76162,
+          "file_sha256": "53bc44d054986607d025a3b3aa04a3a6c94b13cc1070c2f560def4decba14014",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "metadata_preserved_fields": [
+          "shape",
+          "dtype",
+          "stride",
+          "storage_offset",
+          "byte_length",
+          "sha256"
+        ],
+        "device_transfer_recorded": true
+      },
+      "runtime_projection": {
+        "module_path": "model.layers.35.self_attn.o_proj",
+        "module_class": "RowParallelLinear",
+        "quant_method_class": "ModelOptNvFp4LinearMethod",
+        "selected_kernel": "FlashInferCutlassNvFp4LinearKernel",
+        "packed_weight": {
+          "shape": [
+            4096,
+            2048
+          ],
+          "dtype": "uint8",
+          "stride": [
+            2048,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 8388608,
+          "byte_length": 8388608,
+          "sha256": "aed64b412b68a7e5242868a1d99a8be2b8d96fc6b6b250b619cdd3cba8c62a41",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "runtime_weight_scale": {
+          "shape": [
+            4096,
+            256
+          ],
+          "dtype": "float8_e4m3fn",
+          "stride": [
+            256,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 1048576,
+          "byte_length": 1048576,
+          "sha256": "e090c97c547b193de8cbf41d4098eccfb2ef7a3f75f6e8ab2c2323d51bdf7d6c",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "weights_padding_cols": 0,
+        "input_global_scale": 0.0260416679084301,
+        "weight_global_scale": 0.0003197079640813172,
+        "alpha": 8.325728231284302e-06
+      },
+      "replay": {
+        "warmup_runs": 1,
+        "repetitions": 3,
+        "synchronized": true,
+        "all_finite": true,
+        "output_shape": [
+          9,
+          4096
+        ],
+        "output_dtype": "bfloat16",
+        "output_sha256s": [
+          "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+          "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+          "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603"
+        ],
+        "output_hash_stable": true,
+        "captured_module_output_sha256": "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+        "logical_byte_exact_captured_module_output_matches": [
+          true,
+          true,
+          true
+        ],
+        "reconstructed_activation_metadata": {
+          "shape": [
+            9,
+            4096
+          ],
+          "dtype": "bfloat16",
+          "stride": [
+            4096,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 36864,
+          "byte_length": 73728,
+          "sha256": "3a54eb38bcdd52cf844144c716d8571e03faa84fc34b99cd82145a7a3b9bd57d",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "logical_byte_exact_captured_input_match": true,
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "input_sha256": "3a54eb38bcdd52cf844144c716d8571e03faa84fc34b99cd82145a7a3b9bd57d",
+        "replay_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-o-proj-replay-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76099,
+          "file_sha256": "c943d48c3c961d24933a612dd1e919cc16d7830b35cfe8afd9c55896250d5327",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "6eec4e6a5988f920f1573b14d13b69e84ec713d6bec614b480b4ffacf0924603",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        }
+      },
+      "backend_range": {
+        "target_nvtx_range": "e004:real_activation_matrix:layer_35:o_proj:nvfp4_gemm",
+        "target_kernel_ids": [
+          "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
+          "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+          "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851"
+        ],
+        "target_kernel_set_sha256": "34a0557d0bb8e37aec1cc338f4853dc85613a3d2f20ed99ab9d5818e966b9411",
+        "expected_sm120_cutlass_signature_present": true,
+        "activation_quantization_signature_present": true,
+        "fallback_status": "not_detected"
+      }
+    },
+    {
+      "case_id": "layer-35-down-proj",
+      "layer": 35,
+      "role": "late",
+      "projection": "down_proj",
+      "adapter_scope": "production_aligned_unfused",
+      "module_path": "model.layers.35.mlp.down_proj",
+      "tensor_role": "module_input",
+      "phase": "prefill",
+      "event_count": 1,
+      "activation_provenance": "real_qwen_prefill",
+      "checkpoint_identity": {
+        "checkpoint_source_tensor_sha256": {
+          "input_scale": "7c7acd75f092fcceedd4474ec98216fba8b6b5520d07f432e1659198e0256d04",
+          "weight": "f85d171fa3cdea06da0dca6eb3aeb93264585de74c1385b1ae5ebd3b6880f036",
+          "weight_scale": "0e7452d4cb550aaa43e9a2ac4f9f2750aead9fcabe0a1596d037f9a3ccf7ffa5",
+          "weight_scale_2": "dbef90a193a1849c67922c08a330ee969895c95356b9a030180a65d49883d841"
+        },
+        "runtime_packed_weight_sha256": "f85d171fa3cdea06da0dca6eb3aeb93264585de74c1385b1ae5ebd3b6880f036",
+        "runtime_weight_scale_sha256": "bc8e1ac903a1c0a53f74594a390229b73f2ae5e72b304946e50a7efbea3747a7",
+        "packed_weight_shape": [
+          4096,
+          6144
+        ],
+        "weight_scale_shape": [
+          4096,
+          768
+        ],
+        "expected_runtime_scalars": {
+          "input_global_scale": 0.8333333730697632,
+          "weight_global_scale": 0.0010811942629516125,
+          "alpha": 0.0009009952773340046
+        }
+      },
+      "capture": {
+        "input_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-down-proj-input.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 223520,
+          "file_sha256": "4425f6679d792ceb44d7ada7763a15f8a873dc0a70914c6e97b8eea20a0b764e",
+          "tensor": {
+            "shape": [
+              9,
+              12288
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              12288,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 110592,
+            "byte_length": 221184,
+            "sha256": "2ff622a107f58392bbb0f755828992927910a18f25609d5c67d24a03d18f1ceb",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              12288
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              12288,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 110592,
+            "byte_length": 221184,
+            "sha256": "2ff622a107f58392bbb0f755828992927910a18f25609d5c67d24a03d18f1ceb",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "captured_module_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-down-proj-captured-module-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76183,
+          "file_sha256": "c44e0d319afe06f0d755a4b65e81043da005c5b4b6cf090bcac1f784d48a0ae7",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        },
+        "metadata_preserved_fields": [
+          "shape",
+          "dtype",
+          "stride",
+          "storage_offset",
+          "byte_length",
+          "sha256"
+        ],
+        "device_transfer_recorded": true
+      },
+      "runtime_projection": {
+        "module_path": "model.layers.35.mlp.down_proj",
+        "module_class": "RowParallelLinear",
+        "quant_method_class": "ModelOptNvFp4LinearMethod",
+        "selected_kernel": "FlashInferCutlassNvFp4LinearKernel",
+        "packed_weight": {
+          "shape": [
+            4096,
+            6144
+          ],
+          "dtype": "uint8",
+          "stride": [
+            6144,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 25165824,
+          "byte_length": 25165824,
+          "sha256": "f85d171fa3cdea06da0dca6eb3aeb93264585de74c1385b1ae5ebd3b6880f036",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "runtime_weight_scale": {
+          "shape": [
+            4096,
+            768
+          ],
+          "dtype": "float8_e4m3fn",
+          "stride": [
+            768,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 3145728,
+          "byte_length": 3145728,
+          "sha256": "bc8e1ac903a1c0a53f74594a390229b73f2ae5e72b304946e50a7efbea3747a7",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "weights_padding_cols": 0,
+        "input_global_scale": 0.8333333730697632,
+        "weight_global_scale": 0.0010811942629516125,
+        "alpha": 0.0009009952773340046
+      },
+      "replay": {
+        "warmup_runs": 1,
+        "repetitions": 3,
+        "synchronized": true,
+        "all_finite": true,
+        "output_shape": [
+          9,
+          4096
+        ],
+        "output_dtype": "bfloat16",
+        "output_sha256s": [
+          "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+          "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+          "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477"
+        ],
+        "output_hash_stable": true,
+        "captured_module_output_sha256": "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+        "logical_byte_exact_captured_module_output_matches": [
+          true,
+          true,
+          true
+        ],
+        "reconstructed_activation_metadata": {
+          "shape": [
+            9,
+            12288
+          ],
+          "dtype": "bfloat16",
+          "stride": [
+            12288,
+            1
+          ],
+          "storage_offset": 0,
+          "device": "cuda:0",
+          "contiguous": true,
+          "numel": 110592,
+          "byte_length": 221184,
+          "sha256": "2ff622a107f58392bbb0f755828992927910a18f25609d5c67d24a03d18f1ceb",
+          "sha256_encoding": "canonical_contiguous_logical_bytes"
+        },
+        "logical_byte_exact_captured_input_match": true,
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "input_sha256": "2ff622a107f58392bbb0f755828992927910a18f25609d5c67d24a03d18f1ceb",
+        "replay_output_artifact": {
+          "path": "artifacts/E004-qwen3-layer-capture/real-activation-matrix/layer-35-down-proj-replay-output.pt",
+          "ignored": true,
+          "encoding": "torch_save_cpu_tensor_v1",
+          "file_bytes": 76120,
+          "file_sha256": "09b89566dc1c9481c1cb711390e6c5346e8929c85333b4c250858620624d8eed",
+          "tensor": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cpu",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "source_metadata": {
+            "shape": [
+              9,
+              4096
+            ],
+            "dtype": "bfloat16",
+            "stride": [
+              4096,
+              1
+            ],
+            "storage_offset": 0,
+            "device": "cuda:0",
+            "contiguous": true,
+            "numel": 36864,
+            "byte_length": 73728,
+            "sha256": "e4d0699df7af0f47539c48a77dc0b981b6c0b390cb6cc50327e572ccf42a4477",
+            "sha256_encoding": "canonical_contiguous_logical_bytes"
+          },
+          "preserved_fields": [
+            "shape",
+            "dtype",
+            "stride",
+            "storage_offset",
+            "byte_length",
+            "sha256"
+          ],
+          "device_transfer": {
+            "source": "cuda:0",
+            "destination": "cpu"
+          }
+        }
+      },
+      "backend_range": {
+        "target_nvtx_range": "e004:real_activation_matrix:layer_35:down_proj:nvfp4_gemm",
+        "target_kernel_ids": [
+          "bffb83516834a1d7418750716d11ae7c43b8bd759668018090d4a5397d6249f5",
+          "9f68371bddd064b8f87a6b1489e329da455d62fd2685af19f331f7915d0b32ae",
+          "e125e2352d2cb89177326d8c860c8f3344007713342701ffad107d9196758851"
+        ],
+        "target_kernel_set_sha256": "bd90ecdd262e1a0d198b7fbd4dc661aac10f113e40991243556f4397e08a5f84",
+        "expected_sm120_cutlass_signature_present": true,
+        "activation_quantization_signature_present": true,
+        "fallback_status": "not_detected"
+      }
+    }
+  ],
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5080",
+    "compute_capability": [
+      12,
+      0
+    ],
+    "total_memory_bytes": 17094475776
+  },
+  "command": {
+    "argv": [
+      "/home/meyowu/projects/nvfp4-doctor/.venv/bin/python",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/scripts/run_e004_real_activation_matrix.py",
+      "--model-dir",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/models/nvidia--Qwen3-8B-NVFP4/ccd10a893cbca613259517c3efe08e151ddf2b8e",
+      "--artifact-root",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/artifacts/E004-qwen3-layer-capture/real-activation-matrix",
+      "--output",
+      "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor/artifacts/E004-qwen3-layer-capture/real-activation-matrix/unfused-matrix.json",
+      "--profile-capture"
+    ],
+    "cwd": "/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor"
+  },
+  "claim_boundary": "For one fixed token-ID request in the pinned environment, this result establishes metadata-preserving capture and deterministic same-module replay for six unfused o_proj and down_proj cases spanning layers 0, 18, and 35, with range-scoped SM120 CUTLASS NVFP4 identity. It does not establish NVFP4 numerical correctness, prompt diversity, fused qkv_proj or gate_up_proj coverage, final-logit or model quality, cross-backend agreement, equivalence to a high-precision checkpoint, or completion of Gate 2."
+}
