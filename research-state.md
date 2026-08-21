@@ -34,7 +34,10 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 unfused matrix evidence commit: `bee0ff3a0ec901a5df63c7e19a44698a270648e1`
 - Verified E004 fused matrix implementation commit: `8f249932241e56e4f487caa0de79a9ed9f4ed5d1`
 - Verified E004 fused matrix evidence commit: `d77eb24502089262d7b759c0e61c2d282e811fbb`
-- Active local branch: `exp/e004-fused-real-activation`
+- Merged E004 branch: `exp/e004-fused-real-activation`
+- E004 closeout PR: `https://github.com/meyowu/nvfp4-doctor/pull/23`
+- E004 content merge commit: `c590b03045ba6a5b41dd5f6869fda78013c0fbe7`
+- Resume branch: `main`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -405,14 +408,12 @@ Nsight checks. The normalized matrix reports status `pass` and the bounded Gate
 
 ## Next action
 
-First finish this E004 documentation closeout, push
-`exp/e004-fused-real-activation`, create and merge its PR, and fast-forward the
-local `main`. Then create a fresh E005 branch and preregister its independent
-numerical reference: explicit NVFP4
-dequantization followed by tiled higher-precision matmul on synthetic golden
-cases and captured E004 shapes. Define error metrics and a clean acceptance
-envelope before comparing production kernels, and stop kernel-correctness claims
-if the independent golden tests fail.
+Create a fresh focused E005 branch from `main` and preregister its independent
+numerical reference: explicit NVFP4 dequantization followed by tiled higher-
+precision matmul on synthetic golden cases and captured E004 shapes. Define
+error metrics and a clean acceptance envelope before comparing production
+kernels, and stop kernel-correctness claims if the independent golden tests
+fail.
 
 ## Blockers and limitations
 
@@ -458,9 +459,9 @@ if the independent golden tests fail.
 
 ## Working-tree expectation
 
-Keep verified E004 real-activation work on the focused
-`exp/e004-fused-real-activation` branch until its PR is merged.
-Use the configured research closeout
-workflow for commit, push, PR creation, and merge. Acquiring additional model
-payloads outside the pinned snapshot, deleting branches, or publishing external
-results still requires separate explicit authorization.
+PR #23 merged the verified E004 fused real-activation branch. Resume from a
+clean `main`; create a fresh focused branch before changing E005 sources or
+evidence. Use the configured research closeout workflow for later commit, push,
+PR creation, and merge. Acquiring additional model payloads outside the pinned
+snapshot, deleting branches, or publishing external results still requires
+separate explicit authorization.
