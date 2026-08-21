@@ -55,6 +55,14 @@ can produce exactly one metadata-preserving prefill capture for each unfused
 input can be replayed three times through its original module with stable,
 logical-byte-exact output and independent range-scoped backend evidence.
 
+The tenth-slice hypothesis is that the same request can capture the production
+fused `qkv_proj` and `gate_up_proj` module boundaries at those three layers,
+that the runtime fused tensors can be reconstructed independently from their
+ordered checkpoint components, and that each captured input can be replayed
+three times through its original fused module with stable, logical-byte-exact
+output and independently scoped backend evidence. This is the preregistered
+completion slice for Gate 2.
+
 ## Completion criterion
 
 This metadata slice passes only if:
@@ -153,6 +161,36 @@ The representative unfused real-activation matrix passes only if:
   and
 - all six unique NVTX ranges contain activation quantization and the expected
   SM120 block-scaled CUTLASS E2M1/UE4M3 signature with no known fallback.
+
+The representative fused real-activation matrix passes only if:
+
+- the exact ordered Cartesian product of layers 0, 18, and 35 with
+  `qkv_proj` and `gate_up_proj` is captured from one model load and the same
+  fixed hashed request;
+- the runtime boundaries are exactly `QKVParallelLinear` with logical widths
+  `[4096, 1024, 1024]` and `MergedColumnParallelLinear` with logical widths
+  `[12288, 12288]`, both at tensor-parallel size one;
+- the checkpoint components are independently loaded in production order,
+  their packed rows concatenate byte-exactly to the runtime weight, and their
+  linear scale rows reproduce the runtime scale only after the independent
+  128x4 swizzle oracle is applied;
+- every component within a fused group has an equal `input_scale` and equal
+  `weight_scale_2`, the recorded maximum reduction is therefore lossless, and
+  the reduced runtime scales, reciprocal, and float32 alpha match exactly;
+- all twelve hooks fire once in model execution order, and all eighteen tensor
+  artifacts preserve the declared logical metadata and bytes across transfer;
+- one warm-up and three synchronized whole-module replays per case are finite,
+  hash-stable, and logical-byte-exact to the corresponding captured fused
+  module output; and
+- all six unique NVTX ranges contain activation quantization and the expected
+  SM120 block-scaled CUTLASS E2M1/UE4M3 signature with no known fallback.
+
+If any fused construction, capture, replay, or range-scoped identity check is
+inconclusive, Gate 2 remains open or pivots to checkpoint-only plus synthetic
+analysis. A pass permits a Gate 2 `go` decision only for metadata-preserving
+real-activation replay and kernel identification; it does not establish NVFP4
+numerical correctness, independent component replay, post-activation
+equivalence, prompt diversity, final logits, or model quality.
 
 ## Controlled variables
 
