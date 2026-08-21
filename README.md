@@ -29,7 +29,8 @@ format faults, five stride/backend-identity faults, and three packed-value
 permutation families. The final held-out matrix applied block, row, and column
 permutations to three new clean artifacts. All nine held-out faults were
 detected and localized with zero clean false rejects or fault false accepts.
-Real dispatch replay, GEMM, and model-level fault propagation remain pending.
+Profiler-backed real dispatch and NVFP4 GEMM execution now exist in E004;
+numerical GEMM comparison and model-level fault propagation remain pending.
 
 E004 has started with a metadata-only inspection of the immutable
 `nvidia/Qwen3-8B-NVFP4` revision
@@ -78,6 +79,16 @@ block-scaled CUTLASS signature with no known fallback in the exact target range.
 This is one prompt and one unfused projection; Gate 2 remains open, and no
 numerical-correctness or model-quality conclusion follows from it.
 
+A representative unfused matrix now extends that same hashed request to
+`o_proj` and `down_proj` at layers 0, 18, and 35 in one model pass. All six BF16
+captures preserved their declared transfer metadata, and all 18 synchronized
+replays were finite, hash-stable, and logical-byte-exact to their captured
+module outputs. Six separate Nsight ranges each contained activation
+quantization and the expected SM120 CUTLASS NVFP4 signature with no known
+fallback. This supports representative unfused execution coverage for one
+request; fused module families, numerical correctness, final logits, model
+quality, and Gate 2 completion remain open.
+
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
 The model-validation sequence is specified in
@@ -118,6 +129,7 @@ bash scripts/run_e004_projection_profile.sh
 PYTHONPATH=src python scripts/run_e004_replay_matrix.py
 PYTHONPATH=src python scripts/run_e004_full_model_acquisition.py
 bash scripts/run_e004_real_activation_profile.sh
+bash scripts/run_e004_real_activation_matrix_profile.sh
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup
