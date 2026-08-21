@@ -6,10 +6,10 @@ only from observed repository, environment, test, and experiment evidence.
 ## Current handoff
 
 - Current experiment: `E004-qwen3-layer-capture`
-- Current gate: `Gate 2 — representative real-activation coverage`
-- Status: `single_real_activation_replay_pass`
+- Current gate: `Gate 2 — fused real-activation coverage`
+- Status: `representative_unfused_real_activation_matrix_pass`
 - Decision: `continue`
-- Verified baseline commit: `3dfd06fbd3ca5e01b8218967def5506135b4bba4`
+- Verified baseline commit: `bee0ff3a0ec901a5df63c7e19a44698a270648e1`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
@@ -30,7 +30,9 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 real-activation capture commit: `95bc5d7dbf6256bee32814e347903facd1d77ace`
 - Verified E004 real-activation finalizer commit: `c7884800ce20a9669386e46a53772ed4f4d18796`
 - Verified E004 real-activation evidence commit: `3dfd06fbd3ca5e01b8218967def5506135b4bba4`
-- Active local branch: `exp/e004-real-activation`
+- Verified E004 unfused matrix implementation commit: `493b0fe988d10816d55fad87941f54ac3a9c5257`
+- Verified E004 unfused matrix evidence commit: `bee0ff3a0ec901a5df63c7e19a44698a270648e1`
+- Active local branch: `exp/e004-real-activation-matrix`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -265,20 +267,37 @@ only from observed repository, environment, test, and experiment evidence.
   E2M1/UE4M3 signature and no known fallback. The retained ignored Nsight report
   has SHA-256
   `394f15f9e944713a01cd04ff7e200df59e411b77bb9f0decd90e6af1f35dc38a`.
+- One full-model pass with the same fixed hashed request produced exactly one
+  real BF16 capture for `o_proj` and `down_proj` at layers 0, 18, and 35. All 12
+  hooks fired once in model order, and all 18 ignored tensor artifacts passed
+  independent file and logical-tensor rehashing.
+- All 18 synchronized measured replays were finite and within-case hash-stable,
+  and every replay output was logical-byte-exact to its captured module output.
+  The overlapping layer-0 `o_proj` input and output matched the prior real case.
+- All six exact NVTX ranges contained activation quantization and the expected
+  SM120 block-scaled CUTLASS E2M1/UE4M3 signature, with no known fallback. The
+  retained ignored matrix report has SHA-256
+  `96351a88df4c7b256e909a38b0ea79e51ef68e3da1e3a16da02dbeb40973c79c`.
+- The normalized matrix has SHA-256
+  `0ea500a2823aff6017d4027ce4ad1bcc84c03205400fdde43258a56af1c97651`,
+  its clean implementation source bundle has SHA-256
+  `d669b40b1dd27da800daeb2a9d28089981df4238427b01f6dbaed537d2445181`,
+  and its manifest binds six dependencies and 21 tracked-or-local artifacts.
 
 These observations complete Gate 1 and E003, and support E004 metadata, header,
 acquisition, strict layout transformation, deterministic real-weight replay,
-complete-snapshot integrity, and one profiler-backed real-activation replay.
-They do not establish representative real-activation coverage, arbitrary-input
-rounding, NVFP4 GEMM numerical correctness or performance, production model
-quality, or model-level fault propagation.
+complete-snapshot integrity, and representative profiler-backed unfused
+real-activation replay for one request. They do not establish fused production
+module coverage, prompt diversity, arbitrary-input rounding, NVFP4 GEMM
+numerical correctness or performance, production model quality, or model-level
+fault propagation.
 
 ## Last verification
 
 ```bash
 source /home/meyowu/projects/nvfp4-doctor/activate-nvfp4-lab.sh
 cd /mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor
-bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh scripts/run_e004_real_activation_profile.sh
+bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh scripts/run_e004_real_activation_profile.sh scripts/run_e004_real_activation_matrix_profile.sh
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff format --check src tests scripts smoke_nvfp4.py
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff check src tests scripts smoke_nvfp4.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/mypy src
@@ -297,11 +316,12 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_replay_matrix.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_full_model_acquisition.py
 bash scripts/run_e004_real_activation_profile.sh
+bash scripts/run_e004_real_activation_matrix_profile.sh
 ```
 
-Observed result: 163 tests plus 419 subtests passed and Python compilation
+Observed result: 188 tests plus 419 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-31 source files, Ruff reported 90 Python files formatted, and `uv pip check`
+32 source files, Ruff reported 97 Python files formatted, and `uv pip check`
 found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
@@ -336,14 +356,20 @@ produced three finite, hash-stable, byte-exact same-module replays. Nsight found
 the expected SM120 block-scaled CUTLASS signature and no known fallback in the
 exact target range; the normalized result reports status `pass` and decision
 `continue`.
+The representative unfused workflow then captured six real activations from one
+model pass and replayed each original module three synchronized times. All six
+cases passed metadata preservation, runtime dependency, stability, logical-byte
+equality, prior-case regression, and independently range-scoped Nsight checks.
+The normalized matrix reports status `pass` and decision `continue`.
 
 ## Next action
 
-Extend the real-activation capture into a bounded representative matrix. Start
-with unfused `o_proj` and `down_proj` at early, middle, and late layers, then
-design fused `qkv_proj` and `gate_up_proj` cases that preserve production module
-boundaries. Keep prompt identities hashed, raw activations ignored, and each
-case separately profiled or tied to an explicit backend-identity anchor.
+Design the next bounded real-activation slice at the production fused
+`qkv_proj` and `gate_up_proj` boundaries. First map their combined runtime
+weights and per-component scales without treating individual `q_proj`,
+`k_proj`, `v_proj`, `gate_proj`, or `up_proj` payloads as exact model-layer
+replays. Keep prompt identities hashed, raw activations ignored, and every fused
+case tied to its own exact profiler range and explicit acceptance criterion.
 
 ## Blockers and limitations
 
@@ -374,9 +400,10 @@ case separately profiled or tied to an explicit backend-identity anchor.
 - The model card documents TensorRT-LLM on B200. The observed RTX 5080 result
   establishes only the pinned vLLM/FlashInfer environment and tested cases, not
   general support.
-- The first real-activation result covers one fixed request and layer-0
-  `o_proj`. It does not cover prompt diversity, other layers, fused module
-  families, final logits, model quality, or a numerical reference comparison.
+- The representative real-activation result covers one fixed request and six
+  unfused `o_proj`/`down_proj` cases. It does not cover prompt diversity, fused
+  module families, final logits, model quality, or a numerical reference
+  comparison.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -385,7 +412,7 @@ case separately profiled or tied to an explicit backend-identity anchor.
 ## Working-tree expectation
 
 Keep verified E004 real-activation work on the focused
-`exp/e004-real-activation` branch.
+`exp/e004-real-activation-matrix` branch until its PR is merged.
 Use the configured research closeout
 workflow for commit, push, PR creation, and merge. Acquiring additional model
 payloads outside the pinned snapshot, deleting branches, or publishing external

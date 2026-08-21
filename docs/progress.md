@@ -206,3 +206,22 @@ expected SM120 block-scaled CUTLASS E2M1/UE4M3 signature to the exact
 fallback there. This advances Gate 2 but does not complete it: one prompt and
 one projection do not establish numerical correctness, final-logit or model
 quality, or representative real-activation coverage.
+
+The ninth slice reused that fixed hashed request and one full-model load to
+capture the exact ordered matrix of `o_proj` and `down_proj` at layers 0, 18,
+and 35. All 12 hooks fired once in model order. The six BF16 inputs had shapes
+`(9, 4096)` or `(9, 12288)`, and all replay outputs had shape `(9, 4096)`.
+Eighteen synchronized measured replays were finite, within-case hash-stable,
+and logical-byte-exact to their corresponding captured module outputs. The
+overlapping layer-0 `o_proj` input and output matched the prior real case.
+
+The requested backend remained `auto`, vLLM selected
+`FlashInferCutlassNvFp4LinearKernel`, and the runtime API did not report a
+separate backend label. Each of the six exact NVTX ranges contained activation
+quantization and the expected SM120
+block-scaled CUTLASS E2M1/UE4M3 signature, with no known fallback. The retained
+ignored Nsight report has SHA-256
+`96351a88df4c7b256e909a38b0ea79e51ef68e3da1e3a16da02dbeb40973c79c`.
+This establishes representative unfused same-module replay for one request,
+not NVFP4 numerical correctness, fused-family coverage, final-logit or model
+quality, prompt diversity, or Gate 2 completion.
