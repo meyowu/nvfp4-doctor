@@ -2,13 +2,14 @@
 
 ## Current slice
 
-Eight E004 slices now progress from public checkpoint metadata and bounded
+Eight completed E004 slices progress from public checkpoint metadata and bounded
 payload acquisition through synthetic projection replay, complete pinned
 snapshot acquisition, and one real Qwen activation capture. The latest slice
 loads the full model, captures the layer-0 unfused `o_proj` prefill input for one
 fixed hashed token-ID request, and replays that activation three times with
-range-scoped profiler evidence. This is a single-case observation; Gate 2
-remains open.
+range-scoped profiler evidence. A preregistered ninth slice extends the same
+request to the unfused `o_proj` and `down_proj` modules at layers 0, 18, and 35.
+It has no observation yet. Gate 2 remains open.
 
 ## Hypothesis
 
@@ -47,6 +48,12 @@ The eighth-slice hypothesis is that one real layer-0 `o_proj` prefill activation
 can be captured with explicit tensor metadata, replayed deterministically
 through the same loaded module, and attributed to the expected SM120 NVFP4
 kernel without committing prompt contents or raw tensors.
+
+The ninth-slice hypothesis is that one model load and one fixed hashed request
+can produce exactly one metadata-preserving prefill capture for each unfused
+`o_proj` and `down_proj` module at layers 0, 18, and 35, and that every captured
+input can be replayed three times through its original module with stable,
+logical-byte-exact output and independent range-scoped backend evidence.
 
 ## Completion criterion
 
@@ -131,6 +138,22 @@ The first real-activation slice passes only if:
 - the exact NVTX range contains the expected SM120 block-scaled CUTLASS
   E2M1/UE4M3 signature and no known fallback.
 
+The representative unfused real-activation matrix passes only if:
+
+- the exact ordered Cartesian product of layers 0, 18, and 35 with `o_proj`
+  and `down_proj` is captured from one model load and one request;
+- all twelve hooks fire once in model execution order, and all eighteen tensor
+  artifacts have unique ignored paths and preserve shape, dtype, stride,
+  storage offset, byte length, and canonical logical bytes across transfer;
+- every runtime packed-weight and swizzled-scale identity matches the tracked
+  representative replay dependency and requires zero weight padding;
+- one warm-up and three synchronized replays per case are finite, hash-stable,
+  and logical-byte-exact to the corresponding captured module output;
+- the overlapping layer-0 `o_proj` input and output match the prior real case;
+  and
+- all six unique NVTX ranges contain activation quantization and the expected
+  SM120 block-scaled CUTLASS E2M1/UE4M3 signature with no known fallback.
+
 ## Controlled variables
 
 - repository: `nvidia/Qwen3-8B-NVFP4`;
@@ -171,6 +194,12 @@ process eager mode with WSL2 pinned memory enabled, FlashInfer sampling disabled
 as unrelated to the target, tensor parallelism 1, CPU offload 0, and a 256 MiB
 KV cache. Its target NVTX range includes the production module's activation
 quantization and NVFP4 GEMM, while validation and device copies remain outside.
+
+The planned real-activation matrix reuses that exact request and environment.
+It installs hooks only after model initialization, profiles replay rather than
+the live hook path, and uses one profiler session containing six sibling NVTX
+ranges. The matrix is limited to production-aligned unfused module boundaries;
+fused `qkv_proj` and `gate_up_proj` require a later design.
 
 ## Actual observations
 
