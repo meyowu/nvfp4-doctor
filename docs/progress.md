@@ -136,7 +136,7 @@ compatible. These results complete the declared synthetic E003 matrix only;
 they do not estimate naturally occurring fault rates or establish runtime,
 GEMM, or model-level detection.
 
-## Next gate
+## Gate progress
 
 Gate 1 and E003 passed their bounded criteria with a `continue` decision. The
 first E004 slice pinned revision
@@ -225,3 +225,32 @@ ignored Nsight report has SHA-256
 This establishes representative unfused same-module replay for one request,
 not NVFP4 numerical correctness, fused-family coverage, final-logit or model
 quality, prompt diversity, or Gate 2 completion.
+
+The tenth slice reused the same model load discipline and fixed hashed request
+to capture the exact ordered matrix of production-fused `qkv_proj` and
+`gate_up_proj` at layers 0, 18, and 35. All 12 hooks fired once. Every input was
+BF16 `(9, 4096)`; qkv outputs were `(9, 6144)` and gate/up outputs were
+`(9, 24576)`. The workflow retained 18 ignored tensor artifacts and produced 18
+finite, stable, logical-byte-exact measured whole-module replays.
+
+Both used checkpoint shards were rehashed. Ordered q/k/v and gate/up components
+reproduced all six runtime packed weights and scale tensors after independent
+128x4 swizzling, with nine exact overlaps to the earlier replay matrix. TP
+size/rank were
+1/0, `gather_output=false`, and equal component global scales made the observed
+maximum reductions lossless for these cases.
+
+vLLM again selected `FlashInferCutlassNvFp4LinearKernel`. All six exact NVTX
+ranges contained activation quantization and the expected SM120 block-scaled
+CUTLASS E2M1/UE4M3 signature, with no recognized fallback. The retained report
+SHA-256 is
+`7841a1fc4424afea5fc21880f21f4f401b8087edadab662a5dabcc4c0f18191a`;
+the normalized result SHA-256 is
+`aa935b76fb6dd5bc4240252cac0047889820fa1d806b3e75f9f43c98936ce9c2`.
+
+Together with the passing unfused dependency, this completes the bounded Gate
+2 capture, replay, checkpoint-binding, and backend-identity criterion with a
+`go` decision. Gate 3 is next. This does not establish numerical correctness,
+equivalence to separately executed q/k/v/gate/up modules, prompt diversity,
+final logits, model quality, performance, cross-backend agreement, or
+generalization beyond the pinned cases.

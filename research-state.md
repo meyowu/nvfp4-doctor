@@ -5,11 +5,11 @@ only from observed repository, environment, test, and experiment evidence.
 
 ## Current handoff
 
-- Current experiment: `E004-qwen3-layer-capture`
-- Current gate: `Gate 2 — fused real-activation coverage`
-- Status: `representative_unfused_real_activation_matrix_pass`
-- Decision: `continue`
-- Verified baseline commit: `bee0ff3a0ec901a5df63c7e19a44698a270648e1`
+- Current experiment: `E005-layer-oracle-versus-production-kernel` (planning)
+- Current gate: `Gate 3 — numerical reference`
+- Status: `representative_fused_real_activation_matrix_pass`
+- Decision: `go`
+- Verified baseline commit: `d77eb24502089262d7b759c0e61c2d282e811fbb`
 - Verified Gate 1 implementation commit: `f0be51513892d8b10968090fb081a8dafbee0b89`
 - Verified E003 implementation commit: `2116fbb5ed76d51119ea79b89da701c25b0ef0d5`
 - Verified E003 completion commit: `326522ce74b70ee5934373a2a5fa72d512cd8390`
@@ -32,7 +32,9 @@ only from observed repository, environment, test, and experiment evidence.
 - Verified E004 real-activation evidence commit: `3dfd06fbd3ca5e01b8218967def5506135b4bba4`
 - Verified E004 unfused matrix implementation commit: `493b0fe988d10816d55fad87941f54ac3a9c5257`
 - Verified E004 unfused matrix evidence commit: `bee0ff3a0ec901a5df63c7e19a44698a270648e1`
-- Active local branch: `exp/e004-real-activation-matrix`
+- Verified E004 fused matrix implementation commit: `8f249932241e56e4f487caa0de79a9ed9f4ed5d1`
+- Verified E004 fused matrix evidence commit: `d77eb24502089262d7b759c0e61c2d282e811fbb`
+- Active local branch: `exp/e004-fused-real-activation`
 - Active Codex worktree: `/mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor`
 - Canonical WSL checkout: `/home/meyowu/projects/nvfp4-doctor`
 - Canonical GPU environment: `/home/meyowu/projects/nvfp4-doctor/.venv`
@@ -250,9 +252,11 @@ only from observed repository, environment, test, and experiment evidence.
   replays with finite, hash-stable outputs. Every packed weight remained
   byte-identical, every weight padding count was zero, and every scale swizzle
   matched vLLM byte-for-byte.
-- Six `o_proj` and `down_proj` cases are production-aligned unfused replays.
-  Nine `q_proj`, `gate_proj`, and `up_proj` cases remain individual fused-family
-  kernel preflights and are not represented as exact model-layer replay.
+- In the earlier synthetic replay matrix, six `o_proj` and `down_proj` cases are
+  production-aligned unfused replays. Its nine individual `q_proj`, `gate_proj`,
+  and `up_proj` cases remain fused-family kernel preflights rather than exact
+  production-module replays; the later fused capture matrix closes that separate
+  boundary using whole `qkv_proj` and `gate_up_proj` modules.
 - The complete pinned repository contains 6,413,063,143 bytes, including
   6,397,066,384 weight-shard bytes and 15,996,759 bytes of tokenizer and small
   files. All 15 pinned files were acquired under ignored `models/` storage and
@@ -283,21 +287,50 @@ only from observed repository, environment, test, and experiment evidence.
   its clean implementation source bundle has SHA-256
   `d669b40b1dd27da800daeb2a9d28089981df4238427b01f6dbaed537d2445181`,
   and its manifest binds six dependencies and 21 tracked-or-local artifacts.
+- The definitive fused workflow used one full-model pass with the same fixed
+  hashed nine-token request and captured exactly one BF16 input and one output
+  for each production-fused `qkv_proj` and `gate_up_proj` module at layers 0,
+  18, and 35. All 12 hooks fired once in model order, and all 18 ignored tensor
+  artifacts passed independent file and logical-tensor rehashing.
+- The fused `qkv_proj` cases mapped input `(9, 4096)` to output `(9, 6144)` via
+  `QKVParallelLinear`; the fused `gate_up_proj` cases mapped input `(9, 4096)`
+  to output `(9, 24576)` via `MergedColumnParallelLinear`. TP size was one,
+  rank was zero, and output gathering was disabled in every case.
+- All 18 synchronized fused-module replays were finite, within-case hash-stable,
+  and logical-byte-exact to their captured module outputs. The finalizer
+  independently streamed and matched both used safetensors shard hashes,
+  reconstructed ordered q/k/v and gate/up packed rows and scale rows, matched
+  all nine available component overlaps to prior replay evidence, and verified
+  lossless max reduction for the equal component global scales observed in these
+  six cases.
+- All six fused NVTX ranges contained activation quantization and the expected
+  SM120 block-scaled CUTLASS E2M1/UE4M3 signature, with no recognized fallback.
+  The retained ignored profiler report has SHA-256
+  `7841a1fc4424afea5fc21880f21f4f401b8087edadab662a5dabcc4c0f18191a`.
+- The normalized fused result has SHA-256
+  `aa935b76fb6dd5bc4240252cac0047889820fa1d806b3e75f9f43c98936ce9c2`,
+  its clean implementation source bundle has SHA-256
+  `c451070f8f44631e0eda4485ee910802c07bb4875eb6b24e6cf9489f1d07548e`,
+  and its manifest binds six dependency records and 21 tracked-or-local
+  artifacts. The result reports status `pass` and the bounded Gate 2 decision
+  `go` from implementation commit `8f249932241e56e4f487caa0de79a9ed9f4ed5d1`.
 
 These observations complete Gate 1 and E003, and support E004 metadata, header,
 acquisition, strict layout transformation, deterministic real-weight replay,
-complete-snapshot integrity, and representative profiler-backed unfused
-real-activation replay for one request. They do not establish fused production
-module coverage, prompt diversity, arbitrary-input rounding, NVFP4 GEMM
-numerical correctness or performance, production model quality, or model-level
-fault propagation.
+complete-snapshot integrity, and representative profiler-backed unfused and
+production-fused real-activation replay for one request. Together the unfused
+and fused matrices satisfy the bounded Gate 2 capture, replay, and backend-
+identity criterion. They do not establish prompt diversity, equivalence to
+separately executing q/k/v or gate/up projections, arbitrary-input rounding,
+NVFP4 GEMM numerical correctness or performance, final-logit or production
+model quality, cross-backend agreement, or model-level fault propagation.
 
 ## Last verification
 
 ```bash
 source /home/meyowu/projects/nvfp4-doctor/activate-nvfp4-lab.sh
 cd /mnt/c/Users/meyow/Documents/Codex/2026-08-19/referenced-chatgpt-conversation-this-is-an/nvfp4-doctor
-bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh scripts/run_e004_real_activation_profile.sh scripts/run_e004_real_activation_matrix_profile.sh
+bash -n activate-nvfp4-lab.sh scripts/run_e001_week1.sh scripts/run_e004_projection_profile.sh scripts/run_e004_real_activation_profile.sh scripts/run_e004_real_activation_matrix_profile.sh scripts/run_e004_real_activation_fused_matrix_profile.sh
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff format --check src tests scripts smoke_nvfp4.py
 /home/meyowu/projects/nvfp4-doctor/.venv/bin/ruff check src tests scripts smoke_nvfp4.py
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/mypy src
@@ -317,11 +350,12 @@ PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e
 PYTHONPATH=src /home/meyowu/projects/nvfp4-doctor/.venv/bin/python scripts/run_e004_full_model_acquisition.py
 bash scripts/run_e004_real_activation_profile.sh
 bash scripts/run_e004_real_activation_matrix_profile.sh
+bash scripts/run_e004_real_activation_fused_matrix_profile.sh
 ```
 
-Observed result: 188 tests plus 419 subtests passed and Python compilation
+Observed result: 218 tests plus 419 subtests passed and Python compilation
 completed. Ruff formatting and lint checks passed, Mypy reported no issues in
-32 source files, Ruff reported 97 Python files formatted, and `uv pip check`
+33 source files, Ruff reported 104 Python files formatted, and `uv pip check`
 found all 207 installed packages compatible.
 The two E003 CPU runners reported 24 clean contract passes, eleven of eleven
 faults detected, exact localization, zero false accepts or rejects, zero
@@ -361,15 +395,24 @@ model pass and replayed each original module three synchronized times. All six
 cases passed metadata preservation, runtime dependency, stability, logical-byte
 equality, prior-case regression, and independently range-scoped Nsight checks.
 The normalized matrix reports status `pass` and decision `continue`.
+The production-fused workflow then captured six whole `qkv_proj` and
+`gate_up_proj` boundaries from one model pass and replayed each original module
+three synchronized times. All six cases passed checkpoint-component fusion,
+runtime metadata, scalar-reduction, stability, full-output and component-slice
+logical-byte equality, dependency regression, and independently range-scoped
+Nsight checks. The normalized matrix reports status `pass` and the bounded Gate
+2 decision `go`.
 
 ## Next action
 
-Design the next bounded real-activation slice at the production fused
-`qkv_proj` and `gate_up_proj` boundaries. First map their combined runtime
-weights and per-component scales without treating individual `q_proj`,
-`k_proj`, `v_proj`, `gate_proj`, or `up_proj` payloads as exact model-layer
-replays. Keep prompt identities hashed, raw activations ignored, and every fused
-case tied to its own exact profiler range and explicit acceptance criterion.
+First finish this E004 documentation closeout, push
+`exp/e004-fused-real-activation`, create and merge its PR, and fast-forward the
+local `main`. Then create a fresh E005 branch and preregister its independent
+numerical reference: explicit NVFP4
+dequantization followed by tiled higher-precision matmul on synthetic golden
+cases and captured E004 shapes. Define error metrics and a clean acceptance
+envelope before comparing production kernels, and stop kernel-correctness claims
+if the independent golden tests fail.
 
 ## Blockers and limitations
 
@@ -400,10 +443,14 @@ case tied to its own exact profiler range and explicit acceptance criterion.
 - The model card documents TensorRT-LLM on B200. The observed RTX 5080 result
   establishes only the pinned vLLM/FlashInfer environment and tested cases, not
   general support.
-- The representative real-activation result covers one fixed request and six
-  unfused `o_proj`/`down_proj` cases. It does not cover prompt diversity, fused
-  module families, final logits, model quality, or a numerical reference
-  comparison.
+- The combined representative real-activation result covers one fixed request,
+  layers 0, 18, and 35, two unfused module families, two fused module families,
+  and one pinned TP1 environment. It does not cover prompt diversity,
+  generalization, final logits, model quality, performance, cross-backend
+  agreement, or a numerical reference comparison. Whole fused-output slices are
+  not evidence of separately executed q/k/v or gate/up projections, and equal
+  component global scales are an observation of these cases rather than a
+  universal NVFP4 rule.
 - The E002 manifest pins the clean implementation commit rather than the later
   evidence-only handoff commit. Regenerate it after any semantic source edit;
   the source-bundle hash detects such changes.
@@ -412,7 +459,7 @@ case tied to its own exact profiler range and explicit acceptance criterion.
 ## Working-tree expectation
 
 Keep verified E004 real-activation work on the focused
-`exp/e004-real-activation-matrix` branch until its PR is merged.
+`exp/e004-fused-real-activation` branch until its PR is merged.
 Use the configured research closeout
 workflow for commit, push, PR creation, and merge. Acquiring additional model
 payloads outside the pinned snapshot, deleting branches, or publishing external

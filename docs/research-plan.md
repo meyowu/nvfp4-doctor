@@ -45,7 +45,7 @@ hashes rather than committing model data.
 | E001 | Environment and kernel identity | Pinned environment, requested backend, observed kernel, no silent fallback |
 | E002 | Independent NVFP4 format oracle | Exhaustive E2M1 checks, E4M3 scale checks, packing and layout golden fixtures |
 | E003 | Synthetic fault injection | Deterministic scale, packing, layout, stride, padding, and dispatch faults with labels |
-| E004 | Qwen3-8B layer extraction | Reproducible captures for representative attention and MLP projections |
+| E004 | Qwen3-8B layer extraction | Reproducible unfused and production-fused captures with checkpoint-to-runtime bindings |
 | E005 | Layer oracle versus production kernel | Quantization error separated from contract/kernel error |
 | E006 | Layer fault propagation | Per-layer error metrics and fault signatures under positive controls |
 | E007 | End-to-end clean baseline | Pinned inputs, logits, top-k agreement, KL divergence, perplexity, latency, and memory |
@@ -91,9 +91,16 @@ of the candidate implementation.
 ### Week 3: Qwen3 layer capture — Gate 2
 
 Pin the primary checkpoint, inspect its quantization configuration, and capture
-representative `q_proj`, `o_proj`, `gate_proj`, `up_proj`, and `down_proj`
-cases. Go only if metadata-preserving replay and actual kernel identification
-are reliable. Otherwise pivot to checkpoint-only plus synthetic analysis.
+representative unfused `o_proj`/`down_proj` plus production-fused
+`qkv_proj`/`gate_up_proj` boundaries. Bind ordered q/k/v and gate/up checkpoint
+components to their fused runtime tensors. Go only if metadata-preserving replay
+and range-scoped kernel identification are reliable. Otherwise pivot to
+checkpoint-only plus synthetic analysis.
+
+Recorded outcome: the layers 0, 18, and 35 matrices passed the bounded Gate 2
+criterion with a `go` decision. E005 / Gate 3 is next. Same-module byte identity
+and selected-kernel evidence do not constitute an independent numerical
+reference.
 
 ### Week 4: Numerical reference — Gate 3
 

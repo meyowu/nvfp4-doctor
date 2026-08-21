@@ -11,12 +11,12 @@ correctness claims.
 
 ## Current status
 
-Week 2 / Gate 1 and the bounded E003 synthetic fault experiment are complete
-with a `continue` decision toward Gate 2. The repository contains a CPU-only oracle for E2M1,
-UE4M3 scales, packed values, CUTLASS 128x4 scale layout, padding, scalar global
-scales, and exact hierarchical reconstruction. Its semantics are pinned to
-versioned public NVIDIA sources and hand-authored fixtures rather than the
-candidate FlashInfer implementation.
+Gate 1, the bounded E003 synthetic fault experiment, and E004 / Gate 2 are
+complete. Gate 2 records a `go` decision toward the Gate 3 numerical reference.
+The repository contains a CPU-only oracle for E2M1, UE4M3 scales, packed values,
+CUTLASS 128x4 scale layout, padding, scalar global scales, and exact hierarchical
+reconstruction. Its semantics are pinned to versioned public NVIDIA sources and
+hand-authored fixtures rather than the candidate FlashInfer implementation.
 
 Three constructed RTX 5080 differential cases matched FlashInfer's packed and
 scale bytes exactly, including boundary padding and multi-atom layouts. This
@@ -76,8 +76,9 @@ activation had shape `(9, 4096)`. Three synchronized standalone replays were
 finite, hash-stable, and byte-exact to the captured module output. vLLM selected
 `FlashInferCutlassNvFp4LinearKernel`, and Nsight found the expected SM120
 block-scaled CUTLASS signature with no known fallback in the exact target range.
-This is one prompt and one unfused projection; Gate 2 remains open, and no
-numerical-correctness or model-quality conclusion follows from it.
+This first slice covered one prompt and one unfused projection; by itself it did
+not complete Gate 2, and no numerical-correctness or model-quality conclusion
+followed from it.
 
 A representative unfused matrix now extends that same hashed request to
 `o_proj` and `down_proj` at layers 0, 18, and 35 in one model pass. All six BF16
@@ -86,8 +87,20 @@ replays were finite, hash-stable, and logical-byte-exact to their captured
 module outputs. Six separate Nsight ranges each contained activation
 quantization and the expected SM120 CUTLASS NVFP4 signature with no known
 fallback. This supports representative unfused execution coverage for one
-request; fused module families, numerical correctness, final logits, model
-quality, and Gate 2 completion remain open.
+request; it does not establish numerical correctness, final logits, or model
+quality.
+
+The Gate 2 completion slice captures the production-fused `qkv_proj` and
+`gate_up_proj` boundaries at the same three layers and with the same hashed
+request. Their ordered q/k/v and gate/up checkpoint components reconstruct the
+runtime packed weights and independently swizzled scales byte-for-byte. All 18
+measured whole-module replays were finite, stable, and logical-byte-exact, and
+all six exact Nsight ranges contained activation quantization plus the expected
+SM120 CUTLASS NVFP4 signature with no known fallback. Combined with the unfused
+matrix, this satisfies the bounded Gate 2 replay and backend-identity criterion
+with a `go` decision. Numerical correctness, prompt diversity, final logits,
+model quality, performance, and high-precision equivalence remain open for later
+gates.
 
 See [docs/setup-windows-wsl2.md](docs/setup-windows-wsl2.md) for the reproducible
 host setup and [docs/progress.md](docs/progress.md) for the verified baseline.
@@ -130,6 +143,7 @@ PYTHONPATH=src python scripts/run_e004_replay_matrix.py
 PYTHONPATH=src python scripts/run_e004_full_model_acquisition.py
 bash scripts/run_e004_real_activation_profile.sh
 bash scripts/run_e004_real_activation_matrix_profile.sh
+bash scripts/run_e004_real_activation_fused_matrix_profile.sh
 ```
 
 Package pins reflect the verified 2026-08-19 environment. Review the setup
