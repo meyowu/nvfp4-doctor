@@ -2,14 +2,15 @@
 
 ## Current slice
 
-Nine completed E004 slices progress from public checkpoint metadata and bounded
+Ten completed E004 slices progress from public checkpoint metadata and bounded
 payload acquisition through synthetic projection replay, complete pinned
-snapshot acquisition, and one real Qwen activation capture. The latest slice
-reuses one full-model load and the same fixed hashed token-ID request to capture
-and replay the unfused `o_proj` and `down_proj` modules at layers 0, 18, and 35.
-All six cases passed their preregistered transfer, replay, regression, and
-range-scoped profiler criteria. Gate 2 remains open because fused production
-module boundaries are not covered.
+snapshot acquisition, and representative real Qwen activation capture. The
+latest slice uses one full-model load and reuses the same fixed hashed token-ID
+request to capture and replay the production-fused `qkv_proj` and
+`gate_up_proj` modules at layers 0, 18, and 35. All six cases passed their
+preregistered source-fusion, transfer, replay, regression, and range-scoped
+profiler criteria. Together with the prior unfused matrix, this completes the
+bounded Gate 2 criterion with a `go` decision.
 
 ## Hypothesis
 
@@ -54,6 +55,14 @@ can produce exactly one metadata-preserving prefill capture for each unfused
 `o_proj` and `down_proj` module at layers 0, 18, and 35, and that every captured
 input can be replayed three times through its original module with stable,
 logical-byte-exact output and independent range-scoped backend evidence.
+
+The tenth-slice hypothesis is that the same request can capture the production
+fused `qkv_proj` and `gate_up_proj` module boundaries at those three layers,
+that the runtime fused tensors can be reconstructed independently from their
+ordered checkpoint components, and that each captured input can be replayed
+three times through its original fused module with stable, logical-byte-exact
+output and independently scoped backend evidence. This is the preregistered
+completion slice for Gate 2.
 
 ## Completion criterion
 
@@ -154,6 +163,36 @@ The representative unfused real-activation matrix passes only if:
 - all six unique NVTX ranges contain activation quantization and the expected
   SM120 block-scaled CUTLASS E2M1/UE4M3 signature with no known fallback.
 
+The representative fused real-activation matrix passes only if:
+
+- the exact ordered Cartesian product of layers 0, 18, and 35 with
+  `qkv_proj` and `gate_up_proj` is captured from one model load and the same
+  fixed hashed request;
+- the runtime boundaries are exactly `QKVParallelLinear` with logical widths
+  `[4096, 1024, 1024]` and `MergedColumnParallelLinear` with logical widths
+  `[12288, 12288]`, both at tensor-parallel size one;
+- the checkpoint components are independently loaded in production order,
+  their packed rows concatenate byte-exactly to the runtime weight, and their
+  linear scale rows reproduce the runtime scale only after the independent
+  128x4 swizzle oracle is applied;
+- every component within a fused group has an equal `input_scale` and equal
+  `weight_scale_2`, the recorded maximum reduction is therefore lossless, and
+  the reduced runtime scales, reciprocal, and float32 alpha match exactly;
+- all twelve hooks fire once in model execution order, and all eighteen tensor
+  artifacts preserve the declared logical metadata and bytes across transfer;
+- one warm-up and three synchronized whole-module replays per case are finite,
+  hash-stable, and logical-byte-exact to the corresponding captured fused
+  module output; and
+- all six unique NVTX ranges contain activation quantization and the expected
+  SM120 block-scaled CUTLASS E2M1/UE4M3 signature with no known fallback.
+
+If any fused construction, capture, replay, or range-scoped identity check is
+inconclusive, Gate 2 remains open or pivots to checkpoint-only plus synthetic
+analysis. A pass permits a Gate 2 `go` decision only for metadata-preserving
+real-activation replay and kernel identification; it does not establish NVFP4
+numerical correctness, independent component replay, post-activation
+equivalence, prompt diversity, final logits, or model quality.
+
 ## Controlled variables
 
 - repository: `nvidia/Qwen3-8B-NVFP4`;
@@ -195,11 +234,16 @@ as unrelated to the target, tensor parallelism 1, CPU offload 0, and a 256 MiB
 KV cache. Its target NVTX range includes the production module's activation
 quantization and NVFP4 GEMM, while validation and device copies remain outside.
 
-The real-activation matrix reuses that exact request and environment. It
+The unfused real-activation matrix reuses that exact request and environment. It
 installs hooks only after model initialization, profiles replay rather than the
 live hook path, and uses one profiler session containing six sibling NVTX
-ranges. The matrix is limited to production-aligned unfused module boundaries;
-fused `qkv_proj` and `gate_up_proj` require a later design.
+ranges.
+
+The fused completion matrix uses the same execution discipline at the exact
+`QKVParallelLinear` and `MergedColumnParallelLinear` boundaries. Before loading
+the model, it rehashes both used safetensors shards and independently rebuilds
+the fused packed weights, full 128x4 scale swizzles, and lossless shared global-
+scale reductions from ordered q/k/v and gate/up checkpoint components.
 
 ## Actual observations
 
@@ -326,6 +370,48 @@ the clean source bundle has SHA-256
 `d669b40b1dd27da800daeb2a9d28089981df4238427b01f6dbaed537d2445181`,
 and the run peaked at 7,189,731,328 allocated GPU bytes.
 
+The production-fused completion matrix then captured `qkv_proj` and
+`gate_up_proj` at layers 0, 18, and 35 from one model load and the same fixed
+nine-token identity. All 12 hooks fired once in model order. Every input was
+BF16 `(9, 4096)`; `qkv_proj` outputs were `(9, 6144)` with logical widths
+`[4096, 1024, 1024]`, and `gate_up_proj` outputs were `(9, 24576)` with logical
+widths `[12288, 12288]`. Tensor parallel size/rank were 1/0 and
+`gather_output=false`.
+
+Both used safetensors shards were rehashed against the pinned inventory. The
+ordered q/k/v and gate/up component rows independently reproduced every runtime
+packed weight and full 128x4-swizzled scale. All components within each fused
+group had exactly equal `input_scale` and `weight_scale_2`, so the observed
+maximum reductions were lossless in these six cases. All nine components that
+overlap the earlier replay matrix matched that dependency; k/v remained bound
+directly to the verified full snapshot.
+
+One warm-up and three synchronized measured whole-module replays per case were
+finite, within-case hash-stable, and logical-byte-exact to the captured module
+output. All six input hashes and all six output hashes were distinct.
+
+| Case | Captured input SHA-256 | Captured/replayed output SHA-256 |
+| --- | --- | --- |
+| layer 0 `qkv_proj` | `b2324c464141674ad735b35b8c01c5162c7d70151d0e1a7523c32e570132cf69` | `62d36931f8a6ee1c562acca4a44a4aa39fbd537da27176b1de2f9e53dac44d8c` |
+| layer 0 `gate_up_proj` | `e42ac8a6d978317ed6376e1736ec491bf409acd6d1f5cb778e25e41248d1ed8b` | `530191e8df3aebc96647048b4d9c808e6bcfcbdd50ba1a30056cf16f4150d3d8` |
+| layer 18 `qkv_proj` | `1165c182d22a7da73869f74f57ed940d7671efc8b9662cadef06a1641dca49b7` | `880cb30f7a0c0e852282b950381347dc5b0d0344e5232c3eb22b7ad6c2470abd` |
+| layer 18 `gate_up_proj` | `6bff23df380a4e02f6b00072b7d892887d2010d372d4cb5ce8b507af2cbf3c39` | `fa0115228df7e1c8853b19447340e7d3f0d22ffcf61db012e0ae6878c5cc1e3a` |
+| layer 35 `qkv_proj` | `38de4e88b8a7607fbf1597d6681a9ab50631094517532923d10a144c15bd0eeb` | `cbd87690760153b3b7795017c264c032b068bad452b94b9991edf5e248b88faa` |
+| layer 35 `gate_up_proj` | `71ffeffcd7acb780313881e3dbeb01e9a7948b2c8d21dd88973bb81b9c0d56a2` | `6881dba2655bbe953f008a363e9240ab525e2f7160cd93200d3420e1b9641672` |
+
+All six exact NVTX ranges contained BF16-to-FP4 activation conversion and the
+expected SM120 block-scaled CUTLASS E2M1/UE4M3 kernel, with no recognized
+fallback. The retained ignored profiler report has SHA-256
+`7841a1fc4424afea5fc21880f21f4f401b8087edadab662a5dabcc4c0f18191a`.
+The normalized result has SHA-256
+`aa935b76fb6dd5bc4240252cac0047889820fa1d806b3e75f9f43c98936ce9c2`,
+the clean source bundle has SHA-256
+`c451070f8f44631e0eda4485ee910802c07bb4875eb6b24e6cf9489f1d07548e`,
+and the implementation commit is
+`8f249932241e56e4f487caa0de79a9ed9f4ed5d1`. The manifest binds six dependency
+records and 21 artifacts; raw tensors, the raw observation, and the report
+remain ignored and local.
+
 Run the slice with network access using:
 
 ```bash
@@ -339,6 +425,7 @@ PYTHONPATH=src python scripts/run_e004_replay_matrix.py
 PYTHONPATH=src python scripts/run_e004_full_model_acquisition.py
 bash scripts/run_e004_real_activation_profile.sh
 bash scripts/run_e004_real_activation_matrix_profile.sh
+bash scripts/run_e004_real_activation_fused_matrix_profile.sh
 ```
 
 The normalized evidence is retained in [metadata.json](metadata.json) and
@@ -370,6 +457,11 @@ The normalized representative unfused observation and clean provenance are
 retained in
 [real-activation-unfused-matrix.json](real-activation-unfused-matrix.json) and
 [manifest-real-activation-unfused-matrix.json](manifest-real-activation-unfused-matrix.json);
+its 18 raw tensors, raw run, and Nsight report remain ignored and local.
+The normalized representative fused observation and clean provenance are
+retained in
+[real-activation-fused-matrix.json](real-activation-fused-matrix.json) and
+[manifest-real-activation-fused-matrix.json](manifest-real-activation-fused-matrix.json);
 its 18 raw tensors, raw run, and Nsight report remain ignored and local.
 
 ## Interpretation
@@ -416,9 +508,15 @@ not a numerical reference comparison or a representative activation matrix.
 The representative unfused real-activation hypothesis is supported for one
 fixed request. The result expands real activation, same-module replay, and
 independently scoped backend identity across early, middle, and late `o_proj`
-and `down_proj` modules. It does not cover the fused `qkv_proj` or
-`gate_up_proj` production boundaries and is not a numerical reference or model
-quality result.
+and `down_proj` modules.
+
+The production-fused hypothesis is also supported for the same request and
+representative layers. Exact ordered checkpoint-component bindings, deterministic
+whole-module replay, and independently scoped kernel identity now cover
+`qkv_proj` and `gate_up_proj`. Combined with the required passing unfused
+dependency, this satisfies the bounded Gate 2 capture, replay, and backend-
+identity criterion. Byte-exact same-module replay is reproducibility evidence,
+not an independent numerical reference or model-quality result.
 
 ## Threats to validity
 
@@ -437,23 +535,29 @@ quality result.
   pinning each source shard by its immutable LFS SHA-256.
 - Exact transport and local hashes do not prove that the producer's logical
   NVFP4 layout matches the Gate 1 oracle.
-- The 15-case checkpoint replay matrix uses synthetic activations. The latest
-  six-case matrix adds real Qwen prefill activations only for unfused `o_proj`
-  and `down_proj` modules.
+- The 15-case checkpoint replay matrix uses synthetic activations. The two
+  real-activation matrices cover only one fixed request and layers 0, 18, and
+  35 in the pinned environment.
 - `o_proj` is unfused in the inspected vLLM path. Individual `q_proj`,
   `gate_proj`, and `up_proj` replays would not reproduce their fused model-layer
   loading behavior without the companion tensors.
-- Six profiled unfused projections establish selected-kernel identity only for
-  this pinned environment and these cases; they do not establish numerical
-  correctness.
-- One fixed request and six unfused cases do not characterize other prompts,
-  fused module families, final logits, model quality, or a high-precision
-  reference.
+- The fused result replays whole `qkv_proj` and `gate_up_proj` modules; its
+  q/k/v and gate/up output slices are not equivalent to separately executing
+  those component projections.
+- Equal component global scales are observed for these six fused groups, not a
+  universal NVFP4 or ModelOpt rule.
+- Twelve profiled production modules establish selected-kernel identity only
+  for the pinned RTX 5080, software environment, TP1 configuration, request,
+  and cases. No recognized fallback is not proof against unknown fallbacks.
+- One fixed request does not characterize other prompts, final logits,
+  perplexity, model quality, performance, cross-backend behavior, arbitrary-
+  input rounding, or agreement with a high-precision checkpoint.
 
 ## Decision
 
-Continue within Gate 2. The representative unfused real-activation matrix now
-passes for `o_proj` and `down_proj` at early, middle, and late layers. The next
-bounded step is to design real-activation capture and replay at the production
-fused `qkv_proj` and `gate_up_proj` boundaries. Gate 2 is not complete, and no
-numerical-correctness or model-quality claim is made.
+Go to E005 / Gate 3. The fused matrix passed all preregistered criteria, and its
+required representative unfused dependency also passes. Gate 2 is complete
+only for the bounded metadata-preserving capture, deterministic same-module
+replay, checkpoint-to-runtime binding, and range-scoped backend-identity claim.
+E005 must preregister and independently test explicit dequantization plus a
+tiled higher-precision matmul before any NVFP4 numerical-correctness claim.
