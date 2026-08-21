@@ -2,9 +2,9 @@
   "schema_version": 1,
   "experiment_id": "E004-qwen3-layer-capture",
   "slice": "representative_fused_real_activation_replay_matrix_v1",
-  "captured_at_utc": "2026-08-21T03:40:59.418685Z",
+  "captured_at_utc": "2026-08-21T03:47:38.287828Z",
   "git": {
-    "commit": "c4f1d984fea189f77ea75abc42771f88b4b60196",
+    "commit": "8f249932241e56e4f487caa0de79a9ed9f4ed5d1",
     "branch": "exp/e004-fused-real-activation",
     "dirty": false
   },
@@ -148,7 +148,7 @@
     "requested_backend": "auto",
     "expected_selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
     "reported_backend": null,
-    "profiler_sha256": "91b08ab1b544dfb087c7a786dd330ecc2642ba954202d97aac0df073d0aa4b49",
+    "profiler_sha256": "7841a1fc4424afea5fc21880f21f4f401b8087edadab662a5dabcc4c0f18191a",
     "kernel_catalog": [
       {
         "kernel_id": "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
@@ -168,18 +168,18 @@
       }
     ]
   },
-  "source_bundle_sha256": "ced6c89c3a68db3d2316b5fb02a6ba54003373e26a667eb1eeb6137848fd118f",
+  "source_bundle_sha256": "c451070f8f44631e0eda4485ee910802c07bb4875eb6b24e6cf9489f1d07548e",
   "artifacts": [
     {
       "kind": "normalized-real-activation-fused-matrix-result",
       "path": "experiments/E004-qwen3-layer-capture/real-activation-fused-matrix.json",
-      "sha256": "f81e2a62847cdede45f25eb9ecac1da840da128e2e8b22112981db868b375131",
+      "sha256": "aa935b76fb6dd5bc4240252cac0047889820fa1d806b3e75f9f43c98936ce9c2",
       "ignored": false
     },
     {
       "kind": "raw-real-activation-fused-matrix-observation",
       "path": "artifacts/E004-qwen3-layer-capture/real-activation-fused-matrix/fused-matrix.json",
-      "sha256": "a18beadcc9de4ff9d0c50bad17c95de284e53aecc388420a45426d763149320b",
+      "sha256": "1d5de54ba44946c50c9ea3913f95ee62cf4fef6e59128ea77b875831b03b320d",
       "ignored": true
     },
     {
@@ -293,7 +293,7 @@
     {
       "kind": "nsight-systems-report",
       "path": ".local/profiles/e004-real-activation-fused-matrix.nsys-rep",
-      "sha256": "91b08ab1b544dfb087c7a786dd330ecc2642ba954202d97aac0df073d0aa4b49",
+      "sha256": "7841a1fc4424afea5fc21880f21f4f401b8087edadab662a5dabcc4c0f18191a",
       "ignored": true
     }
   ]

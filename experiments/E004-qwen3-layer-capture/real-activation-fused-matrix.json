@@ -2,7 +2,7 @@
   "schema_version": 1,
   "experiment_id": "E004-qwen3-layer-capture",
   "slice": "representative_fused_real_activation_replay_matrix_v1",
-  "captured_at_utc": "2026-08-21T03:40:59.418685Z",
+  "captured_at_utc": "2026-08-21T03:47:38.287828Z",
   "status": "pass",
   "decision": "go",
   "repository": {
@@ -148,7 +148,7 @@
     "requested_backend": "auto",
     "expected_selected_vllm_kernel": "FlashInferCutlassNvFp4LinearKernel",
     "reported_backend": null,
-    "profiler_sha256": "91b08ab1b544dfb087c7a786dd330ecc2642ba954202d97aac0df073d0aa4b49",
+    "profiler_sha256": "7841a1fc4424afea5fc21880f21f4f401b8087edadab662a5dabcc4c0f18191a",
     "kernel_catalog": [
       {
         "kernel_id": "3a4bad62fa866fa67fafd8c79447e8f80b29d9740407da93dc8d11e6b6987b43",
