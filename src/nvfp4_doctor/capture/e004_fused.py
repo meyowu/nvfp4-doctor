@@ -173,6 +173,8 @@ class E004FusedRealActivationCase:
 
 
 def _case(layer: int, role: str, projection: str) -> E004FusedRealActivationCase:
+    component_projections: tuple[str, ...]
+    component_output_widths: tuple[int, ...]
     if projection == "qkv_proj":
         checkpoint_parent = f"model.layers.{layer}.self_attn"
         module_class = "QKVParallelLinear"
